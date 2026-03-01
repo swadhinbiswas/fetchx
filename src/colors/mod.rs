@@ -38,3 +38,43 @@ pub struct ColorScheme {
     /// Whether bold is enabled for ASCII art
     #[allow(dead_code)]
     pub ascii_bold: bool,
+}
+
+impl ColorScheme {
+    /// Create a color scheme from a list of color numbers (like neofetch's set_colors).
+    /// First color is primary, second is secondary, etc.
+    pub fn from_colors(nums: &[u8], bold: bool) -> Self {
+        let mut c = [
+            String::new(),
+            String::new(),
+            String::new(),
+            String::new(),
+            String::new(),
+            String::new(),
+        ];
+        let bold_str = if bold { BOLD } else { "" };
+        for (i, &n) in nums.iter().take(6).enumerate() {
+            c[i] = format!("{}{}", color(n), bold_str);
+        }
+        // Fill remaining with first color
+        if !nums.is_empty() {
+            let first = c[0].clone();
+            for item in c.iter_mut() {
+                if item.is_empty() {
+                    item.clone_from(&first);
+                }
+            }
+        }
+
+        // Text colors derived from distro colors (neofetch "distro" mode)
+        // Mirrors neofetch's set_text_colors(): title=color($1), subtitle=color($2),
+        // at/underline/colon/info all reset. Special cases for colors 7 and 8.
+        let c1 = nums.first().copied().unwrap_or(1);
+        let c2 = nums.get(1).copied().unwrap_or(7);
+
+        // If the first color is 8 or 7, title resets to default fg
+        let title = if c1 == 8 || c1 == 7 {
+            RESET.to_string()
+        } else {
+            color(c1)
+        };
