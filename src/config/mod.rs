@@ -218,3 +218,63 @@ fn default_auto() -> String {
 }
 fn default_normal() -> String {
     "normal".to_string()
+}
+fn default_center() -> String {
+    "center".to_string()
+}
+fn default_gap() -> usize {
+    3
+}
+fn default_separator() -> String {
+    ": ".to_string()
+}
+fn default_block_range() -> (u8, u8) {
+    (0, 15)
+}
+fn default_block_width() -> usize {
+    3
+}
+fn default_block_height() -> usize {
+    1
+}
+fn default_bar_width() -> usize {
+    15
+}
+fn default_underline_char() -> String {
+    "-".to_string()
+}
+
+impl Default for Config {
+    fn default() -> Self {
+        Self {
+            no_color: false,
+            bold: true,
+            separator: ": ".to_string(),
+            colors: ColorConfig::default(),
+            image_backend: "auto".to_string(),
+            image_source: "auto".to_string(),
+            ascii_distro: "auto".to_string(),
+            ascii_file: None,
+            ascii_colors: ColorConfig::default(),
+            ascii_bold: true,
+            custom_image: None,
+            image_size: "auto".to_string(),
+            crop_mode: "normal".to_string(),
+            crop_offset: "center".to_string(),
+            emoji_mode: false,
+            nerd_font: false,
+            gap: 3,
+            logo_only: false,
+            show_title: true,
+            show_underline: true,
+            show_os: true,
+            show_host: true,
+            show_kernel: true,
+            show_uptime: true,
+            show_packages: true,
+            show_shell: true,
+            show_resolution: true,
+            show_de: true,
+            show_wm: true,
+            show_wm_theme: true,
+            show_theme: true,
