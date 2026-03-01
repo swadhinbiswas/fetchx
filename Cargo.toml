@@ -2,3 +2,7 @@
 name = "fetchx"
 version = "0.1.0"
 edition = "2021"
+description = "A fast, modern system information tool written in Rust"
+
+[dependencies]
+clap = { version = "4.4", features = ["derive"] }
