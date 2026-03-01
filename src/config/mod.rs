@@ -98,3 +98,63 @@ pub struct Config {
     pub emoji_mode: bool,
 
     /// Use Nerd Font icons for info labels
+    #[serde(default = "default_false")]
+    pub nerd_font: bool,
+
+    // ── Layout ───────────────────────────────────────────────────
+
+    /// Gap between logo and info text (in chars)
+    #[serde(default = "default_gap")]
+    pub gap: usize,
+
+    /// Only show the logo/ASCII art, no system info
+    #[serde(default = "default_false")]
+    pub logo_only: bool,
+
+    // ── Info field toggles ───────────────────────────────────────
+
+    #[serde(default = "default_true")]
+    pub show_title: bool,
+    #[serde(default = "default_true")]
+    pub show_underline: bool,
+    #[serde(default = "default_true")]
+    pub show_os: bool,
+    #[serde(default = "default_true")]
+    pub show_host: bool,
+    #[serde(default = "default_true")]
+    pub show_kernel: bool,
+    #[serde(default = "default_true")]
+    pub show_uptime: bool,
+    #[serde(default = "default_true")]
+    pub show_packages: bool,
+    #[serde(default = "default_true")]
+    pub show_shell: bool,
+    #[serde(default = "default_true")]
+    pub show_resolution: bool,
+    #[serde(default = "default_true")]
+    pub show_de: bool,
+    #[serde(default = "default_true")]
+    pub show_wm: bool,
+    #[serde(default = "default_true")]
+    pub show_wm_theme: bool,
+    #[serde(default = "default_true")]
+    pub show_theme: bool,
+    #[serde(default = "default_true")]
+    pub show_icons: bool,
+    #[serde(default = "default_true")]
+    pub show_terminal: bool,
+    #[serde(default = "default_true")]
+    pub show_term_font: bool,
+    #[serde(default = "default_true")]
+    pub show_cpu: bool,
+    #[serde(default = "default_true")]
+    pub show_gpu: bool,
+    #[serde(default = "default_true")]
+    pub show_memory: bool,
+    #[serde(default = "default_false")]
+    pub show_disk: bool,
+    #[serde(default = "default_false")]
+    pub show_battery: bool,
+    #[serde(default = "default_false")]
+    pub show_local_ip: bool,
+    #[serde(default = "default_false")]
