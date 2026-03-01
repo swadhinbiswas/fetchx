@@ -528,3 +528,73 @@ fn get_resolution() -> String {
             // Simple extraction: find "width": N and "height": N pairs
             let mut i = 0;
             let chars: Vec<char> = out.chars().collect();
+            while i < chars.len() {
+                if out[i..].starts_with("\"width\":") {
+                    let w_start = i + 8;
+                    let w_str: String = out[w_start..].chars().take_while(|c| c.is_ascii_digit() || *c == ' ').collect();
+                    let width = w_str.trim().parse::<u32>().unwrap_or(0);
+                    // Find the next "height":
+                    if let Some(h_pos) = out[w_start..].find("\"height\":") {
+                        let h_start = w_start + h_pos + 9;
+                        let h_str: String = out[h_start..].chars().take_while(|c| c.is_ascii_digit() || *c == ' ').collect();
+                        let height = h_str.trim().parse::<u32>().unwrap_or(0);
+                        if width > 0 && height > 0 {
+                            resolutions.push(format!("{}x{}", width, height));
+                        }
+                    }
+                }
+                i += 1;
+            }
+            if !resolutions.is_empty() {
+                return resolutions.join(", ");
+            }
+        }
+
+        // Non-JSON fallback: parse text output
+        let out = run_cmd("hyprctl", &["monitors"]);
+        if !out.is_empty() {
+            let mut resolutions: Vec<String> = Vec::new();
+            let mut found_monitor = false;
+            for line in out.lines() {
+                let trimmed = line.trim();
+                // Monitor header lines don't start with whitespace
+                if !line.starts_with(' ') && !line.starts_with('\t') && !trimmed.is_empty() {
+                    found_monitor = true;
+                    continue;
+                }
+                // The resolution line typically contains "at WxH@rate"
+                // or just "WxH@rate" as the first data after the monitor name
+                if found_monitor && trimmed.contains('@') && trimmed.contains('x') {
+                    if let Some(res) = trimmed.split('@').next() {
+                        let res = res.trim();
+                        if res.chars().next().map_or(false, |c| c.is_ascii_digit()) {
+                            resolutions.push(res.to_string());
+                            found_monitor = false; // Only first resolution per monitor
+                        }
+                    }
+                }
+            }
+            if !resolutions.is_empty() {
+                return resolutions.join(", ");
+            }
+        }
+    }
+
+    // Try xrandr (X11 only — skip on pure Wayland)
+    let wayland = env_or("WAYLAND_DISPLAY");
+    if command_exists("xrandr") && wayland.is_empty() {
+        let out = run_cmd("xrandr", &["--current"]);
+        if !out.is_empty() {
+            let mut resolutions: Vec<String> = Vec::new();
+            for line in out.lines() {
+                if line.contains(" connected") {
+                    // Find resolution pattern like "1920x1080+0+0"
+                    for word in line.split_whitespace() {
+                        if word.contains('x')
+                            && word.chars().next().map_or(false, |c| c.is_ascii_digit())
+                        {
+                            let res = word.split('+').next().unwrap_or(word);
+                            resolutions.push(res.to_string());
+                            break;
+                        }
+                    }
