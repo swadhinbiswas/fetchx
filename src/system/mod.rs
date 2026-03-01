@@ -228,3 +228,83 @@ fn get_os() -> String {
         return uname;
     }
 
+    "Unknown".to_string()
+}
+
+fn get_host() -> String {
+    // DMI: product_name + product_version
+    let name = read_first_line("/sys/class/dmi/id/product_name");
+    let version = read_first_line("/sys/class/dmi/id/product_version");
+
+    if !name.is_empty() {
+        let name = filter_oem(&name);
+        if name.is_empty() {
+            return "Unknown".to_string();
+        }
+        let version = filter_oem(&version);
+        if !version.is_empty() {
+            return format!("{} {}", name, version);
+        }
+        return name;
+    }
+
+    // dmidecode fallback
+    let dmi = run_cmd("dmidecode", &["-s", "system-product-name"]);
+    let dmi = filter_oem(&dmi);
+    if !dmi.is_empty() {
+        return dmi;
+    }
+
+    "Unknown".to_string()
+}
+
+fn filter_oem(s: &str) -> String {
+    let s = s.trim();
+    let lc = s.to_lowercase();
+    if lc.is_empty()
+        || lc == "to be filled by o.e.m."
+        || lc == "not applicable"
+        || lc == "system product name"
+        || lc == "type1productconfigid"
+        || lc == "default string"
+        || lc == "undefined"
+        || lc == "not specified"
+        || lc == "none"
+    {
+        return String::new();
+    }
+    s.to_string()
+}
+
+fn get_kernel() -> String {
+    let k = run_cmd("uname", &["-r"]);
+    if k.is_empty() {
+        "Unknown".to_string()
+    } else {
+        k
+    }
+}
+
+fn get_uptime() -> String {
+    // /proc/uptime: "seconds.frac idle_seconds.frac"
+    let content = read_file("/proc/uptime");
+    if let Some(secs_str) = content.split_whitespace().next() {
+        if let Ok(secs_f) = secs_str.parse::<f64>() {
+            let secs = secs_f as u64;
+            return format_uptime(secs);
+        }
+    }
+    // Fallback
+    let up = run_cmd("uptime", &["-p"]);
+    if !up.is_empty() {
+        return up.trim_start_matches("up ").to_string();
+    }
+    "Unknown".to_string()
+}
+
+fn format_uptime(total_secs: u64) -> String {
+    let days = total_secs / 86400;
+    let hours = (total_secs % 86400) / 3600;
+    let mins = (total_secs % 3600) / 60;
+
+    let mut parts = Vec::new();
