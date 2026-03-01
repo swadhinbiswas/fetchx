@@ -1,18 +1,41 @@
 [package]
 name = "fetchx"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
-description = "A fast, modern system information tool written in Rust"
+authors = ["FetchX Contributors"]
+description = "A blazing-fast neofetch alternative — system information tool with image support, smart caching, 60+ distro logos, and Nerd Font icons"
+license = "MIT"
+repository = "https://github.com/swadhinbiswas/fetchx"
+keywords = ["neofetch", "system-info", "terminal", "fetch", "ascii-art"]
+categories = ["command-line-utilities"]
+readme = "README.md"
 
 [dependencies]
+# CLI argument parsing
 clap = { version = "4.4", features = ["derive"] }
+
+# Configuration
 serde = { version = "1.0", features = ["derive"] }
 toml = "0.8"
 dirs = "5.0"
-colored = "2.1"
+
+# Unicode width for proper terminal alignment
 unicode-width = "0.2"
-atty = "0.2"
-reqwest = { version = "0.11", features = ["blocking", "json"] }
-serde_json = "1.0"
-image = { version = "0.25", features = ["png", "jpeg", "gif", "webp"] }
+
+# Base64 encoding for kitty image protocol
 base64 = "0.22"
+
+# Image processing for image backends
+image = { version = "0.25", default-features = false, features = ["png", "jpeg", "gif", "webp"] }
+
+# HTTP requests for downloading images (blocking client)
+reqwest = { version = "0.11", features = ["blocking", "json"] }
+
+# JSON parsing
+serde_json = "1.0"
+
+[profile.release]
+lto = true
+codegen-units = 1
+opt-level = 3
+strip = true
