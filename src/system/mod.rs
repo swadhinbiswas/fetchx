@@ -678,3 +678,73 @@ fn get_de_version(de: &str) -> String {
     let de_lower = de.to_lowercase();
     if de_lower.contains("gnome") || de_lower.contains("unity") {
         let out = run_cmd("gnome-shell", &["--version"]);
+        // "GNOME Shell 45.2" → "45.2"
+        if let Some(v) = out.split_whitespace().last() {
+            if v.chars().next().map_or(false, |c| c.is_ascii_digit()) {
+                return v.to_string();
+            }
+        }
+    }
+    if de_lower.contains("kde") || de_lower.contains("plasma") {
+        let out = run_cmd("plasmashell", &["--version"]);
+        // "plasmashell 5.27.10" or "plasmashell 6.0.2"
+        if let Some(v) = out.split_whitespace().last() {
+            if v.chars().next().map_or(false, |c| c.is_ascii_digit()) {
+                return v.to_string();
+            }
+        }
+    }
+    if de_lower.contains("xfce") {
+        let out = run_cmd("xfce4-session", &["--version"]);
+        for line in out.lines() {
+            if line.contains("xfce4-session") || line.contains("xfce") {
+                if let Some(v) = line.split_whitespace().last() {
+                    if v.chars().next().map_or(false, |c| c.is_ascii_digit()) {
+                        return v.to_string();
+                    }
+                }
+            }
+        }
+    }
+    if de_lower.contains("cinnamon") {
+        let out = run_cmd("cinnamon", &["--version"]);
+        if let Some(v) = out.split_whitespace().last() {
+            if v.chars().next().map_or(false, |c| c.is_ascii_digit()) {
+                return v.to_string();
+            }
+        }
+    }
+    if de_lower.contains("mate") {
+        let out = run_cmd("mate-session", &["--version"]);
+        if let Some(v) = out.split_whitespace().last() {
+            if v.chars().next().map_or(false, |c| c.is_ascii_digit()) {
+                return v.to_string();
+            }
+        }
+    }
+    if de_lower.contains("lxqt") {
+        let out = run_cmd("lxqt-about", &["--version"]);
+        if let Some(v) = out.split_whitespace().last() {
+            if v.chars().next().map_or(false, |c| c.is_ascii_digit()) {
+                return v.to_string();
+            }
+        }
+    }
+    if de_lower.contains("budgie") {
+        let out = run_cmd("budgie-desktop", &["--version"]);
+        if let Some(v) = out.split_whitespace().last() {
+            if v.chars().next().map_or(false, |c| c.is_ascii_digit()) {
+                return v.to_string();
+            }
+        }
+    }
+    String::new()
+}
+
+fn get_wm() -> String {
+    // Check for Wayland compositors
+    let wayland = env_or("WAYLAND_DISPLAY");
+    if !wayland.is_empty() {
+        let xdg = env_or("XDG_CURRENT_DESKTOP").to_lowercase();
+        if xdg.contains("hyprland") {
+            return "Hyprland".to_string();
