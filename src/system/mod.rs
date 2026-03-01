@@ -308,3 +308,73 @@ fn format_uptime(total_secs: u64) -> String {
     let mins = (total_secs % 3600) / 60;
 
     let mut parts = Vec::new();
+    if days > 0 {
+        parts.push(if days == 1 {
+            "1 day".to_string()
+        } else {
+            format!("{} days", days)
+        });
+    }
+    if hours > 0 {
+        parts.push(if hours == 1 {
+            "1 hour".to_string()
+        } else {
+            format!("{} hours", hours)
+        });
+    }
+    if mins > 0 || parts.is_empty() {
+        parts.push(if mins == 1 {
+            "1 min".to_string()
+        } else {
+            format!("{} mins", mins)
+        });
+    }
+    parts.join(", ")
+}
+
+fn get_packages() -> String {
+    let mut managers: Vec<String> = Vec::new();
+
+    // pacman
+    if Path::new("/var/lib/pacman/local").exists() {
+        if let Ok(entries) = std::fs::read_dir("/var/lib/pacman/local") {
+            let count = entries
+                .filter_map(|e| e.ok())
+                .filter(|e| e.path().is_dir())
+                .count()
+                .saturating_sub(1); // subtract the ALPM_DB_VERSION dir
+            if count > 0 {
+                managers.push(format!("{} (pacman)", count));
+            }
+        }
+    }
+
+    // dpkg
+    if Path::new("/var/lib/dpkg/status").exists() {
+        let content = read_file("/var/lib/dpkg/status");
+        let count = content
+            .split("\n\n")
+            .filter(|block| {
+                block
+                    .lines()
+                    .any(|l| l.starts_with("Status: install ok installed"))
+            })
+            .count();
+        if count > 0 {
+            managers.push(format!("{} (dpkg)", count));
+        }
+    }
+
+    // rpm
+    if command_exists("rpm") {
+        let out = run_cmd("rpm", &["-qa", "--last"]);
+        if !out.is_empty() {
+            let count = out.lines().count();
+            if count > 0 {
+                managers.push(format!("{} (rpm)", count));
+            }
+        }
+    }
+
+    // portage (Gentoo)
+    if Path::new("/var/db/pkg").exists() && command_exists("qlist") {
