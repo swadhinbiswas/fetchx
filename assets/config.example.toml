@@ -1,0 +1,153 @@
+# =============================================================================
+# FetchX Configuration File
+# Location: ~/.config/fetchx/config.toml
+#
+# FetchX is a fast, modern system info tool (neofetch clone in Rust).
+# All options have sensible defaults — only set what you want to change.
+# =============================================================================
+
+# ─── Display Options ─────────────────────────────────────────────────────────
+
+# Disable all colors
+# no_color = false
+
+# Enable bold text
+# bold = true
+
+# Separator between label and value
+# separator = ": "
+
+
+# ─── Text Colors ─────────────────────────────────────────────────────────────
+# Either "distro" for automatic color matching, or an array of 6 color numbers:
+#   [title, @, underline, subtitle, colon, info]
+#
+# Color numbers: 0=black, 1=red, 2=green, 3=yellow, 4=blue,
+#                5=magenta, 6=cyan, 7=white, 8-255=256-color palette
+#
+# Examples:
+#   colors = "distro"             # auto-detect from distro (default)
+#   colors = [4, 6, 1, 8, 8, 6]  # blue title, cyan @, red underline, etc.
+#   colors = [6, 6]               # cyan title & subtitle, rest default
+colors = "distro"
+
+
+# ─── ASCII Art / Logo ────────────────────────────────────────────────────────
+
+# Image backend: "ascii", "kitty", "sixel", "chafa", "off"
+# image_backend = "ascii"
+
+# Image source: "auto", "ascii", "wallpaper", "/path/to/image.png"
+# image_source = "auto"
+
+# Which distro's ASCII art to display (when image_backend = "ascii")
+# Values: "auto", "arch", "ubuntu", "debian", "fedora", "gentoo", "nixos",
+#         "manjaro", "void", "pop", "cachyos", "endeavouros", "artix", "kali",
+#         "opensuse", "linuxmint", "alpine", "garuda", "zorin", "elementary",
+#         "rocky", "alma", "slackware", "centos", "solus", "deepin", "mx",
+#         "raspbian", "freebsd", "openbsd", "macos", "windows", "android"
+# ascii_distro = "auto"
+
+# Path to a custom ASCII art file (overrides ascii_distro when set)
+# The file can use {c1}..{c6} color placeholders, one line per line of art.
+# Example: ascii_file = "/home/user/.config/fetchx/my_logo.txt"
+# ascii_file = null
+
+# Colors for ASCII art: "distro" or explicit color numbers
+# Examples:
+#   ascii_colors = "distro"       # use distro's default colors
+#   ascii_colors = [4, 6, 1]      # custom colors for {c1}, {c2}, {c3}
+ascii_colors = "distro"
+
+# Bold the ASCII art
+# ascii_bold = true
+
+
+# ─── Image Options (for kitty/sixel/chafa backends) ──────────────────────────
+
+# Path to a custom image file
+# custom_image = "/path/to/image.png"
+
+# Image size: "auto", "none", or dimensions like "300px", "50%"
+# image_size = "auto"
+
+# Crop mode: "normal", "fit", "fill"
+# crop_mode = "normal"
+
+# Crop offset: "center", "north", "south", "east", "west",
+#              "northwest", "northeast", "southwest", "southeast"
+# crop_offset = "center"
+
+
+# ─── Extra Features ──────────────────────────────────────────────────────────
+
+# Use emoji art instead of ASCII art
+# emoji_mode = false
+
+# Use Nerd Font icons for info labels (requires a Nerd Font terminal font)
+# nerd_font = false
+
+
+# ─── Layout ──────────────────────────────────────────────────────────────────
+
+# Gap between logo/image and info text (characters)
+# gap = 3
+
+# Show only the logo, hide system info
+# logo_only = false
+
+
+# ─── Info Fields ─────────────────────────────────────────────────────────────
+# Toggle which info lines to display
+
+show_title = true
+show_underline = true
+show_os = true
+show_host = true
+show_kernel = true
+show_uptime = true
+show_packages = true
+show_shell = true
+show_resolution = true
+show_de = true
+show_wm = true
+show_wm_theme = true
+show_theme = true
+show_icons = true
+show_terminal = true
+show_term_font = true
+show_cpu = true
+show_gpu = true
+show_memory = true
+show_disk = false
+show_battery = false
+show_local_ip = false
+show_public_ip = false
+show_locale = false
+show_colors = true
+
+
+# ─── Color Blocks ───────────────────────────────────────────────────────────
+
+# Range of colors to display in color blocks
+# Default shows all 16 standard terminal colors (0-15)
+# block_range = [0, 15]
+
+# Width of each color block (in spaces)
+# block_width = 3
+
+# Height of color blocks (in lines)
+# block_height = 1
+
+
+# ─── Underline ───────────────────────────────────────────────────────────────
+
+# Character used for the title underline
+# underline_char = "-"
+
+
+# ─── Misc ────────────────────────────────────────────────────────────────────
+
+# Stdout mode: disable colors and image (useful for piping)
+# stdout = false
+
