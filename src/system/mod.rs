@@ -598,3 +598,83 @@ fn get_resolution() -> String {
                             break;
                         }
                     }
+                }
+            }
+            if !resolutions.is_empty() {
+                return resolutions.join(", ");
+            }
+        }
+    }
+
+    // Try wlr-randr (Wayland)
+    if command_exists("wlr-randr") {
+        let out = run_cmd("wlr-randr", &[]);
+        if !out.is_empty() {
+            let mut resolutions: Vec<String> = Vec::new();
+            for line in out.lines() {
+                let trimmed = line.trim();
+                if trimmed.contains("current") {
+                    // "1920x1080 px, 60.000000 Hz (current)"
+                    if let Some(res) = trimmed.split_whitespace().next() {
+                        if res.contains('x') {
+                            resolutions.push(res.to_string());
+                        }
+                    }
+                }
+            }
+            if !resolutions.is_empty() {
+                return resolutions.join(", ");
+            }
+        }
+    }
+
+    // /sys/class/drm fallback (like neofetch)
+    if let Ok(entries) = std::fs::read_dir("/sys/class/drm") {
+        let mut resolutions: Vec<String> = Vec::new();
+        for entry in entries.flatten() {
+            let modes_path = entry.path().join("modes");
+            if modes_path.exists() {
+                let mode = read_first_line(modes_path.to_str().unwrap_or(""));
+                if !mode.is_empty() && mode.contains('x') {
+                    resolutions.push(mode);
+                }
+            }
+        }
+        if !resolutions.is_empty() {
+            // Deduplicate
+            resolutions.sort();
+            resolutions.dedup();
+            return resolutions.join(", ");
+        }
+    }
+
+    "Unknown".to_string()
+}
+
+fn get_de() -> String {
+    let de = env_or("XDG_CURRENT_DESKTOP");
+    let de_name = if !de.is_empty() {
+        de
+    } else {
+        let session = env_or("DESKTOP_SESSION");
+        if !session.is_empty() {
+            session
+        } else {
+            return "Unknown".to_string();
+        }
+    };
+
+    // Try to get version for known DEs
+    let version = get_de_version(&de_name);
+    if version.is_empty() {
+        de_name
+    } else {
+        format!("{} {}", de_name, version)
+    }
+}
+
+/// Detect DE version for known desktop environments (like neofetch).
+fn get_de_version(de: &str) -> String {
+    let de_lower = de.to_lowercase();
+    if de_lower.contains("gnome") || de_lower.contains("unity") {
+        let out = run_cmd("gnome-shell", &["--version"]);
