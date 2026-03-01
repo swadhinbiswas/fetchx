@@ -48,3 +48,53 @@ pub struct Config {
 
     // ── ASCII / Logo options ─────────────────────────────────────
 
+    /// Image backend: "ascii", "kitty", "sixel", "chafa", "off"
+    #[serde(default = "default_ascii")]
+    pub image_backend: String,
+
+    /// Image source: "auto", "ascii", "wallpaper", "/path/to/image"
+    #[serde(default = "default_auto")]
+    pub image_source: String,
+
+    /// Which distro's ASCII art to display: "auto", "arch", "ubuntu", etc.
+    #[serde(default = "default_auto")]
+    pub ascii_distro: String,
+
+    /// Path to a custom ASCII art file (overrides ascii_distro)
+    /// The file can contain {c1}..{c6} color placeholders
+    #[serde(default)]
+    pub ascii_file: Option<String>,
+
+    /// Colors for ASCII art: "distro" or explicit [6, 6, 7, 1]
+    #[serde(default)]
+    pub ascii_colors: ColorConfig,
+
+    /// Bold the ASCII art
+    #[serde(default = "default_true")]
+    pub ascii_bold: bool,
+
+    // ── Image options ────────────────────────────────────────────
+
+    /// Path to custom image to display (for kitty/sixel/chafa backends)
+    #[serde(default)]
+    pub custom_image: Option<String>,
+
+    /// Image size: "auto", "none", or "NNpx" / "NN%"
+    #[serde(default = "default_auto")]
+    pub image_size: String,
+
+    /// Crop mode: "normal", "fit", "fill"
+    #[serde(default = "default_normal")]
+    pub crop_mode: String,
+
+    /// Crop offset: "center", "north", "south", "east", "west", etc.
+    #[serde(default = "default_center")]
+    pub crop_offset: String,
+
+    // ── Extra features ───────────────────────────────────────────
+
+    /// Use emoji art instead of ASCII art
+    #[serde(default = "default_false")]
+    pub emoji_mode: bool,
+
+    /// Use Nerd Font icons for info labels
