@@ -98,3 +98,53 @@ impl SystemInfo {
             packages,
             shell,
             resolution,
+            de,
+            wm,
+            wm_theme,
+            theme,
+            icons,
+            terminal,
+            term_font,
+            cpu,
+            gpu,
+            memory,
+            memory_percent,
+            disk,
+            disk_percent,
+            battery,
+            local_ip,
+            public_ip,
+            locale,
+            song,
+            users,
+        }
+    }
+
+    /// Format the title line: user@host
+    #[allow(dead_code)]
+    pub fn title(&self) -> String {
+        format!("{}@{}", self.username, self.hostname)
+    }
+}
+
+// ─── Detection Functions ────────────────────────────────────────────
+
+fn get_username() -> String {
+    let user = env_or("USER");
+    if !user.is_empty() {
+        return user;
+    }
+    let logname = env_or("LOGNAME");
+    if !logname.is_empty() {
+        return logname;
+    }
+    let whoami = run_cmd("whoami", &[]);
+    if !whoami.is_empty() {
+        return whoami;
+    }
+    "unknown".to_string()
+}
+
+// Helper trait: allow Option-like behavior on String
+#[allow(dead_code)]
+trait OrElseStr {
