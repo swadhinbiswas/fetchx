@@ -78,3 +78,53 @@ impl ColorScheme {
         } else {
             color(c1)
         };
+
+        // If the second color is 7 or 8, subtitle uses the first color instead
+        let subtitle = if c2 == 7 || c2 == 8 {
+            if c1 == 8 || c1 == 7 {
+                RESET.to_string()
+            } else {
+                color(c1)
+            }
+        } else {
+            color(c2)
+        };
+
+        Self {
+            c,
+            title,
+            at: RESET.to_string(),
+            underline: RESET.to_string(),
+            subtitle,
+            colon: RESET.to_string(),
+            info: RESET.to_string(),
+            ascii_bold: bold,
+        }
+    }
+
+    /// Create a no-color scheme (for --stdout / --no-color).
+    pub fn plain() -> Self {
+        Self {
+            c: Default::default(),
+            title: String::new(),
+            at: String::new(),
+            underline: String::new(),
+            subtitle: String::new(),
+            colon: String::new(),
+            info: String::new(),
+            ascii_bold: false,
+        }
+    }
+}
+
+impl Default for ColorScheme {
+    fn default() -> Self {
+        Self::from_colors(&[6, 6, 7, 1], true)
+    }
+}
+
+/// Generate color blocks matching neofetch's get_cols().
+/// Colors 0-7 use standard ANSI (fg+bg), colors 8+ use 256-color mode.
+/// Blocks are split into two rows: standard (0-7) and extended (8+).
+pub fn color_blocks(start: u8, end: u8, width: usize) -> Vec<String> {
+    let block = "\u{2588}".repeat(width); // █ repeated
