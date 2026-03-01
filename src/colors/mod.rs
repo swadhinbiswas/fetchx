@@ -178,3 +178,53 @@ pub fn progress_bar(percent: f64, width: usize, bar_color: &str) -> String {
 /// Apply a gradient effect to text using 256-color (or RGB) ANSI codes.
 /// Interpolates between `start_color` (r,g,b) and `end_color` (r,g,b) across the text.
 #[allow(dead_code)]
+pub fn gradient_text(text: &str, start: (u8, u8, u8), end: (u8, u8, u8)) -> String {
+    let chars: Vec<char> = text.chars().collect();
+    let len = chars.len();
+    if len == 0 {
+        return String::new();
+    }
+
+    let mut result = String::with_capacity(text.len() * 20);
+    for (i, ch) in chars.iter().enumerate() {
+        let t = if len > 1 {
+            i as f64 / (len - 1) as f64
+        } else {
+            0.0
+        };
+        let r = (start.0 as f64 + (end.0 as f64 - start.0 as f64) * t) as u8;
+        let g = (start.1 as f64 + (end.1 as f64 - start.1 as f64) * t) as u8;
+        let b = (start.2 as f64 + (end.2 as f64 - start.2 as f64) * t) as u8;
+        result.push_str(&format!("\x1b[38;2;{};{};{}m{}", r, g, b, ch));
+    }
+    result.push_str(RESET);
+    result
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_color_standard() {
+        assert_eq!(color(0), "\x1b[0m\x1b[30m");
+        assert_eq!(color(1), "\x1b[0m\x1b[31m");
+        assert_eq!(color(7), "\x1b[0m\x1b[37m");
+    }
+
+    #[test]
+    fn test_color_256() {
+        assert_eq!(color(8), "\x1b[38;5;8m");
+        assert_eq!(color(255), "\x1b[38;5;255m");
+    }
+
+    #[test]
+    fn test_color_scheme_from_colors() {
+        let scheme = ColorScheme::from_colors(&[6, 6, 7, 1], true);
+        assert_eq!(scheme.c.len(), 6);
+        // c1 should be cyan (6)
+        assert!(scheme.c[0].contains("\x1b[36m"));
+    }
+
+    #[test]
+    fn test_color_scheme_plain() {
