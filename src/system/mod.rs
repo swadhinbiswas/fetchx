@@ -448,3 +448,83 @@ fn get_packages() -> String {
         if !out.is_empty() {
             let count = out.lines().count();
             if count > 0 {
+                managers.push(format!("{} (brew)", count));
+            }
+        }
+    }
+
+    if managers.is_empty() {
+        return "Unknown".to_string();
+    }
+
+    // Format like neofetch's 'on' mode: "142 (pacman), 12 (flatpak)"
+    if managers.len() == 1 {
+        managers[0].clone()
+    } else {
+        managers.join(", ")
+    }
+}
+
+fn get_shell() -> String {
+    let shell_path = env_or("SHELL");
+    if shell_path.is_empty() {
+        return "Unknown".to_string();
+    }
+
+    let shell_name = shell_path.split('/').last().unwrap_or("Unknown");
+
+    // Get version
+    let version = match shell_name {
+        "bash" => {
+            // Use single-quoted command to avoid expanding $BASH_VERSION in the parent shell
+            let v = run_cmd("bash", &["-c", "printf '%s' \"$BASH_VERSION\""]);
+            if !v.is_empty() {
+                // Strip everything after first '-' (like neofetch: ${BASH_VERSION/-*})
+                v.split('-').next().unwrap_or(&v).to_string()
+            } else {
+                run_cmd("bash", &["--version"])
+                    .lines()
+                    .next()
+                    .unwrap_or("")
+                    .split_whitespace()
+                    .nth(3)
+                    .unwrap_or("")
+                    .split('-')
+                    .next()
+                    .unwrap_or("")
+                    .to_string()
+            }
+        }
+        "zsh" => run_cmd("zsh", &["--version"])
+            .split_whitespace()
+            .nth(1)
+            .unwrap_or("")
+            .to_string(),
+        "fish" => run_cmd("fish", &["--version"]).replace("fish, version ", ""),
+        "ksh" | "mksh" => run_cmd(shell_name, &["-c", "echo $KSH_VERSION"]),
+        "tcsh" => run_cmd("tcsh", &["--version"])
+            .split_whitespace()
+            .nth(1)
+            .unwrap_or("")
+            .to_string(),
+        "nu" | "nushell" => run_cmd("nu", &["--version"]),
+        _ => String::new(),
+    };
+
+    if version.is_empty() {
+        shell_name.to_string()
+    } else {
+        format!("{} {}", shell_name, version)
+    }
+}
+
+fn get_resolution() -> String {
+    // Try hyprctl first for Hyprland (Wayland)
+    if command_exists("hyprctl") {
+        let out = run_cmd("hyprctl", &["monitors", "-j"]);
+        if !out.is_empty() && out.starts_with('[') {
+            // Parse JSON-like output for width/height
+            let mut resolutions: Vec<String> = Vec::new();
+            // Simple extraction: find "width": N and "height": N pairs
+            let mut i = 0;
+            let chars: Vec<char> = out.chars().collect();
