@@ -278,3 +278,73 @@ impl Default for Config {
             show_wm: true,
             show_wm_theme: true,
             show_theme: true,
+            show_icons: true,
+            show_terminal: true,
+            show_term_font: true,
+            show_cpu: true,
+            show_gpu: true,
+            show_memory: true,
+            show_disk: false,
+            show_battery: false,
+            show_local_ip: false,
+            show_public_ip: false,
+            show_locale: false,
+            show_song: false,
+            show_users: false,
+            show_colors: true,
+            memory_bar: false,
+            disk_bar: false,
+            bar_width: 15,
+            block_range: (0, 15),
+            block_width: 3,
+            block_height: 1,
+            underline_char: "-".to_string(),
+            stdout: false,
+        }
+    }
+}
+
+impl Config {
+    /// Get the path to the config file.
+    pub fn config_path() -> PathBuf {
+        dirs::config_dir()
+            .unwrap_or_else(|| PathBuf::from(".config"))
+            .join("fetchx")
+            .join("config.toml")
+    }
+
+    /// Load config from file, or return defaults if not found.
+    pub fn load_or_default() -> Self {
+        let path = Self::config_path();
+        if path.exists() {
+            if let Ok(content) = std::fs::read_to_string(&path) {
+                match toml::from_str::<Config>(&content) {
+                    Ok(config) => return config,
+                    Err(e) => {
+                        eprintln!(
+                            "\x1b[33m[fetchx] Warning: config parse error: {}\x1b[0m",
+                            e
+                        );
+                        eprintln!(
+                            "\x1b[33m[fetchx] Using default config. Fix: {}\x1b[0m",
+                            path.display()
+                        );
+                    }
+                }
+            }
+        }
+        Self::default()
+    }
+
+    /// Return the default config as a TOML string.
+    #[allow(dead_code)]
+    pub fn default_toml() -> String {
+        toml::to_string_pretty(&Config::default()).unwrap_or_else(|_| "# error".to_string())
+    }
+
+    /// Return the full documented example config.
+    pub fn example_config() -> String {
+        EXAMPLE_CONFIG.to_string()
+    }
+
+    /// Create the config file with example content if it doesn't exist.
