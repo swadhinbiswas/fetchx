@@ -148,3 +148,83 @@ fn get_username() -> String {
 // Helper trait: allow Option-like behavior on String
 #[allow(dead_code)]
 trait OrElseStr {
+    fn or_else_str<F: FnOnce() -> String>(self, f: F) -> String;
+}
+impl OrElseStr for String {
+    fn or_else_str<F: FnOnce() -> String>(self, f: F) -> String {
+        if self.is_empty() {
+            f()
+        } else {
+            self
+        }
+    }
+}
+
+fn get_hostname() -> String {
+    let h = read_first_line("/etc/hostname");
+    if !h.is_empty() {
+        return h;
+    }
+    run_cmd("hostname", &[])
+}
+
+fn detect_distro_id() -> String {
+    let content = read_file("/etc/os-release");
+    for line in content.lines() {
+        if let Some(val) = line.strip_prefix("ID=") {
+            return val.trim_matches('"').to_lowercase();
+        }
+    }
+    "linux".to_string()
+}
+
+fn get_os() -> String {
+    // Try /etc/os-release PRETTY_NAME first
+    let content = read_file("/etc/os-release");
+    if !content.is_empty() {
+        let mut pretty = String::new();
+        let mut name = String::new();
+        let mut version = String::new();
+        for line in content.lines() {
+            if let Some(val) = line.strip_prefix("PRETTY_NAME=") {
+                pretty = val.trim_matches('"').to_string();
+            } else if let Some(val) = line.strip_prefix("NAME=") {
+                name = val.trim_matches('"').to_string();
+            } else if let Some(val) = line.strip_prefix("VERSION=") {
+                version = val.trim_matches('"').to_string();
+            }
+        }
+        if !pretty.is_empty() {
+            // Append arch
+            let arch = run_cmd("uname", &["-m"]);
+            if !arch.is_empty() {
+                return format!("{} {}", pretty, arch);
+            }
+            return pretty;
+        }
+        if !name.is_empty() {
+            let arch = run_cmd("uname", &["-m"]);
+            let base = if !version.is_empty() {
+                format!("{} {}", name, version)
+            } else {
+                name
+            };
+            if !arch.is_empty() {
+                return format!("{} {}", base, arch);
+            }
+            return base;
+        }
+    }
+
+    // lsb_release fallback
+    let lsb = run_cmd("lsb_release", &["-d", "-s"]);
+    if !lsb.is_empty() {
+        return lsb;
+    }
+
+    // uname fallback
+    let uname = run_cmd("uname", &["-o"]);
+    if !uname.is_empty() {
+        return uname;
+    }
+
