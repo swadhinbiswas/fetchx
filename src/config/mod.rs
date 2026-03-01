@@ -158,3 +158,63 @@ pub struct Config {
     #[serde(default = "default_false")]
     pub show_local_ip: bool,
     #[serde(default = "default_false")]
+    pub show_public_ip: bool,
+    #[serde(default = "default_false")]
+    pub show_locale: bool,
+    #[serde(default = "default_false")]
+    pub show_song: bool,
+    #[serde(default = "default_false")]
+    pub show_users: bool,
+    #[serde(default = "default_true")]
+    pub show_colors: bool,
+
+    // ── Progress bars ────────────────────────────────────────────
+
+    /// Show progress bar next to memory percentage
+    #[serde(default = "default_false")]
+    pub memory_bar: bool,
+
+    /// Show progress bar next to disk percentage
+    #[serde(default = "default_false")]
+    pub disk_bar: bool,
+
+    /// Width of progress bars (in chars)
+    #[serde(default = "default_bar_width")]
+    pub bar_width: usize,
+
+    // ── Color blocks ─────────────────────────────────────────────
+
+    #[serde(default = "default_block_range")]
+    pub block_range: (u8, u8),
+    #[serde(default = "default_block_width")]
+    pub block_width: usize,
+    #[serde(default = "default_block_height")]
+    pub block_height: usize,
+
+    // ── Underline ────────────────────────────────────────────────
+
+    /// Underline character (neofetch defaults to "-")
+    #[serde(default = "default_underline_char")]
+    pub underline_char: String,
+
+    // ── Misc ─────────────────────────────────────────────────────
+
+    /// Stdout mode — disable colors & image backend (for piping)
+    #[serde(default = "default_false")]
+    pub stdout: bool,
+}
+
+fn default_true() -> bool {
+    true
+}
+fn default_false() -> bool {
+    false
+}
+fn default_ascii() -> String {
+    "ascii".to_string()
+}
+fn default_auto() -> String {
+    "auto".to_string()
+}
+fn default_normal() -> String {
+    "normal".to_string()
