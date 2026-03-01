@@ -488,3 +488,73 @@ show_de = true
 show_wm = true
 show_wm_theme = true
 show_theme = true
+show_icons = true
+show_terminal = true
+show_term_font = true
+show_cpu = true
+show_gpu = true
+show_memory = true
+show_disk = false
+show_battery = false
+show_local_ip = false
+show_public_ip = false
+show_locale = false
+show_song = false
+show_users = false
+show_colors = true
+
+
+# ─── Progress Bars ──────────────────────────────────────────────────────────
+# Show progress bars alongside memory/disk usage
+
+# Show a progress bar next to memory info
+# memory_bar = false
+
+# Show a progress bar next to disk info
+# disk_bar = false
+
+# Width of progress bars (in characters)
+# bar_width = 15
+
+
+# ─── Color Blocks ───────────────────────────────────────────────────────────
+
+# Range of colors to display in color blocks
+# Default shows all 16 standard terminal colors (0-15)
+# block_range = [0, 15]
+
+# Width of each color block (in spaces)
+# block_width = 3
+
+# Height of color blocks (in lines)
+# block_height = 1
+
+
+# ─── Underline ───────────────────────────────────────────────────────────────
+
+# Character used for the title underline
+# underline_char = "-"
+
+
+# ─── Misc ────────────────────────────────────────────────────────────────────
+
+# Stdout mode: disable colors and image (useful for piping)
+# stdout = false
+"##;
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_default_config() {
+        let config = Config::default();
+        assert_eq!(config.separator, ": ");
+        assert!(!config.no_color);
+        assert!(config.bold);
+        assert!(config.show_title);
+        assert!(config.show_os);
+        assert!(config.show_cpu);
+        assert!(config.show_memory);
+        assert!(!config.show_disk);
+        assert!(!config.show_battery);
