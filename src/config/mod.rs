@@ -558,3 +558,96 @@ mod tests {
         assert!(config.show_memory);
         assert!(!config.show_disk);
         assert!(!config.show_battery);
+        assert!(!config.show_song);
+        assert!(!config.show_users);
+        assert!(!config.memory_bar);
+        assert!(!config.disk_bar);
+        assert_eq!(config.bar_width, 15);
+        assert_eq!(config.gap, 3);
+        assert_eq!(config.image_backend, "ascii");
+        assert_eq!(config.block_range, (0, 15));
+    }
+
+    #[test]
+    fn test_color_config_distro() {
+        let cc = ColorConfig::Auto("distro".to_string());
+        assert!(cc.is_distro());
+    }
+
+    #[test]
+    fn test_color_config_numbers() {
+        let cc = ColorConfig::Numbers(vec![1, 2, 3]);
+        assert!(!cc.is_distro());
+    }
+
+    #[test]
+    fn test_config_parse_minimal_toml() {
+        let toml_str = r#"
+            no_color = true
+            separator = " => "
+        "#;
+        let config: Config = toml::from_str(toml_str).unwrap();
+        assert!(config.no_color);
+        assert_eq!(config.separator, " => ");
+        // Defaults should fill in
+        assert!(config.show_title);
+        assert_eq!(config.gap, 3);
+    }
+
+    #[test]
+    fn test_config_parse_colors_distro() {
+        let toml_str = r#"colors = "distro""#;
+        let config: Config = toml::from_str(toml_str).unwrap();
+        assert!(config.colors.is_distro());
+    }
+
+    #[test]
+    fn test_config_parse_colors_numbers() {
+        let toml_str = r#"colors = [4, 6, 1, 8]"#;
+        let config: Config = toml::from_str(toml_str).unwrap();
+        match config.colors {
+            ColorConfig::Numbers(nums) => assert_eq!(nums, vec![4, 6, 1, 8]),
+            _ => panic!("Expected Numbers variant"),
+        }
+    }
+
+    #[test]
+    fn test_config_parse_bar_settings() {
+        let toml_str = r#"
+            memory_bar = true
+            disk_bar = true
+            bar_width = 20
+        "#;
+        let config: Config = toml::from_str(toml_str).unwrap();
+        assert!(config.memory_bar);
+        assert!(config.disk_bar);
+        assert_eq!(config.bar_width, 20);
+    }
+
+    #[test]
+    fn test_config_parse_song_users() {
+        let toml_str = r#"
+            show_song = true
+            show_users = true
+        "#;
+        let config: Config = toml::from_str(toml_str).unwrap();
+        assert!(config.show_song);
+        assert!(config.show_users);
+    }
+
+    #[test]
+    fn test_example_config_is_valid_toml() {
+        let result = toml::from_str::<Config>(EXAMPLE_CONFIG);
+        assert!(result.is_ok(), "EXAMPLE_CONFIG is not valid: {:?}", result.err());
+    }
+
+    #[test]
+    fn test_config_serialize_roundtrip() {
+        let config = Config::default();
+        let toml_str = toml::to_string_pretty(&config).unwrap();
+        let parsed: Config = toml::from_str(&toml_str).unwrap();
+        assert_eq!(parsed.separator, config.separator);
+        assert_eq!(parsed.gap, config.gap);
+        assert_eq!(parsed.no_color, config.no_color);
+    }
+}
