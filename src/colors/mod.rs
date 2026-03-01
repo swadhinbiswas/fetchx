@@ -128,3 +128,53 @@ impl Default for ColorScheme {
 /// Blocks are split into two rows: standard (0-7) and extended (8+).
 pub fn color_blocks(start: u8, end: u8, width: usize) -> Vec<String> {
     let block = "\u{2588}".repeat(width); // █ repeated
+    let mut row1 = String::new(); // standard colors 0-7
+    let mut row2 = String::new(); // extended colors 8+
+
+    for i in start..=end {
+        match i {
+            0..=7 => {
+                // Standard ANSI: set both fg and bg to same color
+                row1.push_str(&format!("\x1b[3{}m\x1b[4{}m{}", i, i, block));
+            }
+            _ => {
+                // 256-color mode: set both fg and bg
+                row2.push_str(&format!("\x1b[38;5;{}m\x1b[48;5;{}m{}", i, i, block));
+            }
+        }
+    }
+
+    let mut lines = Vec::new();
+    if !row1.is_empty() {
+        row1.push_str(RESET);
+        lines.push(row1);
+    }
+    if !row2.is_empty() {
+        row2.push_str(RESET);
+        lines.push(row2);
+    }
+    lines
+}
+
+/// Generate a progress bar for memory/disk usage.
+/// `percent` is 0-100. `width` is the total bar width in chars.
+/// Returns something like: `[████████░░░░░░░░] 50%`
+pub fn progress_bar(percent: f64, width: usize, bar_color: &str) -> String {
+    let pct = percent.clamp(0.0, 100.0);
+    let filled = ((pct / 100.0) * width as f64).round() as usize;
+    let empty = width.saturating_sub(filled);
+
+    let bar = format!(
+        "{}{}{}{}{}",
+        bar_color,
+        "█".repeat(filled),
+        RESET,
+        "░".repeat(empty),
+        RESET,
+    );
+    format!("[{}] {:.0}%", bar, pct)
+}
+
+/// Apply a gradient effect to text using 256-color (or RGB) ANSI codes.
+/// Interpolates between `start_color` (r,g,b) and `end_color` (r,g,b) across the text.
+#[allow(dead_code)]
