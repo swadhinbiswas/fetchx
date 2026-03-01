@@ -98,3 +98,53 @@ pub fn strip_ansi(s: &str) -> String {
                     chars.next();
                     if c == '(' || c == ')' {
                         chars.next(); // consume charset designator
+                    }
+                }
+                _ => {} // Lone ESC, skip it
+            }
+        } else {
+            result.push(ch);
+        }
+    }
+    result
+}
+
+/// Calculate the visible width of a string (strip ANSI, use unicode-width).
+pub fn visible_width(s: &str) -> usize {
+    use unicode_width::UnicodeWidthStr;
+    let stripped = strip_ansi(s);
+    UnicodeWidthStr::width(stripped.as_str())
+}
+
+/// Pad a string to a given visible width with spaces on the right.
+pub fn pad_right(s: &str, target_width: usize) -> String {
+    let current = visible_width(s);
+    if current >= target_width {
+        s.to_string()
+    } else {
+        format!("{}{}", s, " ".repeat(target_width - current))
+    }
+}
+
+/// Truncate a string (which may contain ANSI escapes) so its visible width
+/// does not exceed `max_width`. Preserves ANSI sequences but cuts visible chars.
+pub fn truncate_to_width(s: &str, max_width: usize) -> String {
+    use unicode_width::UnicodeWidthChar;
+    let mut result = String::with_capacity(s.len());
+    let mut vis_w: usize = 0;
+    let mut chars = s.chars().peekable();
+    while let Some(ch) = chars.next() {
+        if ch == '\x1b' {
+            // Pass through the entire escape sequence
+            result.push(ch);
+            match chars.peek() {
+                Some(&'[') => {
+                    result.push(chars.next().unwrap());
+                    while let Some(&c) = chars.peek() {
+                        result.push(chars.next().unwrap());
+                        if c.is_ascii_alphabetic() {
+                            break;
+                        }
+                    }
+                }
+                Some(&']') | Some(&'_') | Some(&'^') => {
