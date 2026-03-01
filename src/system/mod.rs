@@ -48,3 +48,53 @@ impl SystemInfo {
         let did = distro_id.clone();
 
         // Spawn threads for slow/independent operations
+        let h_packages = thread::spawn(get_packages);
+        let h_resolution = thread::spawn(get_resolution);
+        let h_gpu = thread::spawn(get_gpu);
+        let h_public_ip = thread::spawn(get_public_ip);
+        let h_song = thread::spawn(get_song);
+        let h_cpu = thread::spawn(get_cpu);
+        let h_term_font = thread::spawn(get_term_font);
+        let h_wm_theme = thread::spawn(get_wm_theme);
+
+        // Fast operations run on main thread
+        let username = get_username();
+        let hostname = get_hostname();
+        let os = get_os();
+        let host = get_host();
+        let kernel = get_kernel();
+        let uptime = get_uptime();
+        let shell = get_shell();
+        let de = get_de();
+        let wm = get_wm();
+        let theme = get_theme();
+        let icons = get_icons();
+        let terminal = get_terminal();
+        let (memory, memory_percent) = get_memory_with_percent();
+        let (disk, disk_percent) = get_disk_with_percent();
+        let battery = get_battery();
+        let local_ip = get_local_ip();
+        let locale = get_locale();
+        let users = get_users();
+
+        // Join threads
+        let packages = h_packages.join().unwrap_or_default();
+        let resolution = h_resolution.join().unwrap_or_default();
+        let gpu = h_gpu.join().unwrap_or_default();
+        let public_ip = h_public_ip.join().unwrap_or_else(|_| "Unknown".to_string());
+        let song = h_song.join().unwrap_or_default();
+        let cpu = h_cpu.join().unwrap_or_default();
+        let term_font = h_term_font.join().unwrap_or_default();
+        let wm_theme = h_wm_theme.join().unwrap_or_else(|_| "Unknown".to_string());
+
+        Self {
+            username,
+            hostname,
+            os,
+            distro_id: did,
+            host,
+            kernel,
+            uptime,
+            packages,
+            shell,
+            resolution,
