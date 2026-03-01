@@ -378,3 +378,73 @@ fn get_packages() -> String {
 
     // portage (Gentoo)
     if Path::new("/var/db/pkg").exists() && command_exists("qlist") {
+        let out = run_cmd("qlist", &["-I"]);
+        if !out.is_empty() {
+            let count = out.lines().count();
+            if count > 0 {
+                managers.push(format!("{} (portage)", count));
+            }
+        }
+    }
+
+    // xbps (Void)
+    if command_exists("xbps-query") {
+        let out = run_cmd("xbps-query", &["-l"]);
+        if !out.is_empty() {
+            let count = out.lines().count();
+            if count > 0 {
+                managers.push(format!("{} (xbps)", count));
+            }
+        }
+    }
+
+    // apk (Alpine)
+    if command_exists("apk") {
+        let out = run_cmd("apk", &["info"]);
+        if !out.is_empty() {
+            let count = out.lines().count();
+            if count > 0 {
+                managers.push(format!("{} (apk)", count));
+            }
+        }
+    }
+
+    // nix
+    if command_exists("nix-store") {
+        let out = run_cmd("nix-store", &["-qR", "/run/current-system/sw"]);
+        if !out.is_empty() {
+            let count = out.lines().count();
+            if count > 0 {
+                managers.push(format!("{} (nix)", count));
+            }
+        }
+    }
+
+    // flatpak
+    if command_exists("flatpak") {
+        let out = run_cmd("flatpak", &["list"]);
+        if !out.is_empty() {
+            let count = out.lines().count();
+            if count > 0 {
+                managers.push(format!("{} (flatpak)", count));
+            }
+        }
+    }
+
+    // snap
+    if command_exists("snap") {
+        let out = run_cmd("snap", &["list"]);
+        if !out.is_empty() {
+            let count = out.lines().filter(|l| !l.starts_with("Name")).count();
+            if count > 0 {
+                managers.push(format!("{} (snap)", count));
+            }
+        }
+    }
+
+    // brew
+    if command_exists("brew") {
+        let out = run_cmd("brew", &["list", "--formula", "-1"]);
+        if !out.is_empty() {
+            let count = out.lines().count();
+            if count > 0 {
