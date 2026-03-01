@@ -418,3 +418,73 @@ image_source = "auto"
 # Which distro's ASCII art to display (when using ASCII backend)
 # Values: "auto", "arch", "ubuntu", "debian", "fedora", "gentoo", "nixos",
 #         "manjaro", "void", "pop", "cachyos", "endeavouros", "artix", "kali",
+#         "opensuse", "linuxmint", "alpine", "garuda", "zorin", "elementary",
+#         "rocky", "alma", "slackware", "centos", "solus", "deepin", "mx",
+#         "raspbian", "freebsd", "openbsd", "macos", "windows", "android"
+ascii_distro = "auto"
+
+# Path to a custom ASCII art file (overrides ascii_distro when set)
+# The file can use {c1}..{c6} color placeholders, one line per line of art.
+# Example: ascii_file = "/home/user/.config/fetchx/my_logo.txt"
+# ascii_file = null
+
+# Colors for ASCII art: "distro" or explicit color numbers
+# Examples:
+#   ascii_colors = "distro"       # use distro's default colors
+#   ascii_colors = [4, 6, 1]      # custom colors for {c1}, {c2}, {c3}
+ascii_colors = "distro"
+
+# Bold the ASCII art
+# ascii_bold = true
+
+
+# ─── Image Options (for kitty/sixel/chafa backends) ──────────────────────────
+
+# Path to a custom image file
+# custom_image = "/path/to/image.png"
+
+# Image size: "auto", "none", or dimensions like "300px", "50%"
+# image_size = "auto"
+
+# Crop mode: "normal", "fit", "fill"
+# crop_mode = "normal"
+
+# Crop offset: "center", "north", "south", "east", "west",
+#              "northwest", "northeast", "southwest", "southeast"
+# crop_offset = "center"
+
+
+# ─── Extra Features ──────────────────────────────────────────────────────────
+
+# Use emoji art instead of ASCII art
+# emoji_mode = false
+
+# Use Nerd Font icons for info labels (requires a Nerd Font terminal font)
+# nerd_font = false
+
+
+# ─── Layout ──────────────────────────────────────────────────────────────────
+
+# Gap between logo/image and info text (characters)
+# gap = 3
+
+# Show only the logo, hide system info
+# logo_only = false
+
+
+# ─── Info Fields ─────────────────────────────────────────────────────────────
+# Toggle which info lines to display
+
+show_title = true
+show_underline = true
+show_os = true
+show_host = true
+show_kernel = true
+show_uptime = true
+show_packages = true
+show_shell = true
+show_resolution = true
+show_de = true
+show_wm = true
+show_wm_theme = true
+show_theme = true
