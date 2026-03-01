@@ -348,3 +348,73 @@ impl Config {
     }
 
     /// Create the config file with example content if it doesn't exist.
+    pub fn create_default_config() -> std::io::Result<PathBuf> {
+        let path = Self::config_path();
+        if !path.exists() {
+            if let Some(parent) = path.parent() {
+                std::fs::create_dir_all(parent)?;
+            }
+            std::fs::write(&path, EXAMPLE_CONFIG)?;
+        }
+        Ok(path)
+    }
+}
+
+/// Full documented example configuration
+const EXAMPLE_CONFIG: &str = r##"# =============================================================================
+# FetchX Configuration File
+# Location: ~/.config/fetchx/config.toml
+#
+# FetchX is a fast, modern system info tool (neofetch clone in Rust).
+# All options have sensible defaults — only set what you want to change.
+# =============================================================================
+
+# ─── Display Options ─────────────────────────────────────────────────────────
+
+# Disable all colors
+# no_color = false
+
+# Enable bold text
+# bold = true
+
+# Separator between label and value
+# separator = ": "
+
+
+# ─── Text Colors ─────────────────────────────────────────────────────────────
+# Either "distro" for automatic color matching, or an array of 6 color numbers:
+#   [title, @, underline, subtitle, colon, info]
+#
+# Color numbers: 0=black, 1=red, 2=green, 3=yellow, 4=blue,
+#                5=magenta, 6=cyan, 7=white, 8-255=256-color palette
+#
+# Examples:
+#   colors = "distro"             # auto-detect from distro (default)
+#   colors = [4, 6, 1, 8, 8, 6]  # blue title, cyan @, red underline, etc.
+#   colors = [6, 6]               # cyan title & subtitle, rest default
+colors = "distro"
+
+
+# ─── ASCII Art / Logo ────────────────────────────────────────────────────────
+
+# Image backend: "auto", "ascii", "kitty", "sixel", "chafa", "w3m", "iterm2", "off"
+# "auto" = auto-detect based on terminal capabilities (RECOMMENDED)
+# "ascii" = ASCII art logo (works everywhere)
+# "kitty" = Kitty terminal graphics protocol
+# "sixel" = Sixel graphics (requires img2sixel or chafa)
+# "chafa" = Chafa text-based image conversion (best fallback)
+# "w3m" = w3m image display (X11 only)
+# "iterm2" = iTerm2 inline images
+# "off" = no logo/image
+image_backend = "auto"
+
+# Image source: "auto", "ascii", "/path/to/image.png"
+# "auto" = automatically use cached image from API (downloads new ones every 6 hours)
+#          Shows previous image while downloading next one in background
+# "ascii" = only use ASCII art, never fetch images
+# "/path/to/image.png" = use specific image file
+image_source = "auto"
+
+# Which distro's ASCII art to display (when using ASCII backend)
+# Values: "auto", "arch", "ubuntu", "debian", "fedora", "gentoo", "nixos",
+#         "manjaro", "void", "pop", "cachyos", "endeavouros", "artix", "kali",
