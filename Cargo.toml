@@ -6,3 +6,5 @@ description = "A fast, modern system information tool written in Rust"
 
 [dependencies]
 clap = { version = "4.4", features = ["derive"] }
+serde = { version = "1.0", features = ["derive"] }
+toml = "0.8"
