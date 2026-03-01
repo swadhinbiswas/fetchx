@@ -148,3 +148,150 @@ pub fn truncate_to_width(s: &str, max_width: usize) -> String {
                     }
                 }
                 Some(&']') | Some(&'_') | Some(&'^') => {
+                    result.push(chars.next().unwrap());
+                    while let Some(c) = chars.next() {
+                        result.push(c);
+                        if c == '\x07' {
+                            break;
+                        }
+                        if c == '\x1b' {
+                            if chars.peek() == Some(&'\\') {
+                                result.push(chars.next().unwrap());
+                                break;
+                            }
+                        }
+                    }
+                }
+                Some(&c) if c.is_ascii_alphabetic() || c == '(' || c == ')' => {
+                    result.push(chars.next().unwrap());
+                    if c == '(' || c == ')' {
+                        if let Some(n) = chars.next() {
+                            result.push(n);
+                        }
+                    }
+                }
+                _ => {}
+            }
+        } else {
+            let cw = UnicodeWidthChar::width(ch).unwrap_or(0);
+            if vis_w + cw > max_width {
+                break;
+            }
+            vis_w += cw;
+            result.push(ch);
+        }
+    }
+    result
+}
+
+/// Get the home directory.
+pub fn home_dir() -> String {
+    std::env::var("HOME")
+        .or_else(|_| std::env::var("USERPROFILE"))
+        .unwrap_or_else(|_| "/root".to_string())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_strip_ansi_no_escapes() {
+        assert_eq!(strip_ansi("hello world"), "hello world");
+    }
+
+    #[test]
+    fn test_strip_ansi_csi() {
+        assert_eq!(strip_ansi("\x1b[31mred\x1b[0m"), "red");
+        assert_eq!(strip_ansi("\x1b[1;34mbold blue\x1b[0m"), "bold blue");
+    }
+
+    #[test]
+    fn test_strip_ansi_osc() {
+        assert_eq!(strip_ansi("\x1b]0;title\x07text"), "text");
+    }
+
+    #[test]
+    fn test_strip_ansi_complex() {
+        let s = "\x1b[36m\x1b[1mCPU\x1b[0m\x1b[0m: \x1b[0mi5-13600K";
+        assert_eq!(strip_ansi(s), "CPU: i5-13600K");
+    }
+
+    #[test]
+    fn test_visible_width_plain() {
+        assert_eq!(visible_width("hello"), 5);
+        assert_eq!(visible_width(""), 0);
+    }
+
+    #[test]
+    fn test_visible_width_with_ansi() {
+        assert_eq!(visible_width("\x1b[31mhello\x1b[0m"), 5);
+    }
+
+    #[test]
+    fn test_visible_width_unicode() {
+        // CJK characters are typically double-width
+        assert_eq!(visible_width("日本"), 4);
+    }
+
+    #[test]
+    fn test_pad_right() {
+        let padded = pad_right("hi", 10);
+        assert_eq!(visible_width(&padded), 10);
+        assert!(padded.starts_with("hi"));
+    }
+
+    #[test]
+    fn test_pad_right_already_wide() {
+        let padded = pad_right("hello world", 5);
+        assert_eq!(padded, "hello world");
+    }
+
+    #[test]
+    fn test_truncate_to_width_plain() {
+        let truncated = truncate_to_width("hello world", 5);
+        assert_eq!(truncated, "hello");
+    }
+
+    #[test]
+    fn test_truncate_to_width_with_ansi() {
+        let s = "\x1b[31mhello world\x1b[0m";
+        let truncated = truncate_to_width(s, 5);
+        // Should contain "hello" visible chars + ANSI prefix
+        assert_eq!(visible_width(&truncated), 5);
+        assert!(truncated.contains("hello"));
+    }
+
+    #[test]
+    fn test_truncate_to_width_no_cut() {
+        let s = "hi";
+        let truncated = truncate_to_width(s, 10);
+        assert_eq!(truncated, "hi");
+    }
+
+    #[test]
+    fn test_env_or() {
+        std::env::set_var("FETCHX_TEST_VAR", "test_value");
+        assert_eq!(env_or("FETCHX_TEST_VAR"), "test_value");
+        assert_eq!(env_or("FETCHX_NONEXISTENT_VAR_12345"), "");
+        std::env::remove_var("FETCHX_TEST_VAR");
+    }
+
+    #[test]
+    fn test_run_cmd() {
+        let result = run_cmd("echo", &["hello"]);
+        assert_eq!(result, "hello");
+    }
+
+    #[test]
+    fn test_run_cmd_failure() {
+        let result = run_cmd("nonexistent_command_12345", &[]);
+        assert_eq!(result, "");
+    }
+
+    #[test]
+    fn test_command_exists() {
+        assert!(command_exists("echo"));
+        assert!(!command_exists("nonexistent_command_12345"));
+    }
+}
