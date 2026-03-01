@@ -228,3 +228,68 @@ mod tests {
 
     #[test]
     fn test_color_scheme_plain() {
+        let scheme = ColorScheme::plain();
+        assert!(scheme.title.is_empty());
+        assert!(scheme.subtitle.is_empty());
+    }
+
+    #[test]
+    fn test_color_blocks() {
+        let blocks = color_blocks(0, 7, 3);
+        assert!(!blocks.is_empty());
+        assert!(blocks[0].contains("███"));
+    }
+
+    #[test]
+    fn test_color_blocks_extended() {
+        let blocks = color_blocks(0, 15, 3);
+        assert!(blocks.len() >= 2); // standard + extended rows
+    }
+
+    #[test]
+    fn test_progress_bar_zero() {
+        let bar = progress_bar(0.0, 10, "\x1b[31m");
+        assert!(bar.contains("0%"));
+        assert!(bar.contains("░"));
+    }
+
+    #[test]
+    fn test_progress_bar_full() {
+        let bar = progress_bar(100.0, 10, "\x1b[32m");
+        assert!(bar.contains("100%"));
+        assert!(bar.contains("█"));
+    }
+
+    #[test]
+    fn test_progress_bar_half() {
+        let bar = progress_bar(50.0, 10, "\x1b[33m");
+        assert!(bar.contains("50%"));
+    }
+
+    #[test]
+    fn test_progress_bar_clamp() {
+        let bar = progress_bar(150.0, 10, "");
+        assert!(bar.contains("100%"));
+        let bar2 = progress_bar(-50.0, 10, "");
+        assert!(bar2.contains("0%"));
+    }
+
+    #[test]
+    fn test_gradient_text() {
+        let result = gradient_text("Hello", (255, 0, 0), (0, 0, 255));
+        assert!(result.contains("\x1b[38;2;"));
+        assert!(result.ends_with(RESET));
+    }
+
+    #[test]
+    fn test_gradient_text_empty() {
+        let result = gradient_text("", (255, 0, 0), (0, 0, 255));
+        assert!(result.is_empty());
+    }
+
+    #[test]
+    fn test_gradient_text_single_char() {
+        let result = gradient_text("A", (255, 0, 0), (0, 0, 255));
+        assert!(result.contains("A"));
+    }
+}
