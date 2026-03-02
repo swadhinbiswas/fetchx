@@ -1108,3 +1108,83 @@ fn exherbo() -> AsciiArt {
 fn guix() -> AsciiArt {
     AsciiArt {
         colors: vec![3, 7, 6, 4, 1],
+        lines: vec![
+            "{c1} |.__          __.|",
+            "{c1} |__ \\        / __|",
+            "{c1}    \\ \\      / /",
+            "{c1}     \\ \\    / /",
+            "{c1}      \\ \\  / /",
+            "{c1}       \\ \\/ /",
+            "{c1}        \\__/",
+            "{c1}        /  \\",
+            "{c1}       / /\\ \\",
+            "{c1}      / /  \\ \\",
+            "{c1}     / /    \\ \\",
+            "{c1}    / /      \\ \\",
+            "{c1} .__/ /        \\ \\__.",
+            "{c1} |__./          \\.__|",
+        ],
+    }
+}
+
+fn haiku() -> AsciiArt {
+    AsciiArt {
+        colors: vec![2, 7],
+        lines: vec![
+            "{c2}          :dc.",
+            "{c2}       ,oouoo.",
+            "{c2}     ,oouooouoo.",
+            "{c2}    ouooo;{c1}oooooo{c2}oo",
+            "{c2}   oo{c1}ooooooooooooo{c2}o",
+            "{c2}   l{c1}oooooooooooooooo{c2}o",
+            "{c2}   '{c1}ooooooooooooooooo{c2}b",
+            "{c2}    '{c1}oooooooooooooooooo{c2}b",
+            "{c2}     '{c1}ooooooooooooooooooo{c2}b",
+            "{c2}       {c1}`oooooooooooooooo",
+            "{c2}         {c1}`ooooooooooooo",
+            "{c2}           {c1}`ooooooooo",
+            "{c2}              {c1}`:oo;",
+        ],
+    }
+}
+
+fn hyperbola() -> AsciiArt {
+    AsciiArt {
+        colors: vec![8, 8],
+        lines: vec![
+            "{c1}                    .',",
+            "{c1}                 '-:////;.",
+            "{c1}              '-:////////;.",
+            "{c1}           '-://////////////;.",
+            "{c1}         '-://// - - -////////;.",
+            "{c1}       '-://// -       -///////;.",
+            "{c1}     '-://// -           -/////;.",
+            "{c1}   '-://// -               -///;.",
+            "{c1}  '-://// -                 -//;.",
+            "{c1}  '-://// -                  -;.",
+            "{c1}  ;/////;.",
+            "{c1}  ;/////;.",
+            "{c1}  ;/////;.",
+            "{c1}  ;/////;.",
+            "{c1}  ;/////;.",
+        ],
+    }
+}
+
+fn instantos() -> AsciiArt {
+    AsciiArt {
+        colors: vec![4, 6],
+        lines: vec![
+            "{c1}                  .o.",
+            "{c1}                   :oo.",
+            "{c1}                 .dMMMd",
+            "{c1}                :NMMMm.",
+            "{c1}               oMMMMs",
+            "{c1}             `dMMMN",
+            "{c1}            :NMMMm`",
+            "{c2}      .:oydmMMMMNdyo:.",
+            "{c2}   :dNMMMMMMMMMMMMMMMNd:",
+            "{c2} `sMMMMMMMMMMMMMMMMMMMMMs`",
+            "{c2} dMMMMMMMMMMMMMMMMMMMMMMMd",
+            "{c2} dMMMMMMMMMMMMMMMMMMMMMMMd",
+            "{c2} `sMMMMMMMMMMMMMMMMMMMMMs`",
