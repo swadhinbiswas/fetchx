@@ -1248,3 +1248,63 @@ fn get_battery() -> String {
                 return format!("{}%{}", capacity, status_str);
             }
         }
+    }
+
+    "Unknown".to_string()
+}
+
+fn get_local_ip() -> String {
+    // hostname -I
+    let out = run_cmd("hostname", &["-I"]);
+    if !out.is_empty() {
+        if let Some(ip) = out.split_whitespace().next() {
+            return ip.to_string();
+        }
+    }
+
+    // ip route fallback
+    let out = run_cmd("ip", &["route", "get", "1.1.1.1"]);
+    if !out.is_empty() {
+        for word_pair in out.split_whitespace().collect::<Vec<_>>().windows(2) {
+            if word_pair[0] == "src" {
+                return word_pair[1].to_string();
+            }
+        }
+    }
+
+    "Unknown".to_string()
+}
+
+fn get_public_ip() -> String {
+    // Try curl
+    if command_exists("curl") {
+        let out = run_cmd("curl", &["-s", "--max-time", "2", "ifconfig.me"]);
+        if !out.is_empty() && !out.contains('<') {
+            return out;
+        }
+    }
+    // Try wget
+    if command_exists("wget") {
+        let out = run_cmd("wget", &["-qO-", "--timeout=2", "ifconfig.me"]);
+        if !out.is_empty() && !out.contains('<') {
+            return out;
+        }
+    }
+    "Unknown".to_string()
+}
+
+fn get_locale() -> String {
+    let lang = env_or("LANG");
+    if !lang.is_empty() {
+        return lang;
+    }
+    let lc = env_or("LC_ALL");
+    if !lc.is_empty() {
+        return lc;
+    }
+    "Unknown".to_string()
+}
+
+/// Detect currently playing song via MPRIS (playerctl) or MPD (mpc).
+fn get_song() -> String {
+    // Try playerctl (works with most MPRIS-compatible players)
