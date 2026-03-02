@@ -1348,3 +1348,83 @@ fn postmarketos() -> AsciiArt {
             "{c1}      /                    \\",
             "{c1}     /                      \\",
             "{c1}    /________________________\\",
+        ],
+    }
+}
+
+fn puppy() -> AsciiArt {
+    AsciiArt {
+        colors: vec![4, 7],
+        lines: vec![
+            "{c1}           ,xq@@@@@@@px,",
+            "{c1}        ,q@@@@@@@@@@@@@@@@p,",
+            "{c1}      ,q@@@@@@@@@@@@@@@@@@@@@p,",
+            "{c1}     q@@@@@@@@@@@@@@@@@@@@@@@@@@,",
+            "{c1}    q@@@@{c2}AAAAA{c1}@@@@@@@@@@{c2}AAAAA{c1}@@@,",
+            "{c1}   q@@@@ {c2}AAAA{c1}@@@@@@@@@@ {c2}AAAA{c1}@@@@",
+            "{c1}   @@@@@       @@@@@@@@       @@@@@@",
+            "{c1}   q@@@@@@@@@@@{c2}######{c1}@@@@@@@@@@@@@",
+            "{c1}    q@@@@@@@@@@{c2}######{c1}@@@@@@@@@@@@",
+            "{c1}     q@@@@@@@@@@@@@@@@@@@@@@@@@@,",
+            "{c1}      'q@@@@@@@@@@@@@@@@@@@@@p'",
+            "{c1}        'pq@@@@@@@@@@@@@@@qp'",
+            "{c1}            'pq@@@@@@@qp'",
+        ],
+    }
+}
+
+fn pureos() -> AsciiArt {
+    AsciiArt {
+        colors: vec![2, 7],
+        lines: vec![
+            "{c1}      dmmmmmmmmmmmmmmmmd",
+            "{c1}   dmmmmmmmmmmmmmmmmmmmmmd",
+            "{c1}  dmmmmmmmmmmmmmmmmmmmmmmmmd",
+            "{c1}  mmmmm{c2}NNNNNNNNNo{c1}mmmmmmmmmmm",
+            "{c1}   mmm{c2}NNNNo.  oNNNNm{c1}mmmmmmmm",
+            "{c1}    mm{c2}NNNo      dNNNm{c1}mmmmmmm",
+            "{c1}    mm{c2}NNN        NNNN{c1}mmmmmmm",
+            "{c1}    mm{c2}NNN        NNNN{c1}mmmmmmm",
+            "{c1}    mm{c2}NNNo      dNNN{c1}mmmmmmmm",
+            "{c1}   mmm{c2}NNNNo.  oNNNN{c1}mmmmmmmmm",
+            "{c1}  mmmmm{c2}NNNNNNNNNo{c1}mmmmmmmmmmm",
+            "{c1}  dmmmmmmmmmmmmmmmmmmmmmmmd",
+            "{c1}   dmmmmmmmmmmmmmmmmmmmmmd",
+            "{c1}      dmmmmmmmmmmmmmmmd",
+        ],
+    }
+}
+
+fn sabayon() -> AsciiArt {
+    AsciiArt {
+        colors: vec![4, 7, 6],
+        lines: vec![
+            "{c2}            ....",
+            "{c2}         ..{c1}MMMMMMM{c2}..",
+            "{c2}       .{c1}MMMM{c2};{c1}MMMMMMM{c2}.",
+            "{c2}      .{c1}MMM{c2}:{c1}MMMM{c2};{c1}MMMM{c2}.",
+            "{c2}     .{c1}MMM{c2}:{c1}MMMM{c2}:{c1}MMMMM{c2}.",
+            "{c2}    .{c1}MMM{c2};{c1}:MMMM{c2}:{c1}MMMMMM{c2}.",
+            "{c2}    {c1}MMM{c2};{c1};MMMM{c2}:{c1}MMMMMMM{c2}.",
+            "{c2}   .{c1}MMM{c2}:{c1};MMMM{c2}:{c1}MMMMMMM{c2}:",
+            "{c2}   .{c1}MMMM{c2}:{c1};MMM{c2}:{c1}MMMMMMMM{c2}.",
+            "{c2}   .{c1}MMMMMM{c2}::{c1}MMMMMMMMMM{c2}.",
+            "{c2}    {c1}.MMMMMMMMMMMMMMMMMM{c2}.",
+            "{c2}      {c1}`MMMMMMMMMMMMMM{c2}'",
+            "{c2}         {c1}``MMMMMM{c2}''",
+        ],
+    }
+}
+
+fn slitaz() -> AsciiArt {
+    AsciiArt {
+        colors: vec![3, 3],
+        lines: vec![
+            "{c1}        @    @(               @",
+            "{c1}      @@   @@  @@          @@ @@",
+            "{c1}     @@   @@   @@   @@@  @@ @ @@",
+            "{c1}    @@  @@    @@  @@   @@   @@ @@",
+            "{c1}   @@  @@@@@@@@ @@         @@ @@",
+            "{c1}  @@       @@  @@    @@@@  @@ @@",
+            "{c1} @@       @@  @@   @@   @@ @  @@",
+            "{c1}         @@   @@@@  @@@@ @ @@@@@@",
