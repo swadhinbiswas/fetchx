@@ -408,3 +408,73 @@ fn cachyos() -> AsciiArt {
             "{c1}    +osss/`      .:+ossssssso-",
             "{c1}   .osso-     .:+ossssssssso-",
             "{c1}   :oss/   `-+osssssssssso/.",
+            "{c1}   -oss/ `-+ossssssssssso/.",
+            "{c1}    +oss+ossssssssssso+:`",
+            "{c1}     -+osssssssssso+:`",
+            "{c1}       `-/+ooo+/-`",
+        ],
+    }
+}
+
+fn endeavouros() -> AsciiArt {
+    AsciiArt {
+        colors: vec![1, 5, 4],
+        lines: vec![
+            "                     {c1}./o.",
+            "                   {c1}./sssso-",
+            "                 {c1}`/osssssss+-",
+            "                {c1}/ossssssssssso/",
+            "              {c1}-osssssssssssssss+-",
+            "            {c1}.+ossssssssssssssssso/.",
+            "           {c1}/osssssssssssssssssssss+-",
+            "         {c1}.+ossssssssssssss{c2}oooo{c1}sssssso.",
+            "        {c1}/osssssssssssss{c2}ooooooo{c1}sssssss+.",
+            "       {c1}+osssssssssss{c2}ooooooooooo{c1}ssssssso\\",
+            "     {c1}`+osssssssss{c2}oooooooooooooo{c1}ssssssso/",
+            "    {c1}`/osssssss{c2}oooooooooooooooooo{c1}sssssss-",
+            "    {c1}+osssss{c2}oooooooooooooooo{c3}++++{c2}o{c1}sssssso+`",
+            "   {c1}/osss{c2}oooooooooooooo{c3}++++++++++{c1}ssssso\\",
+            "  {c1}/oss{c2}ooooooooooo{c3}++++++++++++++++{c1}ssso-",
+            " {c1}+os{c2}oooooooo{c3}++++++++++++++++++++{c1}sso/`",
+            "{c1}`/o{c2}ooooo{c3}++++++++++++++++++++++++{c1}s+-`",
+            "{c1}-o{c3}++++++++++++++++++++++++++++{c1}/`",
+            "{c1}-{c3}+++++++++++++++++++++++++{c1}/-`",
+            " {c3}`-/++++++++++++++++/-.`",
+        ],
+    }
+}
+
+fn artix() -> AsciiArt {
+    AsciiArt {
+        colors: vec![6, 4, 2],
+        lines: vec![
+            "{c1}                   /\\",
+            "{c1}                  /  \\",
+            "{c1}                 /`'.,\\",
+            "{c1}                /     ',",
+            "{c1}               /      ,`\\",
+            "{c1}              /   ,.'`.  \\",
+            "{c1}             /.,'`     `'.\\",
+        ],
+    }
+}
+
+fn garuda() -> AsciiArt {
+    AsciiArt {
+        colors: vec![1, 4, 6],
+        lines: vec![
+            "            {c2}.:+syyyyyys+:.",
+            "         {c2}.+hhhhhhhhhhhhhhhh+.",
+            "       {c2}:shhhhhhhhhhhhhhhhhhhs:",
+            "      {c2}ohhhhhh{c1}ssssssssss{c2}hhhhhho",
+            "     {c2}shhhhh{c1}s          {c2}hhhhhhs",
+            "    {c2}shhhhh{c1}s     {c3}.::.  {c2}shhhhs",
+            "   {c2}/hhhhhh{c1}s    {c3}`+hhh-  {c2}shhhh\\",
+            "  {c2}.hhhhhhh{c1}s   {c3}`+hhhh+  {c2}shhhh.",
+            "  {c2}:hhhhhhh{c1}ss{c3}`+hhhhhh+  {c2}shhhh:",
+            "  {c2}:hhhhhhh{c3}`+hhhhhhhh+  {c2}shhhh:",
+            "  {c2} hhhhhhh{c3}`+hhhhhhhh+  {c2}shhhh",
+            "   {c2}ohhhhhh{c3}`+hhhhhh+`  {c2}shhhho",
+            "    {c2}`ohhhhh{c3}`+hhh+`   {c2}shhho`",
+        ],
+    }
