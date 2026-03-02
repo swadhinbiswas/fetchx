@@ -948,3 +948,83 @@ fn bedrock() -> AsciiArt {
             "{c1}--------{c2}\\\\\\\\\\\\///////{c1}--------",
             "{c1}---------{c2}\\\\\\\\//////{c1}---------",
             "{c1}----------{c2}\\\\\\/////{c1}----------",
+            "{c1}-----------{c2}\\\\////{c1}-----------",
+            "{c1}------------{c2}\\///{c1}------------",
+            "{c1}-------------{c2}\\//{c1}-------------",
+            "{c1}--------------------------------------",
+            "{c1}--------------------------------------",
+            "{c1}--------------------------------------",
+        ],
+    }
+}
+
+fn clearlinux() -> AsciiArt {
+    AsciiArt {
+        colors: vec![4, 3, 6, 2],
+        lines: vec![
+            "{c1}               ,,,,,,,,,,,,,",
+            "{c1}          .,,,,,,,,,,,,,,,,,,,,,.",
+            "{c1}       ,,,,,,,,,,,,,,,,,,{c2},,,{c1},,,,,,,",
+            "{c1}     ,,,,,,,,,,,,,,,{c2},,,,{c3},,,,{c2},,,,{c1},,,,",
+            "{c1}   ,,,,,,,,,,,,,,{c2},,,,,{c3},,,,,{c2},,,,,{c1},,,,",
+            "{c1}  ,,,,,,,,,,,,,,{c2},,,,,{c3},,,,,{c2},,,,,{c1},,,,,",
+            "{c1} ,,,,,,,,,,,,,{c2},,,,,,{c3},,,,,{c2},,,,,,{c1},,,,,",
+            "{c1} ,,,,,,,,,,,,,{c2},,,,,,{c3},,,,{c2},,,,,,,{c1},,,,,",
+            "{c1} ,,,,,,,,,,,,,{c2},,,,,,{c3},,,,{c2},,,,,,,{c1},,,,,",
+            "{c1}  ,,,,,,,,,,,,{c2},,,,,,{c3},,,{c2},,,,,,,,{c1},,,,",
+            "{c1}  ,,,,,,,,,,,,,{c2},,,,,,{c3},{c2},,,,,,,,{c1},,,,,",
+            "{c1}   ,,,,,,,,,,,,,{c2},,,,,,,,,,,,,{c1},,,,,",
+            "{c1}    ,,,,,,,,,,,,,{c2},,,,,,,,,,{c1},,,,,,",
+            "{c1}      ,,,,,,,,,,,,,,,,,,,,,,,,,,",
+            "{c1}         ,,,,,,,,,,,,,,,,,,,,",
+            "{c1}              ,,,,,,,,,,",
+        ],
+    }
+}
+
+fn crux() -> AsciiArt {
+    AsciiArt {
+        colors: vec![6, 6, 7],
+        lines: vec![
+            "{c1}         odddd",
+            "{c1}      odddddddddd",
+            "{c1}    oddxkkkxxddddddd",
+            "{c1}   odddddOOOOOOdddddd",
+            "{c1}  xddddOOOOOOOOOOOdddd",
+            "{c1}  xdddOOOOOkkOOOOOOdddd",
+            "{c1}  ddddOOOOOOOOOOOOOOdddd",
+            "{c1}  ddddOOOOkOOOOOOkOOOdddd",
+            "{c1}  xdddOOOOOOOOOOOOOOOdddd",
+            "{c1}  xdddOOOOOxxOOOOOOOOdddd",
+            "{c1}   xdddOOOOOOOOOOOOOoddd",
+            "{c1}    xddddddOOOOOOdddddd",
+            "{c1}     xddddddddddddddd",
+            "{c1}       xdddddddddd",
+            "{c1}          xdddd",
+        ],
+    }
+}
+
+fn devuan() -> AsciiArt {
+    AsciiArt {
+        colors: vec![5, 7],
+        lines: vec![
+            "{c1}   ..,,;;;::;,..                  ",
+            "{c1}          `':dkko:'.               ",
+            "{c1}              `':okkd;.            ",
+            "{c1}                 `':okkkd:.        ",
+            "{c1}              `.;:ldkkkkkkkd:.     ",
+            "{c1}          `-;dkkkkkkkkkkkkkkkko.   ",
+            "{c1}       .;okkkkkkkkkkkkkkkkkkkkkko. ",
+            "{c1}     -dkkkkkkkkkkkkkkkkkkkkkkkkkk-.",
+            "{c1}   `kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkd",
+            "{c1}   okkkkkkkkkkkkkkkkkkkkkkkkkkkkkkd",
+            "{c1}   okkkkkkkk;'                     ",
+            "{c1}   `kkkkkkk;  .. ..                 ",
+            "{c1}    :kkkkkk;             .....      ",
+            "{c1}     lkkkkk:                        ",
+            "{c1}      `dkkk;                        ",
+            "{c1}        `'kk.                       ",
+            "{c1}           `                        ",
+        ],
+    }
