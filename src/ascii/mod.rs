@@ -868,3 +868,83 @@ fn rhel() -> AsciiArt {
             "{c1}        ,MMMMMMMMMMMMMMMMMMMMMM:",
             "{c1}        MMMMMMMMMMMMMMMMMMMMMMMM",
             "{c1}  .MMMM'  MMMMMMMMMMMMMMMMMMMMMM",
+            "{c1} MMMMMM    `MMMMMMMMMMMMMMMMMMMM.",
+            "{c1}MMMMMMMM      MMMMMMMMMMMMMMMMMM .",
+            "{c1}MMMMMMMMM.       `MMMMMMMMMMMMM' MM",
+            "{c1}MMMMMMMMMMM.                     MMMM",
+            "{c1}`MMMMMMMMMMMMM.                 ,MMMMM.",
+            "{c1} `MMMMMMMMMMMMMMMMM.          ,MMMMMMMM.",
+            "{c1}    MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM",
+            "{c1}      MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM:",
+            "{c1}       MMMMMMMMMMMMMMMMMMMMMMMMMMMMMM",
+            "{c1}         `MMMMMMMMMMMMMMMMMMMMMMMM:",
+            "{c1}             ``MMMMMMMMMMMMMMM'",
+        ],
+    }
+}
+
+fn amazon_linux() -> AsciiArt {
+    AsciiArt {
+        colors: vec![3, 7],
+        lines: vec![
+            "{c1}             `-/oydNNdyo/-`",
+            "{c1}          .+mNNNNNNNNNNNNNNm+.",
+            "{c1}        :dNNNNNNNNNNNNNNNNNNNNd:",
+            "{c1}      .mNNNNNNNNNNNNNNNNNNNNNNNm.",
+            "{c1}     oNNNNNNNNNNNNNNNNNNNNNNNNNNNo",
+            "{c1}    +NNNNNNNNNNNNNNNNNms+//+dNNNNN+",
+            "{c1}   :NNNNNNNNNNNNNNNm+`       .dNNNN:",
+            "{c1}   dNNNNNNNNNNNNNNs`           `sNNNd",
+            "{c1}   NNNNNNNNNNNNNNN       {c2}.--.    {c1}NNNNN",
+            "{c1}   dNNNNNNNNNNNNNd     {c2}/oooo:\\   {c1}dNNNd",
+            "{c1}   :NNNNNNNNNNNNNNo.   {c2}\\oooo/  {c1}.oNNNN:",
+            "{c1}    +NNNNNNNNNNNNNNNd+. {c2}`--` {c1}.+dNNNNN+",
+            "{c1}     oNNNNNNNNNNNNNNNNNdso++osdNNNNNNo",
+            "{c1}      .mNNNNNNNNNNNNNNNNNNNNNNNNNNNm.",
+            "{c1}        :dNNNNNNNNNNNNNNNNNNNNNNNd:",
+            "{c1}          .+mNNNNNNNNNNNNNNNNNm+.",
+            "{c1}             `-/oydNNNNdyo/-`",
+        ],
+    }
+}
+
+fn chromeos() -> AsciiArt {
+    AsciiArt {
+        colors: vec![2, 1, 3, 4, 7],
+        lines: vec![
+            "{c2}            .,:loool:,.",
+            "{c2}        .,coooooooooooooc,.",
+            "{c2}     .,lllllllllllllllllllll,.",
+            "{c2}    ;ccccccccccccccccccccccccc;",
+            "{c1}  '{c2}ccccccccccccccccccccccccccccc{c1}'",
+            "{c1}  OOOOOOOOOOOOo{c2}ccccccc{c3}oOOOOOOOOOOO",
+            "{c1}  OOOOOOOOOOOO{c2}lcccccccl{c3}OOOOOOOOOOOO",
+            "{c1}  OOOOOOOOOOOO{c2}:ccccccc:{c3}OOOOOOOOOOOO",
+            "{c1}  OOOOOOOOOOOOo{c2}ccccccc{c3}oOOOOOOOOOOO",
+            "{c1}  OOOOOOOOOOOOOo{c2}ccccc{c3}oOOOOOOOOOOOO",
+            "{c1}  OOOOOOOOOOOo{c4}OOOOo{c3}oOOOOOOOOOOO",
+            "{c4}  OOOOOOOOOOOOOOOOO{c3}OOOOOOOOOOOO",
+            "{c4}  OOOOOOOOOOOOOOOOOO{c3}OOOOOOOOOOO",
+            "{c4}  OOOOOOOOOOOOOOOOOOO{c3}OOOOOOOOOO",
+            "{c4}  OOOOOOOOOOOOOOOOOOOO{c3}OOOOOOOOO",
+            "{c4}  ``oooooooooooooooo{c3}oooooooo``",
+            "{c4}           ````````",
+        ],
+    }
+}
+
+fn bedrock() -> AsciiArt {
+    AsciiArt {
+        colors: vec![8, 2],
+        lines: vec![
+            "{c1}--------------------------------------",
+            "{c1}--------------------------------------",
+            "{c1}--------------------------------------",
+            "{c1}---{c2}\\\\\\\\\\\\\\\\\\\\\\\\{c1}------{c2}////////////{c1}---",
+            "{c1}----{c2}\\\\\\\\\\\\\\\\\\\\\\{c1}----{c2}///////////{c1}----",
+            "{c1}-----{c2}\\\\\\\\\\\\\\\\\\\\{c1}--{c2}//////////{c1}-----",
+            "{c1}------{c2}\\\\\\\\\\\\\\\\\\\\{c2}/////////{c1}------",
+            "{c1}-------{c2}\\\\\\\\\\\\\\\\////////{c1}-------",
+            "{c1}--------{c2}\\\\\\\\\\\\///////{c1}--------",
+            "{c1}---------{c2}\\\\\\\\//////{c1}---------",
+            "{c1}----------{c2}\\\\\\/////{c1}----------",
