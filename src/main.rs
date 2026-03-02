@@ -38,3 +38,43 @@ struct Args {
 
     /// Image source: auto, ascii, wallpaper, or /path/to/image
     #[arg(short, long, value_name = "SOURCE")]
+    source: Option<String>,
+
+    /// Which distro's ASCII art to display
+    #[arg(long, value_name = "DISTRO")]
+    ascii_distro: Option<String>,
+
+    /// Use emoji mode instead of ASCII art
+    #[arg(long)]
+    emoji: bool,
+
+    /// Use Nerd Font icons for info labels
+    #[arg(long)]
+    nerd_font: bool,
+
+    /// Path to custom image to display
+    #[arg(short, long, value_name = "PATH")]
+    custom_image: Option<String>,
+
+    /// Only show the logo/ASCII art, no system info
+    #[arg(short, long)]
+    logo_only: bool,
+
+    /// Gap between logo and info text
+    #[arg(long, value_name = "NUM")]
+    gap: Option<usize>,
+
+    /// Separator between label and value
+    #[arg(long, value_name = "SEP")]
+    separator: Option<String>,
+
+    /// Disable all formatting (for piping)
+    #[arg(long)]
+    stdout: bool,
+
+    /// Show the config file path and exit
+    #[arg(long)]
+    show_config: bool,
+
+    /// Print the default config to stdout and exit
+    #[arg(long)]
