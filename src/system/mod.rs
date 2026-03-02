@@ -1168,3 +1168,83 @@ fn get_memory_with_percent() -> (String, f64) {
         }
         let val: u64 = parts[1].parse().unwrap_or(0);
         match parts[0] {
+            "MemTotal:" => total_kb = val,
+            "MemAvailable:" => available_kb = val,
+            "Buffers:" => buffers_kb = val,
+            "Cached:" => cached_kb = val,
+            "Shmem:" => shmem_kb = val,
+            "SReclaimable:" => sreclaimable_kb = val,
+            _ => {}
+        }
+    }
+
+    if total_kb == 0 {
+        return ("Unknown".to_string(), 0.0);
+    }
+
+    // If MemAvailable is 0, calculate used manually (like neofetch)
+    let used_kb = if available_kb > 0 {
+        total_kb - available_kb
+    } else {
+        total_kb - (buffers_kb + cached_kb + sreclaimable_kb - shmem_kb)
+    };
+
+    let used_mib = used_kb as f64 / 1024.0;
+    let total_mib = total_kb as f64 / 1024.0;
+    let percent = if total_kb > 0 {
+        (used_kb as f64 / total_kb as f64) * 100.0
+    } else {
+        0.0
+    };
+
+    (format!("{:.0}MiB / {:.0}MiB", used_mib, total_mib), percent)
+}
+
+fn get_disk_with_percent() -> (String, f64) {
+    let out = run_cmd("df", &["-h", "--output=used,size,pcent", "/"]);
+    if !out.is_empty() {
+        if let Some(line) = out.lines().nth(1) {
+            let parts: Vec<&str> = line.split_whitespace().collect();
+            if parts.len() >= 3 {
+                let pct_str = parts[2].trim_end_matches('%');
+                let pct: f64 = pct_str.parse().unwrap_or(0.0);
+                return (format!("{} / {} ({})", parts[0], parts[1], parts[2]), pct);
+            }
+        }
+    }
+
+    // Simpler fallback
+    let out = run_cmd("df", &["-h", "/"]);
+    if !out.is_empty() {
+        if let Some(line) = out.lines().nth(1) {
+            let parts: Vec<&str> = line.split_whitespace().collect();
+            if parts.len() >= 5 {
+                let pct_str = parts[4].trim_end_matches('%');
+                let pct: f64 = pct_str.parse().unwrap_or(0.0);
+                return (format!("{} / {} ({})", parts[2], parts[1], parts[4]), pct);
+            }
+        }
+    }
+
+    ("Unknown".to_string(), 0.0)
+}
+
+fn get_battery() -> String {
+    // Check multiple battery paths
+    for bat_name in &["BAT0", "BAT1", "macsmc-battery"] {
+        let path = format!("/sys/class/power_supply/{}", bat_name);
+        if Path::new(&path).exists() {
+            let capacity = read_first_line(&format!("{}/capacity", path));
+            let status = read_first_line(&format!("{}/status", path));
+
+            if !capacity.is_empty() {
+                let status_str = match status.as_str() {
+                    "Charging" => " [Charging]",
+                    "Discharging" => " [Discharging]",
+                    "Full" => " [Full]",
+                    "Not charging" => " [Not Charging]",
+                    _ => "",
+                };
+                return format!("{}%{}", capacity, status_str);
+            }
+        }
