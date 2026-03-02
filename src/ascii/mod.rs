@@ -478,3 +478,73 @@ fn garuda() -> AsciiArt {
             "    {c2}`ohhhhh{c3}`+hhh+`   {c2}shhho`",
         ],
     }
+}
+
+fn kali() -> AsciiArt {
+    AsciiArt {
+        colors: vec![4, 8],
+        lines: vec![
+            "{c1}...............",
+            "{c1}            ..,;:ccc,.",
+            "{c1}          ......''';lxO.",
+            "{c1}.....''''..........,:ld;",
+            "{c1}           .';;;:::;,,.x,",
+            "{c1}      ..'''.            0Wmmm:;'.",
+            "{c1}    ....                .:...Xmmm0;",
+            "{c1}   .;'                ..;'. dxkOKMW0.",
+            "{c1}  'l.  .;'         ...''   ..    .0MMKX;",
+            "{c1} .0'  ;'    .:c:. l'..       .'dNMMMMMKx.",
+            "{c1}  o.     'KNMMMWd. .'     .c0WMMMMMMKo",
+            "{c1}    ...   .0MMMMMMWc.     .lMMMMMMMK;",
+            "{c1}      '.   ;MMMMMMMW,    'lMMMMMMMd,.",
+            "{c1}        .   .XMMMMMMX     .;MMMMMM0.",
+            "{c1}          .   :MMMMMMO       'dMMMX;",
+            "{c1}            .   .dWMMMo         ;N;",
+            "{c1}              .    :WMM;            .",
+            "{c1}                    :Md.",
+        ],
+    }
+}
+
+fn centos() -> AsciiArt {
+    AsciiArt {
+        colors: vec![3, 2, 4, 5],
+        lines: vec![
+            "                 {c1}..",
+            "               {c1}.PLTJ.",
+            "              {c1}<><><><>",
+            "     {c2}KKSSV' 4KKK {c1}LJ{c4} Kdistribution,",
+            "     {c2}KKV' 4KKKKK {c1}LJ{c4} KK V{c3}KKKKKBS",
+            "     {c2}V' ' 'VKKKK {c1}LJ{c4} KKKS{c3}VKBSV",
+            "     {c2}.   =.VKKK {c1}LJ{c4} KKKK{c3}.'",
+            "     {c2}|{c1}     KKKKK {c1}LJ{c4} KKKK{c3}.  |",
+            "     {c2}|{c1}   . 'VKKK {c1}LJ{c4} KKKK{c3}.. |",
+            "     {c2}|{c1}     .KKKK {c1}LJ{c4} KKKKV{c3}.. |",
+            "     {c2}|{c1}       KKV {c1}LJ{c4} KKV   {c3}  |",
+            "     {c2}|{c1}         ' {c1}LJ{c4}        {c3}  |",
+        ],
+    }
+}
+
+fn rocky() -> AsciiArt {
+    AsciiArt {
+        colors: vec![2, 7],
+        lines: vec![
+            "{c1}         __wgliliiligw_,",
+            "{c1}      _williiiiiiiiiiiiiilw,",
+            "{c1}    _iiiiiiiiiiiiiiiiiiiiiiii_",
+            "{c1}   ,iiiiiiiiiiiiiiiiiiiiiiiiiii.",
+            "{c1}  _iiiiiiiiiii{c2}AAAAAAA{c1}iiiiiiiiiii_",
+            "{c1} diiiiiiiii{c2}AAAAAAAAA{c1}iiiiiiiiiiii.",
+            "{c1} iiiiiiiiiii{c2}AAAAAA{c1}iiiiiiiiiiiiiii.",
+            "{c1} iiiiiiiiii{c2}AAAAAA{c1}iiiiiiiiiiiiiiii.",
+            "{c1} iiiiiii{c2}AAAAAAAAAAAAAAA{c1}iiiiiiiiii.",
+            "{c1} .iiiii{c2}AAAAAAAAAA{c1}iiiiiiiiiiiiiii",
+            "{c1}  .iiii{c2}AAA{c1}iiiiiiiiiiiiiiiiiiiii.",
+            "{c1}    .iiiiiiiiiiiiiiiiiiiiiiiii.",
+            "{c1}      .iiiiiiiiiiiiiiiiii.",
+        ],
+    }
+}
+
+fn alma() -> AsciiArt {
