@@ -1508,3 +1508,112 @@ pub fn get_emoji_art(distro: &str) -> Vec<&'static str> {
         ],
         "ubuntu" => vec![
             "    \u{1F7E0}\u{1F7E0}\u{1F7E0}\u{1F7E0}\u{1F7E0}",
+            "  \u{1F7E0}         \u{1F7E0}",
+            " \u{1F7E0}           \u{1F7E0}",
+            "\u{1F7E0}    \u{1F7E0}\u{1F7E0}\u{1F7E0}    \u{1F7E0}",
+            "\u{1F7E0}   \u{1F7E0}   \u{1F7E0}   \u{1F7E0}",
+            "\u{1F7E0}    \u{1F7E0}\u{1F7E0}\u{1F7E0}    \u{1F7E0}",
+            " \u{1F7E0}           \u{1F7E0}",
+            "  \u{1F7E0}         \u{1F7E0}",
+            "    \u{1F7E0}\u{1F7E0}\u{1F7E0}\u{1F7E0}\u{1F7E0}",
+        ],
+        "debian" => vec![
+            "     \u{1F534}\u{1F534}\u{1F534}",
+            "   \u{1F534}     \u{1F534}",
+            "  \u{1F534}       \u{1F534}",
+            "  \u{1F534}        \u{1F534}",
+            "  \u{1F534}       \u{1F534}",
+            "   \u{1F534}    \u{1F534}",
+            "    \u{1F534}\u{1F534}",
+            "     \u{1F534}",
+        ],
+        "fedora" => vec![
+            "    \u{1F535}\u{1F535}\u{1F535}\u{1F535}\u{1F535}",
+            "  \u{1F535}    \u{1F535}   \u{1F535}",
+            " \u{1F535}   \u{1F535}\u{1F535}    \u{1F535}",
+            "\u{1F535}   \u{1F535}       \u{1F535}",
+            "\u{1F535}   \u{1F535}\u{1F535}\u{1F535}\u{1F535}\u{1F535}",
+            "\u{1F535}   \u{1F535}",
+            " \u{1F535}   \u{1F535}",
+            "  \u{1F535}\u{1F535}\u{1F535}",
+        ],
+        _ => vec![
+            "    \u{1F427}",
+            "   \u{1F427}\u{1F427}\u{1F427}",
+            "  \u{1F427}\u{1F427}\u{1F427}\u{1F427}\u{1F427}",
+            " \u{1F427}\u{1F427}\u{1F427}\u{1F427}\u{1F427}\u{1F427}\u{1F427}",
+            "  \u{1F427}\u{1F427}\u{1F427}\u{1F427}\u{1F427}",
+            "   \u{1F427}\u{1F427}\u{1F427}",
+            "    \u{1F427}",
+        ],
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_get_ascii_arch() {
+        let art = get_ascii("arch");
+        assert!(!art.lines.is_empty());
+        assert!(!art.colors.is_empty());
+    }
+
+    #[test]
+    fn test_get_ascii_ubuntu() {
+        let art = get_ascii("ubuntu");
+        assert!(!art.lines.is_empty());
+    }
+
+    #[test]
+    fn test_get_ascii_unknown_fallback() {
+        let art = get_ascii("nonexistent_distro_xyz");
+        assert!(!art.lines.is_empty()); // Should return linux_generic
+    }
+
+    #[test]
+    fn test_all_distros_have_art() {
+        let distros = [
+            "arch", "ubuntu", "debian", "fedora", "gentoo", "opensuse",
+            "manjaro", "void", "nixos", "pop", "linuxmint", "alpine",
+            "cachyos", "endeavouros", "artix", "garuda", "kali", "centos",
+            "rocky", "alma", "slackware", "zorin", "elementary", "mx",
+            "solus", "deepin", "raspbian", "freebsd", "openbsd", "macos",
+            "windows", "android", "rhel", "amazon", "chromeos", "bedrock",
+            "clearlinux", "crux", "devuan", "dragonfly", "endless",
+            "exherbo", "guix", "haiku", "hyperbola", "instantos", "mageia",
+            "netbsd", "parabola", "parrot", "peppermint", "porteus",
+            "postmarketos", "puppy", "pureos", "sabayon", "slitaz",
+            "tails", "trisquel",
+        ];
+        for distro in &distros {
+            let art = get_ascii(distro);
+            assert!(
+                !art.lines.is_empty(),
+                "Distro '{}' has no ASCII art lines",
+                distro
+            );
+            assert!(
+                !art.colors.is_empty(),
+                "Distro '{}' has no colors defined",
+                distro
+            );
+        }
+    }
+
+    #[test]
+    fn test_art_has_placeholders() {
+        let art = get_ascii("arch");
+        let has_c1 = art.lines.iter().any(|l| l.contains("{c1}"));
+        assert!(has_c1, "Arch art should have {{c1}} placeholders");
+    }
+
+    #[test]
+    fn test_emoji_art() {
+        let art = get_emoji_art("arch");
+        assert!(!art.is_empty());
+        let generic = get_emoji_art("unknown");
+        assert!(!generic.is_empty());
+    }
+}
