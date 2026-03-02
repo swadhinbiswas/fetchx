@@ -748,3 +748,83 @@ fn get_wm() -> String {
         let xdg = env_or("XDG_CURRENT_DESKTOP").to_lowercase();
         if xdg.contains("hyprland") {
             return "Hyprland".to_string();
+        }
+        if xdg.contains("sway") {
+            return "Sway".to_string();
+        }
+        if xdg.contains("river") {
+            return "river".to_string();
+        }
+    }
+
+    // Try xprop for X11
+    if command_exists("xprop") {
+        let out = run_cmd("xprop", &["-root", "-notype", "_NET_SUPPORTING_WM_CHECK"]);
+        if !out.is_empty() {
+            // Gets window ID, then query _NET_WM_NAME on it
+            if let Some(wid) = out.split_whitespace().last() {
+                let name_out = run_cmd(
+                    "xprop",
+                    &["-id", wid, "-notype", "-f", "_NET_WM_NAME", "8t"],
+                );
+                if let Some(line) = name_out.lines().find(|l| l.contains("_NET_WM_NAME")) {
+                    if let Some(val) = line.split('=').nth(1) {
+                        let wm = val.trim().trim_matches('"');
+                        if !wm.is_empty() {
+                            return wm.to_string();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // wmctrl fallback
+    if command_exists("wmctrl") {
+        let out = run_cmd("wmctrl", &["-m"]);
+        for line in out.lines() {
+            if let Some(name) = line.strip_prefix("Name:") {
+                let name = name.trim();
+                if !name.is_empty() {
+                    return name.to_string();
+                }
+            }
+        }
+    }
+
+    let session = env_or("XDG_SESSION_DESKTOP");
+    if !session.is_empty() {
+        return session;
+    }
+
+    "Unknown".to_string()
+}
+
+fn get_wm_theme() -> String {
+    // GNOME / GTK-based
+    let theme = run_cmd(
+        "gsettings",
+        &["get", "org.gnome.desktop.wm.preferences", "theme"],
+    );
+    let theme = theme.trim_matches('\'').trim().to_string();
+    if !theme.is_empty() && theme != "No such schema" && !theme.starts_with("Error") {
+        return theme;
+    }
+
+    // KDE Plasma
+    let kde_config = format!("{}/.config/kwinrc", crate::utils::home_dir());
+    if Path::new(&kde_config).exists() {
+        let content = read_file(&kde_config);
+        for line in content.lines() {
+            if let Some(val) = line.strip_prefix("theme=") {
+                if !val.is_empty() {
+                    return val.to_string();
+                }
+            }
+        }
+    }
+
+    "Unknown".to_string()
+}
+
+fn get_theme() -> String {
