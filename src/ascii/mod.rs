@@ -1268,3 +1268,83 @@ fn parrot() -> AsciiArt {
             "{c1}  `:oho/-`   `-/oho:`",
             "{c1} `ohooooho/-`-/ohooooho`",
             "{c1} ohooooooooho/ohooooooooho",
+            "{c1} ohoooooooooooooooooooooho",
+            "{c1} `ohooooooooooooooooooho`",
+            "{c1}  `+hooooooooooooooooh+`",
+            "{c1}    `:ohoooooooooooho:`",
+            "{c1}       `:ohooooho:`",
+            "{c1}          `:oo:`",
+            "{c1}     {c2}__{c1}      {c2}_{c1}       {c2}__{c1}",
+            "{c2}    / /___ _| |_ ___/ /_",
+            "{c2}   / / __ `/  __/  _ / __\\",
+            "{c2}  / / /_/ / /  /  __/ /_/ /",
+            "{c2} /_/ .___/_/   \\___/\\__,_/",
+            "{c2} /_/",
+        ],
+    }
+}
+
+fn peppermint() -> AsciiArt {
+    AsciiArt {
+        colors: vec![1, 7, 3],
+        lines: vec![
+            "{c2}              NNNNNNNNN",
+            "{c2}         NNNN{c1}NNN{c2}NNNN{c3}NNN{c2}NNNN",
+            "{c2}       NNN{c1}NNNNNN{c2}NN{c3}NNNNNN{c2}NNN",
+            "{c2}     NNN{c1}NNNNNNNNN{c2}N{c3}NNNNNNNNN{c2}NNN",
+            "{c2}    NN{c1}NNNNNNNNNN{c2}NN{c3}NNNNNNNN{c2}NNN",
+            "{c2}   NN{c1}NNNNNNNNN{c2}NNNN{c3}NNNNNNN{c2}NNNN",
+            "{c2}  N{c1}NNNNNNNN{c2}NNNNNN{c3}NNNNNN{c2}NNNNN",
+            "{c2}  NNNNNNNNNNNNNNNNNNNNNNNNNNN",
+            "{c2}  N{c3}NNNNNN{c2}NNNNNNNNNNN{c1}NNNNN{c2}N{c1}N{c2}N",
+            "{c2}  N{c3}NNNNNNN{c2}NNNNNN{c1}NNNNNNNN{c2}NNN",
+            "{c2}   N{c3}NNNNNNN{c2}NNNN{c1}NNNNNNNNN{c2}NN",
+            "{c2}    N{c3}NNNNNNNN{c2}NN{c1}NNNNNNNNNN{c2}N",
+            "{c2}     NNN{c3}NNNNNNNNN{c2}N{c1}NNNNNNNNN{c2}",
+            "{c2}       NNN{c3}NNNNNN{c2}NN{c1}NNNNNN{c2}NNN",
+            "{c2}         NNNN{c3}NNN{c2}NNNN{c1}NNN{c2}NNNN",
+            "{c2}              NNNNNNNNN",
+        ],
+    }
+}
+
+fn porteus() -> AsciiArt {
+    AsciiArt {
+        colors: vec![6, 7],
+        lines: vec![
+            "{c1}     ``````````",
+            "{c1}  ```````````````",
+            "{c1} `````````````````..",
+            "{c1} `````````````````::-",
+            "{c1}  ```````````````:::-",
+            "{c1}   ``````````````:::-",
+            "{c1}    `````:::::::::::-",
+            "{c1}     ```::::::::::::-",
+            "{c1}      ``::;;;;;;::::-",
+            "{c1}       `:;;;;;;;::::-",
+            "{c1}        `;;;;;;;;:::-",
+            "{c1}         `;;;;;;;;;:-",
+            "{c1}          `;;;;::::::",
+            "{c1}            `.::::::",
+        ],
+    }
+}
+
+fn postmarketos() -> AsciiArt {
+    AsciiArt {
+        colors: vec![2, 7],
+        lines: vec![
+            "{c1}                 /\\",
+            "{c1}                /  \\",
+            "{c1}               /    \\",
+            "{c1}              /      \\",
+            "{c1}             /  {c2}____  {c1}\\",
+            "{c1}            / {c2}/    \\  {c1}\\",
+            "{c1}           / {c2}/      \\  {c1}\\",
+            "{c1}          / {c2}/   /\\   \\  {c1}\\",
+            "{c1}         / {c2}/   /  \\   \\  {c1}\\",
+            "{c1}        / {c2}/___/    \\___\\  {c1}\\",
+            "{c1}       /                  \\",
+            "{c1}      /                    \\",
+            "{c1}     /                      \\",
+            "{c1}    /________________________\\",
