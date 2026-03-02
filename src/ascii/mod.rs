@@ -128,3 +128,73 @@ fn ubuntu() -> AsciiArt {
             "{c1}    .ossssssssssssssssss{c2}dMMMNy{c1}sssso.",
             "{c1}      -+sssssssssssssssss{c2}yyy{c1}ssss+-",
             "{c1}        `:+ssssssssssssssssss+:`",
+            "{c1}            .-/+oossssoo+/-.",
+        ],
+    }
+}
+
+fn debian() -> AsciiArt {
+    AsciiArt {
+        colors: vec![1, 7, 3],
+        lines: vec![
+            "{c2}       _,met$$$$$gg.",
+            "{c2}    ,g$$$$$$$$$$$$$$$P.",
+            r#"{c2}  ,g$$P"        """Y$$."."#,
+            "{c2} ,$$P'              `$$$.",
+            "{c2}',$$P       ,ggs.     `$$b:",
+            "{c2}`d$$'     ,$P\"'   {c1}.{c2}    $$$",
+            "{c2} $$P      d$'     {c1},{c2}    $$P",
+            "{c2} $$:      $$.   {c1}-{c2}    ,d$$'",
+            "{c2} $$;      Y$b._   _,d$P'",
+            "{c2} Y$$.    {c1}`.{c2}`\"Y$$$$P\"'",
+            "{c2}  `$$b      {c1}\"-.__",
+            "{c2}   `Y$$",
+            "{c2}    `Y$$.",
+            "{c2}      `$$b.",
+            "{c2}        `Y$$b.",
+            "{c2}           `\"Y$b._",
+            "{c2}               `\"\"\"",
+        ],
+    }
+}
+
+fn fedora() -> AsciiArt {
+    AsciiArt {
+        colors: vec![12, 7],
+        lines: vec![
+            "{c1}             .',;::::;,'.",
+            "{c1}         .';:cccccccccccc:;,.",
+            "{c1}      .;cccccccccccccccccccccc;.",
+            "{c1}    .:cccccccccccccccccccccccccc:.",
+            "{c1}  .;ccccccccccccc;{c2}.:dddl:.{c1};ccccccc;.",
+            "{c1} .:ccccccccccccc;{c2}OWMKOOXMWd{c1};ccccccc:.",
+            "{c1}.:ccccccccccccc;{c2}KMMc{c1};cc;{c2}xMMc{c1};ccccccc:.",
+            "{c1},cccccccccccccc;{c2}MMM.{c1};cc;{c2};WW:{c1};cccccccc,",
+            "{c1}:cccccccccccccc;{c2}MMM.{c1};cccccccccccccccc:",
+            "{c1}:ccccccc;{c2}oxOOOo{c1};{c2}MMM0OOk.{c1};cccccccccccc:",
+            "{c1}cccccc;{c2}0MMKxdd:{c1};{c2}MMMkddc.{c1};cccccccccccc;",
+            "{c1}ccccc;{c2}XM0'{c1};cccc;{c2}MMM.{c1};cccccccccccccccc'",
+            "{c1}ccccc;{c2}MMo{c1};ccccc;{c2}MMW.{c1};ccccccccccccccc;",
+            "{c1}ccccc;{c2}0MNc.{c1}ccc{c2}.xMMd{c1};ccccccccccccccc;",
+            "{c1}cccccc;{c2}dNMWXXXWM0:{c1};cccccccccccccc:,",
+            "{c1}cccccccc;{c2}.:odl:.{c1};cccccccccccccc:,.",
+            "{c1}:cccccccccccccccccccccccccccc:'.",
+            "{c1}.:cccccccccccccccccccccc:;,..",
+            "{c1}  '::cccccccccccccc::;,.",
+        ],
+    }
+}
+
+fn gentoo() -> AsciiArt {
+    AsciiArt {
+        colors: vec![5, 7],
+        lines: vec![
+            "{c1}         -/oyddmdhs+:.",
+            "{c1}     -o{c2}dNMMMMMMMMNNmhy+{c1}-`",
+            "{c1}   -y{c2}NMMMMMMMMMMMNNNmmdhy{c1}+-",
+            "{c1} `o{c2}mMMMMMMMMMMMMNmdmmmmddhhy{c1}/`",
+            "{c1} om{c2}MMMMMMMMMMMN{c1}hhyyyo{c2}hmdddhhhd{c1}o`",
+            "{c1}.y{c2}dMMMMMMMMMMd{c1}hs++so/s{c2}mdddhhhhdm{c1}+`",
+            "{c1} oy{c2}hdmNMMMMMMMN{c1}dyooy{c2}dmddddhhhhyhN{c1}d.",
+            "{c1}  :o{c2}yhhdNNMMMMMMMNNNmmdddhhhhhyym{c1}Mh",
+            "{c1}    .:{c2}+sydNMMMMMNNNmmmdddhhhhhhmM{c1}my",
