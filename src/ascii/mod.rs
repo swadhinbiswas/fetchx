@@ -788,3 +788,83 @@ fn openbsd() -> AsciiArt {
             "{c1}   /L  /'   |/      _.-'-\\",
             "{c1}  /'J       ___.---'\\|",
         ],
+    }
+}
+
+fn macos() -> AsciiArt {
+    AsciiArt {
+        colors: vec![2, 3, 1, 5, 4, 6],
+        lines: vec![
+            "{c1}                 'c.",
+            "{c1}                ,xNMM.",
+            "{c1}              .OMMMMo",
+            "{c1}              OMMM0,",
+            "{c1}    .;loddo:' loolloddol;.",
+            "{c1}  cKMMMMMMMMMMNWMMMMMMMMMM0:",
+            "{c2} .KMMMMMMMMMMMMMMMMMMMMMMMWd.",
+            "{c2} XMMMMMMMMMMMMMMMMMMMMMMMX.",
+            "{c3};MMMMMMMMMMMMMMMMMMMMMMMM:",
+            "{c3}:MMMMMMMMMMMMMMMMMMMMMMMM:",
+            "{c4}.MMMMMMMMMMMMMMMMMMMMMMMMX.",
+            "{c4} kMMMMMMMMMMMMMMMMMMMMMMMMWd.",
+            "{c5} .XMMMMMMMMMMMMMMMMMMMMMMMMk",
+            "{c5}  .XMMMMMMMMMMMMMMMMMMMMK.",
+            "{c6}    kMMMMMMMMMMMMMMMMMMd.",
+            "{c6}     ;KMMMMMMMWXXWMMMKo.",
+        ],
+    }
+}
+
+fn windows() -> AsciiArt {
+    AsciiArt {
+        colors: vec![6, 7],
+        lines: vec![
+            "{c1}        ,.=:!!t3Z3z.,",
+            "{c1}       :tt:::tt333EE3",
+            "{c1}       Et:::ztt33EEEL{c2} @Ee.,      ..,",
+            "{c1}      ;tt:::tt333EE7{c2} ;EEEEEEttt:::z.",
+            "{c1}     :Et:::zt333EEQ.{c2} $EEEEEttt:::z.",
+            "{c1}     it::::tt333EE7{c2} @EEEEEEttt:::z.",
+            "{c1}    ;3=*^```\"*4EEV{c2} :EEEEEEttt:::z.",
+            "{c1}    ,.=::::!t=., `{c2} @EEEEEttt:::z.",
+            "{c1}   ;::::::::zt33){c2}   '4EEEttt:::z.",
+            "{c1}  :t]]]]]]]]]33){c2}     $EEEEttt:::z.",
+            "{c1}  :Et:::::::zt33){c2}      $EEEEttt:::z.",
+            "{c1}  ;t:::::::tt333){c2}       $EEEEEttt;:z.",
+            "{c1}  :::::::::zt33) {c2}         `4$$$$$$$",
+        ],
+    }
+}
+
+fn android() -> AsciiArt {
+    AsciiArt {
+        colors: vec![2, 7],
+        lines: vec![
+            "{c1}         -o          o-",
+            "{c1}          +hydNNNNdyh+",
+            "{c1}        +mMMMMMMMMMMMMm+",
+            "{c1}      `dMM{c2}m:{c1}NMMMMMMN{c2}:m{c1}MMd`",
+            "{c1}      hMMMMMMMMMMMMMMMMMMh",
+            "{c1}  ..  yMMMMMMMMMMMMMMMMMMy  ..",
+            "{c1}.mMMm`+MMMMMMMMMMMMMMMMMM+`mMMm.",
+            "{c1}:MMMM-`MMMMMMMMMMMMMMMMMM`-MMMM:",
+            "{c1}:MMMM-`MMMMMMMMMMMMMMMMMM`-MMMM:",
+            "{c1}:MMMM-`MMMMMMMMMMMMMMMMMM`-MMMM:",
+            "{c1}`mMMm   MMMMMMMMMMMMMMMMMM   mMMm`",
+            "{c1}  ``  `MMMMMMMMMMMMMMMMMM`  ``",
+            "{c1}      `MMMMMMMMMMMMMMMMMM`",
+        ],
+    }
+}
+
+fn rhel() -> AsciiArt {
+    AsciiArt {
+        colors: vec![1, 7],
+        lines: vec![
+            "{c1}           .MMM..:MMMMMMM",
+            "{c1}          MMMMMMMMMMMMMMMMMM",
+            "{c1}          MMMMMMMMMMMMMMMMMMMM.",
+            "{c1}         MMMMMMMMMMMMMMMMMMMMMM",
+            "{c1}        ,MMMMMMMMMMMMMMMMMMMMMM:",
+            "{c1}        MMMMMMMMMMMMMMMMMMMMMMMM",
+            "{c1}  .MMMM'  MMMMMMMMMMMMMMMMMMMMMM",
