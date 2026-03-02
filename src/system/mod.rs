@@ -898,3 +898,73 @@ fn get_terminal() -> String {
             }
         }
 
+        let lc = name.to_lowercase();
+        // Skip shells, init, login
+        let skip = [
+            "bash", "zsh", "fish", "sh", "dash", "ksh", "tcsh", "csh", "nu", "nushell", "login",
+            "init", "systemd", "sshd", "su", "sudo", "fetchx", "neofetch", "screen", "tmux",
+            "code", "node", "electron", "cargo", "rustc",
+        ];
+        if skip.iter().any(|s| lc == *s) {
+            pid = ppid;
+            if ppid <= 1 {
+                break;
+            }
+            continue;
+        }
+
+        // Found a non-shell, non-init process — this is likely the terminal
+        return name;
+    }
+
+    // Fallback to env vars
+    let term_program = env_or("TERM_PROGRAM");
+    if !term_program.is_empty() {
+        return term_program;
+    }
+
+    let colorterm = env_or("COLORTERM");
+    if !colorterm.is_empty() {
+        return colorterm;
+    }
+
+    env_or("TERM")
+}
+
+fn get_term_font() -> String {
+    let terminal = get_terminal().to_lowercase();
+
+    // Alacritty
+    if terminal.contains("alacritty") {
+        let paths = [
+            format!(
+                "{}/.config/alacritty/alacritty.toml",
+                crate::utils::home_dir()
+            ),
+            format!(
+                "{}/.config/alacritty/alacritty.yml",
+                crate::utils::home_dir()
+            ),
+        ];
+        for p in &paths {
+            if Path::new(p).exists() {
+                let content = read_file(p);
+                for line in content.lines() {
+                    let trimmed = line.trim();
+                    if let Some(val) = trimmed.strip_prefix("family") {
+                        let val = val
+                            .trim()
+                            .trim_start_matches(['=', ':'])
+                            .trim()
+                            .trim_matches('"');
+                        if !val.is_empty() {
+                            return val.to_string();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Kitty
+    if terminal.contains("kitty") {
