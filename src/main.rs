@@ -78,3 +78,53 @@ struct Args {
 
     /// Print the default config to stdout and exit
     #[arg(long)]
+    print_config: bool,
+
+    /// Create the default config file if it doesn't exist and exit
+    #[arg(long)]
+    create_config: bool,
+
+    /// Print output as JSON
+    #[arg(long)]
+    json: bool,
+
+    /// Color block range start (0-15)
+    #[arg(long)]
+    block_range_start: Option<u8>,
+
+    /// Color block range end (0-15)
+    #[arg(long)]
+    block_range_end: Option<u8>,
+
+    /// Width of color blocks
+    #[arg(long)]
+    block_width: Option<usize>,
+
+    /// Interactive image selector using fzf
+    #[arg(long)]
+    select_image: bool,
+
+    /// Run as daemon (updates status file every 10 seconds)
+    #[arg(long)]
+    daemon: bool,
+
+    /// Show tray status (compact output for system tray/widget)
+    #[arg(long)]
+    tray_status: bool,
+
+    /// Initialize config with API image fetching (one-command setup)
+    #[arg(long)]
+    init_api_image: bool,
+
+    /// Internal: background download helper (not for user use)
+    #[arg(long, hide = true)]
+    bg_download: bool,
+}
+
+fn main() {
+    let args = Args::parse();
+
+    // Handle special flags
+    if args.show_config {
+        let path = Config::config_path();
+        println!("Config file: {}", path.display());
