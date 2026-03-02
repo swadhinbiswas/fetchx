@@ -1188,3 +1188,83 @@ fn instantos() -> AsciiArt {
             "{c2} dMMMMMMMMMMMMMMMMMMMMMMMd",
             "{c2} dMMMMMMMMMMMMMMMMMMMMMMMd",
             "{c2} `sMMMMMMMMMMMMMMMMMMMMMs`",
+            "{c2}   :dNMMMMMMMMMMMMMMMNd:",
+            "{c2}      .:oydNMMMNdyo:.",
+        ],
+    }
+}
+
+fn mageia() -> AsciiArt {
+    AsciiArt {
+        colors: vec![6, 7],
+        lines: vec![
+            "{c1}        .°°.    ",
+            "{c1}         °°   .°°.",
+            "{c1}         .°°°. °°  ",
+            "{c1}          .   .    ",
+            "{c1}           °   .°  ",
+            "{c1}       .°°°.°°.°°°.",
+            "{c1}   .°°°°°°°°°°°°°°°°.",
+            "{c1}  .°°°°°°°°°°°°°°°°°°.",
+            "{c1}  .°°°°°°°°°°°°°°°°°°.",
+            "{c1}   .°°°°°°°°°°°°°°°°.",
+            "{c1}    .°°°°°°°°°°°°°°.",
+            "{c1}      .°°°°°°°°°°.",
+            "{c1}        .°°°°°°.",
+            "{c1}           .°.",
+        ],
+    }
+}
+
+fn netbsd() -> AsciiArt {
+    AsciiArt {
+        colors: vec![5, 7],
+        lines: vec![
+            "{c1}                                  __,gnnnOCCCCCOonnn;.",
+            "{c1}     _.,gnnnnnnnnNNOOO888888OONNnnn,..",
+            "{c1}   :OOOOOOOOOOOONNNNNNNNNbbbbNNNNNN\\",
+            "{c1}  /OOOOOOOOOOOONNNNNNNNNNbbbbbbbNNNN\\",
+            "{c1} /OOOOOOOOOOOONNNNNNNNNNNNbbbbbbbNNNN\\",
+            "{c1} |OOOOOOOO{c2}ggggnnnn{c1}NNNNNNNbbbbbbbbNNNN|",
+            "{c1} |OOOOO{c2}ggg{c1}NNNNNNNN{c2}nn{c1}NNNNNbbbbbbbbNNNN|",
+            "{c1} |OOO{c2}ggg{c1}NNNN  NNNNNN{c2}n{c1}NNNNbbbbbbbNNNN/",
+            "{c1} \\OO{c2}gg{c1}NNNN      NNNNNN NNNNbbbbbbNNNN/",
+            "{c1}  \\O{c2}g{c1}NNNNN       NNNNN NNNNNbbbbNNNN/",
+            "{c1}   \\{c2}{c1}NNNNN        NNNNN  NNNNNNNNNN/",
+            "{c1}     NNNNNN       NNNNN NNNNNbbII",
+            "{c1}      NNNNNN     NNNNN",
+        ],
+    }
+}
+
+fn parabola() -> AsciiArt {
+    AsciiArt {
+        colors: vec![5, 7],
+        lines: vec![
+            "{c1}               `.:/ohmNMh",
+            "{c1}            -+dNMMMMMMMMMN",
+            "{c1}          -sNMMMMMMMMMMMMMs",
+            "{c1}        `+NMMMMMMMMMMMMMMMm`",
+            "{c1}       -hMMMMMMMMMMMMMMMMMMN-",
+            "{c1}      /mMMMMMMMMMMMMMMMMMMMMs",
+            "{c1}     +NMMMMMMMMMMMMMMNhso+:-`",
+            "{c1}    /MMMMMMMMMMMMM+:.`",
+            "{c1}   :MMMMMMMMMMMh-",
+            "{c1}   NMMMMMMMMMd-",
+            "{c1}   NMMMMMMMd.",
+            "{c1}   NMMMMMN/",
+            "{c1}   NMMMMN+",
+            "{c1}   mMMMMo",
+            "{c1}   yMMMd",
+            "{c1}   `dMd`",
+        ],
+    }
+}
+
+fn parrot() -> AsciiArt {
+    AsciiArt {
+        colors: vec![6, 7],
+        lines: vec![
+            "{c1}  `:oho/-`   `-/oho:`",
+            "{c1} `ohooooho/-`-/ohooooho`",
+            "{c1} ohooooooooho/ohooooooooho",
