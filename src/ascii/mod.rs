@@ -548,3 +548,83 @@ fn rocky() -> AsciiArt {
 }
 
 fn alma() -> AsciiArt {
+    AsciiArt {
+        colors: vec![1, 3, 4, 2, 6],
+        lines: vec![
+            "{c1}         'c:.",
+            "{c1}        lkkkx, ..       {c2}..   ,cc,",
+            "{c1}        okkkk:ckkx'  {c2}.lxkkx.okkkkd",
+            "{c1}        .:llcokkx'  {c2}:kkkxkko:xkkd,",
+            "{c1}      .xkkkkdood:  {c2};kx,  .lkxlll;",
+            "{c1}       xkkx.       {c2}xk'     xkkkkk:",
+            "{c1}       'xkx.       {c2}xd      .....,.",
+            "{c3}      .. {c1}:xkl'     {c2}:c      ..''...",
+            "{c3}    .dkx'  {c1}.:ldl:'. {c2}'  {c4}':lollldkkxo;",
+            "{c3}  .''lkkko'                     {c4}ckkkx.",
+            "{c3}'xkkkd:kkd.       ..  {c5};'        {c4}:kkxo.",
+            "{c3},xkkkd;kk'      ,d;    {c5}ld.   {c4}':dkd::cc,",
+            "{c3} .,,.;xkko'.';lxo.      {c5}dx,  {c4}:kkk'xkkkkc",
+            "{c3}     'dkkkkkxo:.        {c5};kx  {c4}.kkk:;xkkd.",
+            "{c3}       .....   {c5}.;dk:.   {c5}lkk.  {c4}:;,",
+            "             {c5}:kkkkkkkdoxkkx",
+            "{c5}              ,c,,;;;:xkkd.",
+            "{c5}                ;kkkkl...",
+            "{c5}                ;kkkkl",
+            "{c5}                 ,od;",
+        ],
+    }
+}
+
+fn slackware() -> AsciiArt {
+    AsciiArt {
+        colors: vec![4, 7],
+        lines: vec![
+            "{c1}                  ::::::::",
+            "{c1}            :::::::::::::::::::",
+            "{c1}         :::::::::::::::::::::::::",
+            "{c1}       :::::::::{c2}cllcccccllllllll{c1}::::::",
+            "{c1}    :::::::::{c2}lc               dc{c1}:::::::",
+            "{c1}   ::::::::{c2}cl   clccclcc    oc{c1}:::::::::",
+            "{c1}  ::::::::::{c2}o   lc{c1}::::::::{c2}co   oc{c1}::::::::::",
+            "{c1}  :::::::::::{c2}o    cccclc{c1}:::::{c2}clcc{c1}::::::::::::",
+            "{c1}  ::::::::::::{c2}lc        cclccclc{c1}:::::::::::::::",
+            "{c1}  ::::::::::::::{c2}lcclcc          lc{c1}::::::::::::",
+            "{c1}  ::::::::::{c2}cclcc{c1}:::::{c2}lccclc     oc{c1}::::::::::",
+            "{c1}   :::::::::{c2}co{c1}::::::::{c2}clc    lc{c1}::::::::::",
+            "{c1}    ::::::::::{c2}c     lcccc   co{c1}::::::::::::",
+            "{c1}     :::::::::::{c2}lc           oc{c1}:::::::::",
+            "{c1}       :::::::::::{c2}lccclclccclc{c1}::::::::::",
+            "{c1}         :::::::::::::::::::::::::::::",
+            "{c1}            ::::::::::::::::::::::::",
+            "{c1}                ::::::::::::::::",
+        ],
+    }
+}
+
+fn zorin() -> AsciiArt {
+    AsciiArt {
+        colors: vec![4, 6],
+        lines: vec![
+            "{c1}        `osssssssssssssssssssso`",
+            "{c1}       .osssssssssssssssssssssso.",
+            "{c1}      .+oooooooooooooooooooooooo+.",
+            "",
+            "{c1}  `://////////////+////////////////`",
+            "{c1} `+ssssssssssssssssso{c2}+ssssssssssssssss+`",
+            "{c1}.ossssssssssssssssss{c2}+osssssssssssssssso.",
+            "{c1}ssssssssssssssso{c2}+/::+ossssssssssssssssss",
+            "{c1}ssssssssss{c2}+/:::::::/+osssssssssssssssssss",
+            "{c1}sssss{c2}+/::::::::::/+osssssssssssssssssssss",
+            "{c1}sssssso{c2}+/:::::::/+ossssssssssssssssssssss",
+            "{c1}ssssssssso{c2}+/:::/+osssssssssssssssssssssss",
+            "{c1}sssssssssssso{c2}+/+ossssssssssssssssssssssss",
+            "{c1}.ossssssssssssssssssssssssssssssssssssso.",
+            "{c1} `+ssssssssssssssssssssssssssssssssssss+`",
+            "{c1}  `://////////////////////////////////////////`",
+        ],
+    }
+}
+
+fn elementary() -> AsciiArt {
+    AsciiArt {
+        colors: vec![4, 7],
