@@ -1038,3 +1038,63 @@ fn get_cpu() -> String {
                 if let Ok(khz) = val.parse::<u64>() {
                     if khz > 0 {
                         speed_khz = khz;
+                        break;
+                    }
+                }
+            }
+        }
+
+        // Fallback to cpu MHz from /proc/cpuinfo
+        if speed_khz == 0 {
+            for line in content.lines() {
+                if line.starts_with("cpu MHz") {
+                    if let Some(val) = line.split(':').nth(1) {
+                        if let Ok(mhz) = val.trim().parse::<f64>() {
+                            speed_khz = (mhz * 1000.0) as u64;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        if !model.is_empty() {
+            // Clean up model name (remove repeated spaces, (R), (TM) etc)
+            let model = model
+                .replace("(R)", "")
+                .replace("(TM)", "")
+                .replace("(tm)", "")
+                .replace("CPU", "")
+                .replace("Processor", "");
+            let model: String = model.split_whitespace().collect::<Vec<_>>().join(" ");
+
+            let speed_mhz = speed_khz / 1000;
+            let speed = if speed_mhz >= 1000 {
+                format!(" @ {:.2}GHz", speed_mhz as f64 / 1000.0)
+            } else if speed_mhz > 0 {
+                format!(" @ {}MHz", speed_mhz)
+            } else {
+                String::new()
+            };
+
+            return format!("{} ({}){}", model, cores, speed);
+        }
+    }
+
+    // lscpu fallback
+    let out = run_cmd("lscpu", &[]);
+    if !out.is_empty() {
+        for line in out.lines() {
+            if line.starts_with("Model name:") {
+                return line.split(':').nth(1).unwrap_or("").trim().to_string();
+            }
+        }
+    }
+
+    "Unknown".to_string()
+}
+
+fn get_gpu() -> Vec<String> {
+    // lspci
+    if command_exists("lspci") {
+        let out = run_cmd("lspci", &["-mm"]);
