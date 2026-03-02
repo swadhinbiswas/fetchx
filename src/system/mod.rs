@@ -1098,3 +1098,73 @@ fn get_gpu() -> Vec<String> {
     // lspci
     if command_exists("lspci") {
         let out = run_cmd("lspci", &["-mm"]);
+        if !out.is_empty() {
+            let mut gpus: Vec<String> = Vec::new();
+            for line in out.lines() {
+                let lc = line.to_lowercase();
+                if lc.contains("vga") || lc.contains("3d") || lc.contains("display") {
+                    // Parse quoted fields: "slot" "class" "vendor" "device" ...
+                    let fields: Vec<&str> = line.split('"').collect();
+                    if fields.len() >= 8 {
+                        let vendor = fields[5];
+                        let device = fields[7];
+                        let gpu = format!("{} {}", vendor, device);
+                        // Clean up vendor names
+                        let gpu = gpu
+                            .replace("Advanced Micro Devices, Inc. [AMD/ATI]", "AMD")
+                            .replace("NVIDIA Corporation", "NVIDIA")
+                            .replace("Intel Corporation", "Intel");
+                        gpus.push(gpu);
+                    }
+                }
+            }
+            if !gpus.is_empty() {
+                return gpus;
+            }
+        }
+
+        // Simpler lspci output
+        let out = run_cmd("lspci", &[]);
+        if !out.is_empty() {
+            let mut gpus: Vec<String> = Vec::new();
+            for line in out.lines() {
+                if line.contains("VGA") || line.contains("3D") || line.contains("Display") {
+                    if let Some(gpu) = line.split(':').nth(2) {
+                        let gpu = gpu
+                            .trim()
+                            .replace("Advanced Micro Devices, Inc. [AMD/ATI]", "AMD")
+                            .replace("NVIDIA Corporation", "NVIDIA")
+                            .replace("Intel Corporation", "Intel");
+                        gpus.push(gpu);
+                    }
+                }
+            }
+            if !gpus.is_empty() {
+                return gpus;
+            }
+        }
+    }
+
+    vec!["Unknown".to_string()]
+}
+
+fn get_memory_with_percent() -> (String, f64) {
+    let content = read_file("/proc/meminfo");
+    if content.is_empty() {
+        return ("Unknown".to_string(), 0.0);
+    }
+
+    let mut total_kb = 0u64;
+    let mut available_kb = 0u64;
+    let mut buffers_kb = 0u64;
+    let mut cached_kb = 0u64;
+    let mut shmem_kb = 0u64;
+    let mut sreclaimable_kb = 0u64;
+
+    for line in content.lines() {
+        let parts: Vec<&str> = line.split_whitespace().collect();
+        if parts.len() < 2 {
+            continue;
+        }
+        let val: u64 = parts[1].parse().unwrap_or(0);
+        match parts[0] {
