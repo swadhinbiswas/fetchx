@@ -338,3 +338,73 @@ fn pop_os() -> AsciiArt {
             "{c1}         /////////////////////",
             "{c1}             /////////////",
         ],
+    }
+}
+
+fn linux_mint() -> AsciiArt {
+    AsciiArt {
+        colors: vec![2, 7],
+        lines: vec![
+            "{c2}             ...-:::::-...",
+            "{c2}          .-MMMMMMMMMMMMMMM-.",
+            "{c2}      .-MMMM{c1}`..-:::::::-..`{c2}MMMM-.",
+            "{c2}    .:MMMM{c1}.:MMMMMMMMMMMMMMM:.{c2}MMMM:.",
+            "{c2}   -MMM{c1}-M---MMMMMMMMMMMMMMMMMMM.{c2}MMM-",
+            "{c2} `:MMM{c1}:MM`  :MMMM:....::-...-MMMM:{c2}MMM:`",
+            "{c2} :MMM{c1}:MMM`  :MM:`  ``    ``  `:MMM:{c2}MMM:",
+            "{c2}.MMM{c1}.MMMM`  :MM.  -MM.  .MM-  `MMMM.{c2}MMM.",
+            "{c2}:MMM{c1}:MMMM`  :MM.  -MM-  .MM:  `MMMM-{c2}MMM:",
+            "{c2}:MMM{c1}:MMMM`  :MM.  -MM-  .MM:  `MMMM:{c2}MMM:",
+            "{c2}:MMM{c1}:MMMM`  :MM.  -MM-  .MM:  `MMMM-{c2}MMM:",
+            "{c2}.MMM{c1}.MMMM`  :MM:--:MM:--:MM:  `MMMM.{c2}MMM.",
+            "{c2} :MMM{c1}:MMM-  `-MMMMMMMMMMMM-`  -MMM-{c2}MMM:",
+            "{c2}  :MMM{c1}:MMM:`                `:MMM:{c2}MMM:",
+            "{c2}   .MMM{c1}.MMMM:--------------:MMMM.{c2}MMM.",
+            "{c2}     '-MMMM{c1}.-MMMMMMMMMMMMMMM-.{c2}MMMM-'",
+            "{c2}       '.-MMMM{c1}``--:::::--``{c2}MMMM-.'",
+            "{c2}            '-MMMMMMMMMMMMM-'",
+            "{c2}               ``-:::::-``",
+        ],
+    }
+}
+
+fn alpine() -> AsciiArt {
+    AsciiArt {
+        colors: vec![4, 5, 7, 6],
+        lines: vec![
+            "{c1}       .hddddddddddddddddddddddh.",
+            "{c1}      :dddddddddddddddddddddddddd:",
+            "{c1}     /dddddddddddddddddddddddddddd/",
+            "{c1}    +dddddddddddddddddddddddddddddd+",
+            "{c1}  `sdddddddddddddddddddddddddddddddds`",
+            "{c1} `ydddddddddddd++hdddddddddddddddddddy`",
+            "{c1}.hddddddddddd+`  `+ddddh:-sdddddddddddh.",
+            "{c1}hdddddddddd+`      `+y:    .sddddddddddh",
+            "{c1}ddddddddh+`   `//`   `.`     -sddddddddd",
+            "{c1}ddddddh+`   `/hddh/`   `:s-    -sddddddd",
+            "{c1}ddddh+`   `/+/dddddh/`   `+s-    -sddddd",
+            "{c1}ddd+`   `/o` :dddddddh/`   `oy-    .yddd",
+            "{c1}hdddyo+ohddyosdddddddddho+oydddy++ohdddh",
+            "{c1}.hddddddddddddddddddddddddddddddddddddh.",
+            "{c1} `yddddddddddddddddddddddddddddddddddy`",
+            "{c1}  `sdddddddddddddddddddddddddddddddds`",
+            "{c1}    +dddddddddddddddddddddddddddddd+",
+            "{c1}     /dddddddddddddddddddddddddddd/",
+            "{c1}      :dddddddddddddddddddddddddd:",
+            "{c1}       .hddddddddddddddddddddddh.",
+        ],
+    }
+}
+
+fn cachyos() -> AsciiArt {
+    AsciiArt {
+        colors: vec![6, 6, 7],
+        lines: vec![
+            "{c1}           .-/+oss/`",
+            "{c1}        .:+osssssso-",
+            "{c1}       -osssssssso/.`     `.-::.",
+            "{c1}      /ossssssso/.     `-+ossss+",
+            "{c1}     /ossso+:-.`   `.:+ossssso-",
+            "{c1}    +osss/`      .:+ossssssso-",
+            "{c1}   .osso-     .:+ossssssssso-",
+            "{c1}   :oss/   `-+osssssssssso/.",
