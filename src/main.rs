@@ -128,3 +128,53 @@ fn main() {
     if args.show_config {
         let path = Config::config_path();
         println!("Config file: {}", path.display());
+        return;
+    }
+
+    if args.print_config {
+        println!("{}", Config::example_config());
+        return;
+    }
+
+    if args.create_config {
+        match Config::create_default_config() {
+            Ok(path) => {
+                println!("Config file created at: {}", path.display());
+            }
+            Err(e) => {
+                eprintln!("Error creating config: {}", e);
+                std::process::exit(1);
+            }
+        }
+        return;
+    }
+
+    if args.bg_download {
+        // Internal: called as a detached child process to download image
+        if let Err(e) = image_cache::download_image_from_api() {
+            eprintln!("fetchx bg-download error: {}", e);
+        }
+        return;
+    }
+
+    if args.init_api_image {
+        init_api_image_config();
+        return;
+    }
+
+    if args.select_image {
+        select_image_interactive();
+        return;
+    }
+
+    if args.daemon {
+        run_daemon();
+        return;
+    }
+
+    if args.tray_status {
+        show_tray_status();
+        return;
+    }
+
+    // Load config, then override with CLI args
