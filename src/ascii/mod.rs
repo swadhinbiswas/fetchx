@@ -1428,3 +1428,83 @@ fn slitaz() -> AsciiArt {
             "{c1}  @@       @@  @@    @@@@  @@ @@",
             "{c1} @@       @@  @@   @@   @@ @  @@",
             "{c1}         @@   @@@@  @@@@ @ @@@@@@",
+        ],
+    }
+}
+
+fn tails() -> AsciiArt {
+    AsciiArt {
+        colors: vec![5, 7],
+        lines: vec![
+            "{c1}      ``",
+            "{c1}  ./yhNMN+-",
+            "{c1}  `:oydho`  `.+shmNNNh/.",
+            "{c1}     `..` `-+dNMMMMMMMMNy`",
+            "{c1}          -sNMMMMMMMMMMMMMs`",
+            "{c1}         .NMMMMdmNMMMMMMMMm/",
+            "{c1}          /yyo..` :dMMMMMMMMN-",
+            "{c1}         ..  -+sydMMMMMMMMMMN:",
+            "{c1}        `:ohmMMMMMMMMMMMMMMMMd`",
+            "{c1}       -yNMMMMMMMMMMMMMMMMMMMs`",
+            "{c1}      -NMMMMMMMMMMMMMMMMMMMMm-",
+            "{c1}     .NMMMMMMMMMMMMMMMMMMMMh`",
+            "{c1}     +MMMMMMMMMMMMMMMMMMMMy",
+            "{c1}      `..-/+oossssoo+/-.`",
+        ],
+    }
+}
+
+fn trisquel() -> AsciiArt {
+    AsciiArt {
+        colors: vec![4, 6],
+        lines: vec![
+            "{c1}      .,::''''::,.",
+            "{c1}    .:::::::::::::",
+            "{c1}   :::::.     .:::::  ",
+            "{c1}  :::::         :::::.",
+            "{c1}  ::::            ::::",
+            "{c1}  ::::            ::::",
+            "{c1}  ::::            ::::",
+            "{c1}  :::::          :::::",
+            "{c1}   ::::::      ::::::",
+            "{c1}    `::::::::::::::'",
+            "{c1}       ``:::::::''",
+        ],
+    }
+}
+
+fn linux_generic() -> AsciiArt {
+    AsciiArt {
+        colors: vec![7, 8, 3],
+        lines: vec![
+            "{c2}        #####",
+            "{c2}       #######",
+            "{c2}       ##{c1}O{c2}#{c1}O{c2}##",
+            "{c2}       #{c3}#####{c2}#",
+            "{c2}     ##{c1}##{c3}###{c1}##{c2}##",
+            "{c2}    #{c1}##########{c2}##",
+            "{c2}   #{c1}############{c2}##",
+            "{c2}   #{c1}############{c2}###",
+            "{c3}  ##{c2}#{c1}###########{c2}##{c3}#",
+            "{c3}######{c2}#{c1}#######{c2}#{c3}######",
+            "{c3}#######{c2}#{c1}#####{c2}#{c3}#######",
+            "{c3}  #####{c2}#######{c3}#####",
+        ],
+    }
+}
+
+/// Get the emoji art for emoji mode.
+pub fn get_emoji_art(distro: &str) -> Vec<&'static str> {
+    match distro {
+        "arch" | "archlinux" => vec![
+            "         \u{1F539}",
+            "        \u{1F539}\u{1F539}",
+            "       \u{1F539}  \u{1F539}",
+            "      \u{1F539}    \u{1F539}",
+            "     \u{1F539}      \u{1F539}",
+            "    \u{1F539}\u{1F539}\u{1F539}\u{1F539}\u{1F539}\u{1F539}\u{1F539}\u{1F539}",
+            "   \u{1F539}        \u{1F539}",
+            "  \u{1F539}          \u{1F539}",
+        ],
+        "ubuntu" => vec![
+            "    \u{1F7E0}\u{1F7E0}\u{1F7E0}\u{1F7E0}\u{1F7E0}",
