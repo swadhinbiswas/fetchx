@@ -228,3 +228,53 @@ fn apply_args_to_config(config: &mut Config, args: &Args) {
     if args.stdout {
         config.stdout = true;
         config.bold = false;
+    }
+    if let Some(bold) = args.bold {
+        config.bold = bold;
+    }
+    if let Some(ref backend) = args.backend {
+        config.image_backend = backend.clone();
+    }
+    if let Some(ref source) = args.source {
+        config.image_source = source.clone();
+    }
+    if let Some(ref distro) = args.ascii_distro {
+        config.ascii_distro = distro.clone();
+    }
+    if args.emoji {
+        config.emoji_mode = true;
+    }
+    if args.nerd_font {
+        config.nerd_font = true;
+    }
+    if args.custom_image.is_some() {
+        config.custom_image = args.custom_image.clone();
+    }
+    if args.logo_only {
+        config.logo_only = true;
+    }
+    if let Some(gap) = args.gap {
+        config.gap = gap;
+    }
+    if let Some(ref sep) = args.separator {
+        config.separator = sep.clone();
+    }
+    if let Some(start) = args.block_range_start {
+        config.block_range.0 = start;
+    }
+    if let Some(end) = args.block_range_end {
+        config.block_range.1 = end;
+    }
+    if let Some(width) = args.block_width {
+        config.block_width = width;
+    }
+}
+
+fn print_json(info: &SystemInfo) {
+    let gpu_str = info.gpu.join(", ");
+    println!("{{");
+    let fields: Vec<(&str, &str)> = vec![
+        ("os", &info.os),
+        ("host", &info.host),
+        ("kernel", &info.kernel),
+        ("uptime", &info.uptime),
