@@ -828,3 +828,73 @@ fn get_wm_theme() -> String {
 }
 
 fn get_theme() -> String {
+    // GTK theme
+    let theme = run_cmd(
+        "gsettings",
+        &["get", "org.gnome.desktop.interface", "gtk-theme"],
+    );
+    let theme = theme.trim_matches('\'').trim().to_string();
+    if !theme.is_empty() && theme != "No such schema" && !theme.starts_with("Error") {
+        return theme;
+    }
+
+    // Check GTK3 settings file
+    let gtk3_settings = format!("{}/.config/gtk-3.0/settings.ini", crate::utils::home_dir());
+    if Path::new(&gtk3_settings).exists() {
+        let content = read_file(&gtk3_settings);
+        for line in content.lines() {
+            if let Some(val) = line.strip_prefix("gtk-theme-name=") {
+                return val.trim().to_string();
+            }
+        }
+    }
+
+    "Unknown".to_string()
+}
+
+fn get_icons() -> String {
+    let icons = run_cmd(
+        "gsettings",
+        &["get", "org.gnome.desktop.interface", "icon-theme"],
+    );
+    let icons = icons.trim_matches('\'').trim().to_string();
+    if !icons.is_empty() && icons != "No such schema" && !icons.starts_with("Error") {
+        return icons;
+    }
+
+    let gtk3_settings = format!("{}/.config/gtk-3.0/settings.ini", crate::utils::home_dir());
+    if Path::new(&gtk3_settings).exists() {
+        let content = read_file(&gtk3_settings);
+        for line in content.lines() {
+            if let Some(val) = line.strip_prefix("gtk-icon-theme-name=") {
+                return val.trim().to_string();
+            }
+        }
+    }
+
+    "Unknown".to_string()
+}
+
+fn get_terminal() -> String {
+    // Walk up the process tree to find the terminal emulator
+    // This mirrors neofetch's PPID walking approach
+    let mut pid = std::process::id();
+
+    for _ in 0..10 {
+        let stat_path = format!("/proc/{}/status", pid);
+        let content = read_file(&stat_path);
+        if content.is_empty() {
+            break;
+        }
+
+        let mut name = String::new();
+        let mut ppid = 0u32;
+
+        for line in content.lines() {
+            if let Some(val) = line.strip_prefix("Name:\t") {
+                name = val.trim().to_string();
+            } else if let Some(val) = line.strip_prefix("PPid:\t") {
+                ppid = val.trim().parse().unwrap_or(0);
+            }
+        }
+
