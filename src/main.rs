@@ -278,3 +278,53 @@ fn print_json(info: &SystemInfo) {
         ("host", &info.host),
         ("kernel", &info.kernel),
         ("uptime", &info.uptime),
+        ("packages", &info.packages),
+        ("shell", &info.shell),
+        ("resolution", &info.resolution),
+        ("de", &info.de),
+        ("wm", &info.wm),
+        ("wm_theme", &info.wm_theme),
+        ("theme", &info.theme),
+        ("icons", &info.icons),
+        ("terminal", &info.terminal),
+        ("terminal_font", &info.term_font),
+        ("cpu", &info.cpu),
+        ("gpu", &gpu_str),
+        ("memory", &info.memory),
+        ("disk", &info.disk),
+        ("battery", &info.battery),
+        ("local_ip", &info.local_ip),
+        ("public_ip", &info.public_ip),
+        ("locale", &info.locale),
+        ("song", &info.song),
+        ("users", &info.users),
+    ];
+    for (i, (key, val)) in fields.iter().enumerate() {
+        let comma = if i < fields.len() - 1 { "," } else { "" };
+        let escaped = val.replace('\\', "\\\\").replace('"', "\\\"");
+        println!("  \"{}\": \"{}\"{}", key, escaped, comma);
+    }
+    println!("}}");
+}
+
+/// Interactive image selector using fzf
+fn select_image_interactive() {
+    use std::fs;
+    use std::process::{Command, Stdio};
+
+    let mut image_paths = Vec::new();
+
+    // Scan common image directories
+    let search_dirs = vec![
+        dirs::download_dir(),
+        dirs::picture_dir(),
+        dirs::home_dir().map(|h| h.join("Desktop")),
+    ];
+
+    for dir_opt in search_dirs {
+        if let Some(dir) = dir_opt {
+            if let Ok(entries) = fs::read_dir(&dir) {
+                for entry in entries.flatten() {
+                    let path = entry.path();
+                    if let Some(ext) = path.extension().and_then(|e| e.to_str()) {
+                        if matches!(
