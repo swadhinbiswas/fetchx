@@ -1028,3 +1028,83 @@ fn devuan() -> AsciiArt {
             "{c1}           `                        ",
         ],
     }
+}
+
+fn dragonfly() -> AsciiArt {
+    AsciiArt {
+        colors: vec![1, 7],
+        lines: vec![
+            "{c1}              ,--,",
+            "{c1}         _ ,'    '.",
+            "{c1}  {c2}*{c1}    /\\ '/       \\",
+            "{c1}       / /          \\",
+            "{c1}       | |           |",
+            "{c1}       \\ \\           |",
+            "{c1}        '\\          /",
+            "{c1}         |         (",
+            "{c1}         |          '",
+            "{c1}         )           \\",
+            "{c1}        /   /`--------'\\",
+            "{c1}       /   /            \\",
+            "{c1}      /   /              \\",
+            "{c1}     '---'                '",
+        ],
+    }
+}
+
+fn endless() -> AsciiArt {
+    AsciiArt {
+        colors: vec![1, 7],
+        lines: vec![
+            "{c1}         `:+yhmNMMMMNmhy+:`",
+            "{c1}      -oNMMMMMMMMMMMMMMMMMMNs-",
+            "{c1}    -yNMMMMMMMMMMMMMMMMMMMMMMMMy-",
+            "{c1}   oMMMMMMMho/-....-/:shNMMMMMMMMo",
+            "{c1}  yMMMMMy/.              `:yNMMMMMs",
+            "{c1} yMMMMd:`                   `/NMMMM:",
+            "{c1}+MMMMs`                       /NMMMN",
+            "{c1}mMMMy`                         :MMMMm",
+            "{c1}NMMMd`                          dMMMM",
+            "{c1}NMMMh                           yMMMM",
+            "{c1}mMMMN/                         /MMMMN",
+            "{c1}+MMMMNo.                     .sMMMMM/",
+            "{c1} yMMMMMMy:`               `:yMMMMMMd",
+            "{c1}  sMMMMMMMMNyo/-.``.-:oydNMMMMMMMMo",
+            "{c1}   :dMMMMMMMMMMMMMMMMMMMMMMMMMMMs:",
+            "{c1}     :yNMMMMMMMMMMMMMMMMMMMMNy:",
+            "{c1}       `:ohNMMMMMMMMMMMMNho:`",
+            "{c1}            `-:/+oo+/:-`",
+        ],
+    }
+}
+
+fn exherbo() -> AsciiArt {
+    AsciiArt {
+        colors: vec![4, 7, 1],
+        lines: vec![
+            "{c2} ,",
+            "{c2} OXo.",
+            "{c2} NXdX0:",
+            "{c2} KX  d0 .",
+            "{c2} KX   N0.",
+            "{c2} KX    N0.",
+            "{c2} KX     O0.",
+            "{c2} KX      O0",
+            "{c2} KX     d00 ",
+            "{c2} KX   .0X0o",
+            "{c1}    k{c2}xkOOO0X0KKKK0OOOkxk{c1}k",
+            "{c1}    Xd                     dX",
+            "{c1}    Xd                     dX",
+            "{c1}    Xd                     dX",
+            "{c1}    Xd{c2} kx       0k       xk {c1}dX",
+            "{c1}    XX{c2}  k0     0k     0k  {c1}XX",
+            "{c1}     XX{c2}  k0   0k   0k  {c1}XX",
+            "{c1}      XXx{c2} k0 0k k0 {c1}xXX",
+            "{c1}         XXXXX",
+        ],
+    }
+}
+
+fn guix() -> AsciiArt {
+    AsciiArt {
+        colors: vec![3, 7, 6, 4, 1],
