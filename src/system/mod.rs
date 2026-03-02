@@ -1308,3 +1308,60 @@ fn get_locale() -> String {
 /// Detect currently playing song via MPRIS (playerctl) or MPD (mpc).
 fn get_song() -> String {
     // Try playerctl (works with most MPRIS-compatible players)
+    if command_exists("playerctl") {
+        let out = run_cmd(
+            "playerctl",
+            &["metadata", "--format", "{{ artist }} - {{ title }}"],
+        );
+        if !out.is_empty() && !out.contains("No players found") && out != " - " {
+            return out;
+        }
+    }
+
+    // Try mpc for MPD
+    if command_exists("mpc") {
+        let out = run_cmd("mpc", &["current"]);
+        if !out.is_empty() {
+            return out;
+        }
+    }
+
+    // Try cmus-remote
+    if command_exists("cmus-remote") {
+        let out = run_cmd("cmus-remote", &["-Q"]);
+        if !out.is_empty() {
+            let mut artist = String::new();
+            let mut title = String::new();
+            for line in out.lines() {
+                if line.starts_with("tag artist ") {
+                    artist = line.strip_prefix("tag artist ").unwrap_or("").to_string();
+                }
+                if line.starts_with("tag title ") {
+                    title = line.strip_prefix("tag title ").unwrap_or("").to_string();
+                }
+            }
+            if !title.is_empty() {
+                if !artist.is_empty() {
+                    return format!("{} - {}", artist, title);
+                }
+                return title;
+            }
+        }
+    }
+
+    String::new()
+}
+
+/// Detect logged-in user count.
+fn get_users() -> String {
+    // `who` lists one line per logged-in session
+    let out = run_cmd("who", &[]);
+    if !out.is_empty() {
+        let count = out.lines().count();
+        if count == 1 {
+            return "1 user".to_string();
+        }
+        return format!("{} users", count);
+    }
+    String::new()
+}
