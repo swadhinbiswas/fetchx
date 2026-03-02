@@ -178,3 +178,53 @@ fn main() {
     }
 
     // Load config, then override with CLI args
+    let mut config = Config::load_or_default();
+    apply_args_to_config(&mut config, &args);
+
+    // Auto-detect terminal capabilities if backend is "auto"
+    if config.image_backend == "auto" {
+        let capabilities = image_cache::detect_terminal_capabilities();
+        config.image_backend = capabilities.backend.clone();
+    }
+
+    // Only use API image fetching when user explicitly configured it:
+    //   image_backend must be a graphics backend (not "ascii" / "off")
+    //   AND image_source must be "auto" (API mode)
+    //   AND no custom_image already set by user
+    let uses_graphics_backend = matches!(
+        config.image_backend.as_str(),
+        "kitty" | "sixel" | "chafa" | "w3m" | "iterm2"
+    );
+    let uses_api_source = config.image_source == "auto";
+
+    if uses_graphics_backend && uses_api_source && config.custom_image.is_none() {
+        // Use cached image from previous run (instant, no delay)
+        if let Some(cached_img) = image_cache::get_available_image() {
+            config.custom_image = Some(cached_img.to_string_lossy().to_string());
+        }
+
+        // Download a new image in background for next run (non-blocking, zero delay)
+        image_cache::download_image_background();
+    }
+
+    // Gather system info
+    let sys_info = SystemInfo::collect();
+
+    if args.json {
+        print_json(&sys_info);
+        return;
+    }
+
+    // Render
+    let display = Display::new(&config);
+    display.render(&sys_info);
+}
+
+fn apply_args_to_config(config: &mut Config, args: &Args) {
+    // Boolean flags: only set if explicitly passed
+    if args.no_color || args.stdout {
+        config.no_color = true;
+    }
+    if args.stdout {
+        config.stdout = true;
+        config.bold = false;
