@@ -628,3 +628,83 @@ fn zorin() -> AsciiArt {
 fn elementary() -> AsciiArt {
     AsciiArt {
         colors: vec![4, 7],
+        lines: vec![
+            "{c1}         eeeeeeeeeeeeeeeee",
+            "{c1}      eeeeeeeeeeeeeeeeeeeeeee",
+            "{c1}    eeeee  eeeeeeeeeeee   eeeee",
+            "{c1}  eeee   eeeee       eee     eeee",
+            "{c1} eeee   eeee          eee     eeee",
+            "{c1}eee    eee            eee       eee",
+            "{c1}eee   eee            eee        eee",
+            "{c1}ee    eee           eeee       eeee",
+            "{c1}ee    eee         eeeee      eeee",
+            "{c1}ee    eee       eeeee      eeee",
+            "{c1}eee   eeee   eeeeee      eeee",
+            "{c1}eee    eeeeeeeeee      eeee",
+            "{c1} eeee    eeeeeee     eeeee",
+            "{c1}  eeee               eeee",
+            "{c1}    eeeee          eeeee",
+            "{c1}      eeeeeeeeeeeeeee",
+            "{c1}         eeeeeeeeeee",
+        ],
+    }
+}
+
+fn mx() -> AsciiArt {
+    AsciiArt {
+        colors: vec![4, 6],
+        lines: vec![
+            "{c1}MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMNM",
+            "{c1}MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMd..dM",
+            "{c1}MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMNMMMo",
+            "{c1}MMMMNddddddddddddddddddddddddo",
+            "{c1}MMMh{c2}MMMMMMMMMMMMMMMMMMMMMMMMMM{c1}N.",
+            "{c1}MMM{c2}MMMMMMMMMMMMMMMMMMMMMMMMMMMM{c1}d.",
+            "{c1}MMM{c2}MMMM{c1}MN{c2}MMMMMMM{c1}MN{c2}MMMMMMMMMM{c1}d.",
+            "{c1}MM{c2}MMMMM{c1}MMMN{c2}MMM{c1}MNN{c2}MMMMMMMMMMM{c1}d.",
+            "{c1}MM{c2}MMMMM{c1}MMMMN{c2}M{c1}MNNM{c2}MMMMMMMMMM{c1}d.",
+            "{c1}MM{c2}MMMMM{c1}MMMMNN{c2}{c1}MNNNM{c2}MMMMMMMMM{c1}d.",
+            "{c1}MM{c2}MMMMM{c1}MMM{c2}M{c1}NNNNNNN{c2}MMMMMMMM{c1}d.",
+            "{c1}MM{c2}MMMM{c1}M{c2}MMM{c1}NN{c2}M{c1}NNNNN{c2}MMMMMMM{c1}d.",
+            "{c1}MMM{c2}MMMMMMM{c1}NNNM{c2}M{c1}NNNN{c2}MMMMMM{c1}d.",
+        ],
+    }
+}
+
+fn solus() -> AsciiArt {
+    AsciiArt {
+        colors: vec![4, 7, 1],
+        lines: vec![
+            "            {c2}-```````````",
+            "          {c2}`+/----------.`",
+            "         {c2}/+-            `.+/`",
+            "        {c2}/s:              `.+/",
+            "       {c2}/s-       ..       `/s",
+            "      {c2}/s.     `.:++-`      .+s`",
+            "     {c2}/s`    .:+++++++:`     `+s`",
+            "    {c2}/s`   .:/++++++++++:`    `+s`",
+            "   {c2}:s`   `:++++++++++++++:`   .+s:",
+            "  {c2}:s`  `-/++++++++++++++++/-`  .oo:",
+            " {c2}/s:  `-:++++++++++++++++++++:-` :ss:",
+            " {c2}ss: `-/++++++++++++++++++++++++/-`.ss`",
+            " ss` `-/+++++++++++++++++++++++++/-` ss`",
+            " ss  `:++++++++++++++++++++++++++:`  ss",
+        ],
+    }
+}
+
+fn deepin() -> AsciiArt {
+    AsciiArt {
+        colors: vec![2, 7],
+        lines: vec![
+            "{c1}             ............",
+            "{c1}         .';;;;;.       .,;,.",
+            "{c1}      .,;;;;;;;.       ';;;;;;;.",
+            "{c1}    .;::::::::'     .,::;;,'''',.",
+            "{c1}   ,'.::::::::    .;;'.          ';",
+            "{c1}  ;'  'cccccc,  .: ..;googl;.    ;'",
+            "{c1} ,,    :ccccc.  ;: .;'googl';.   ';",
+            "{c1}.l.     ;;;;;   ;. ;.googl  ;;   ;.",
+            "{c1}.c       ,,,,,  ;. ;  ''''  ;;   ;.",
+            "{c1}.l.          .  ;:  ;......;;.  ;'",
+            "{c1} .;.     ...    ;,   '';;;;'.  ;'",
