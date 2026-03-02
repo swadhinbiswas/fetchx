@@ -968,3 +968,73 @@ fn get_term_font() -> String {
 
     // Kitty
     if terminal.contains("kitty") {
+        let path = format!("{}/.config/kitty/kitty.conf", crate::utils::home_dir());
+        if Path::new(&path).exists() {
+            let content = read_file(&path);
+            for line in content.lines() {
+                if let Some(val) = line.strip_prefix("font_family") {
+                    let val = val.trim();
+                    if !val.is_empty() {
+                        return val.to_string();
+                    }
+                }
+            }
+        }
+    }
+
+    // Konsole
+    if terminal.contains("konsole") {
+        let profile_dir = format!("{}/.local/share/konsole", crate::utils::home_dir());
+        if let Ok(entries) = std::fs::read_dir(&profile_dir) {
+            for entry in entries.flatten() {
+                if entry.path().extension().map_or(false, |e| e == "profile") {
+                    let content = read_file(entry.path().to_str().unwrap_or(""));
+                    for line in content.lines() {
+                        if let Some(val) = line.strip_prefix("Font=") {
+                            if let Some(font) = val.split(',').next() {
+                                return font.to_string();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    "Unknown".to_string()
+}
+
+fn get_cpu() -> String {
+    // /proc/cpuinfo
+    let content = read_file("/proc/cpuinfo");
+    if !content.is_empty() {
+        let mut model = String::new();
+        let mut cores = 0u32;
+
+        for line in content.lines() {
+            if line.starts_with("model name") {
+                if let Some(val) = line.split(':').nth(1) {
+                    model = val.trim().to_string();
+                }
+            }
+            if line.starts_with("processor") {
+                cores += 1;
+            }
+        }
+
+        // Get CPU speed from cpufreq sysfs (like neofetch)
+        // Fallback chain: bios_limit -> scaling_max_freq -> cpuinfo_max_freq -> /proc/cpuinfo
+        let speed_dir = "/sys/devices/system/cpu/cpu0/cpufreq";
+        let mut speed_khz: u64 = 0;
+
+        if Path::new(speed_dir).is_dir() {
+            for file in &[
+                "bios_limit",
+                "scaling_max_freq",
+                "cpuinfo_max_freq",
+            ] {
+                let path = format!("{}/{}", speed_dir, file);
+                let val = read_first_line(&path);
+                if let Ok(khz) = val.parse::<u64>() {
+                    if khz > 0 {
+                        speed_khz = khz;
