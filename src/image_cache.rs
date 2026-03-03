@@ -98,3 +98,53 @@ pub fn detect_and_use_wallpaper() -> Option<PathBuf> {
     if let Ok(wallpaper_path) = std::env::var("WALLPAPER") {
         let path = PathBuf::from(wallpaper_path);
         if path.exists() {
+            if let Ok(_) = copy_image_to_cache(&path) {
+                return Some(cached_image_path());
+            }
+        }
+    }
+
+    None
+}
+
+/// Get Hyprland wallpaper (check hyprctl output and config files)
+fn get_hyprland_wallpaper() -> Option<PathBuf> {
+    // Try hyprctl command first
+    if let Ok(output) = Command::new("hyprctl")
+        .args(&["hyprpaper", "wallpapers"])
+        .output()
+    {
+        if let Ok(stdout) = String::from_utf8(output.stdout) {
+            for line in stdout.lines() {
+                let path = line.trim();
+                let file_path = PathBuf::from(path);
+                if file_path.exists() && is_image_file(&file_path) {
+                    return Some(file_path);
+                }
+            }
+        }
+    }
+
+    // Try hyprpaper config
+    let hyprpaper_config = dirs::config_dir()
+        .map(|d| d.join("hypr/hyprpaper.conf"))?;
+
+    if let Ok(content) = fs::read_to_string(&hyprpaper_config) {
+        for line in content.lines() {
+            if line.starts_with("preload") || line.starts_with("wallpaper") {
+                if let Some(path_str) = line.split('=').nth(1) {
+                    let path_str = path_str.trim().trim_matches('"').trim_matches('\'');
+                    let path = expand_path(path_str);
+                    if path.exists() && is_image_file(&path) {
+                        return Some(path);
+                    }
+                }
+            }
+        }
+    }
+
+    None
+}
+
+/// Get GNOME wallpaper from dconf
+fn get_gnome_wallpaper() -> Option<PathBuf> {
