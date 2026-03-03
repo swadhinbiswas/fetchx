@@ -148,3 +148,53 @@ impl Display {
                         let gap = self.config.gap;
                         let offset = max_cols + gap;
                         let reset = if self.config.no_color { "" } else { RESET };
+                        let term_w = terminal_width();
+                        let right_avail = term_w.saturating_sub(offset);
+                        // Move up to start of image area
+                        print!("\x1b[{}A", max_rows);
+                        for i in 0..max_rows.max(info_lines.len()) {
+                            print!("\x1b[{}C", offset);
+                            if i < info_lines.len() {
+                                let truncated = if right_avail > 0 {
+                                    truncate_to_width(&info_lines[i], right_avail)
+                                } else {
+                                    info_lines[i].clone()
+                                };
+                                println!("{}{}", truncated, reset);
+                            } else {
+                                println!();
+                            }
+                        }
+                    }
+                    Err(e) => {
+                        eprintln!("Warning: w3m image failed: {}", e);
+                        self.render_ascii(sys_info);
+                    }
+                }
+            }
+            Backend::Iterm2 => {
+                match image_backend::display_iterm2(image_path, max_cols, max_rows) {
+                    Ok(()) => {
+                        // iTerm2 inline image works like kitty; print info beside it
+                        let gap = self.config.gap;
+                        let reset = if self.config.no_color { "" } else { RESET };
+                        let total = max_rows.max(info_lines.len());
+                        let term_w = terminal_width();
+                        let right_avail = term_w.saturating_sub(max_cols + gap);
+
+                        print!("\x1b[{}A", max_rows);
+                        for i in 0..total {
+                            print!("\x1b[{}C", max_cols + gap);
+                            if i < info_lines.len() {
+                                let truncated = if right_avail > 0 {
+                                    truncate_to_width(&info_lines[i], right_avail)
+                                } else {
+                                    info_lines[i].clone()
+                                };
+                                println!("{}{}", truncated, reset);
+                            } else {
+                                println!();
+                            }
+                        }
+                    }
+                    Err(e) => {
