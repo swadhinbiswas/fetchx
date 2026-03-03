@@ -378,3 +378,63 @@ fn w3m_img_path() -> Option<String> {
 
 /// Display an image using w3mimgdisplay.
 /// w3m uses a helper binary that accepts commands on stdin:
+///   0;1;x;y;w;h;sx;sy;sw;sh;path\n  (draw)
+///   6;offset_x;offset_y;width;height\n  (sync)
+pub fn display_w3m(
+    image_path: &str,
+    max_cols: usize,
+    max_rows: usize,
+) -> Result<(), String> {
+    let path = Path::new(image_path);
+    if !path.exists() {
+        return Err(format!("Image not found: {}", image_path));
+    }
+
+    let w3m_bin = w3m_img_path().ok_or("w3mimgdisplay not found")?;
+
+    // Get pixel dimensions from terminal
+    let cell_w = 8;
+    let cell_h = 16;
+    let max_px_w = max_cols * cell_w;
+    let max_px_h = max_rows * cell_h;
+
+    // Get original image size using w3mimgdisplay (command 5)
+    let size_cmd = format!("5;{}\n", image_path);
+    let size_output = Command::new(&w3m_bin)
+        .stdin(std::process::Stdio::piped())
+        .stdout(std::process::Stdio::piped())
+        .stderr(std::process::Stdio::null())
+        .spawn()
+        .and_then(|mut child| {
+            if let Some(ref mut stdin) = child.stdin {
+                stdin.write_all(size_cmd.as_bytes()).ok();
+            }
+            child.wait_with_output()
+        })
+        .map_err(|e| format!("w3mimgdisplay failed: {}", e))?;
+
+    let size_str = String::from_utf8_lossy(&size_output.stdout);
+    let (orig_w, orig_h) = size_str
+        .trim()
+        .split_once(' ')
+        .and_then(|(w, h)| {
+            let w: u32 = w.parse().ok()?;
+            let h: u32 = h.parse().ok()?;
+            Some((w, h))
+        })
+        .unwrap_or((max_px_w as u32, max_px_h as u32));
+
+    // Scale to fit
+    let scale = (max_px_w as f64 / orig_w as f64)
+        .min(max_px_h as f64 / orig_h as f64)
+        .min(1.0);
+    let target_w = (orig_w as f64 * scale) as u32;
+    let target_h = (orig_h as f64 * scale) as u32;
+
+    // Draw command: 0;1;0;0;target_w;target_h;0;0;orig_w;orig_h;path
+    let draw_cmd = format!(
+        "0;1;0;0;{};{};0;0;{};{};{}\n3;\n",
+        target_w, target_h, orig_w, orig_h, image_path
+    );
+
+    let mut child = Command::new(&w3m_bin)
