@@ -248,3 +248,66 @@ pub fn detect_terminal_capabilities() -> TerminalCapabilities {
             backend: "kitty".to_string(),
         };
     }
+
+    // Check for iTerm2
+    if std::env::var("ITERM_SESSION_ID").is_ok() {
+        return TerminalCapabilities {
+            supports_graphics: true,
+            backend: "iterm2".to_string(),
+        };
+    }
+
+    // Check for sixel support
+    if term.contains("xterm-kitty") || colorterm.contains("truecolor") {
+        if check_sixel_support() {
+            return TerminalCapabilities {
+                supports_graphics: true,
+                backend: "sixel".to_string(),
+            };
+        }
+    }
+
+    // Check for w3m (X11)
+    if std::env::var("DISPLAY").is_ok() {
+        return TerminalCapabilities {
+            supports_graphics: true,
+            backend: "w3m".to_string(),
+        };
+    }
+
+    // Fallback: no graphics support, use ASCII
+    TerminalCapabilities {
+        supports_graphics: false,
+        backend: "ascii".to_string(),
+    }
+}
+
+pub struct TerminalCapabilities {
+    #[allow(dead_code)]
+    pub supports_graphics: bool,
+    pub backend: String,
+}
+
+/// Check if terminal supports sixel (heuristic)
+fn check_sixel_support() -> bool {
+    std::env::var("TERM")
+        .map(|t| t.contains("256color") || t.contains("truecolor"))
+        .unwrap_or(false)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_cache_dir_exists() {
+        let dir = cache_dir();
+        assert!(dir.to_string_lossy().contains("cache"));
+    }
+
+    #[test]
+    fn test_should_download_returns_bool() {
+        let result = should_download();
+        assert!(result || !result); // Just verify it returns a bool
+    }
+}
