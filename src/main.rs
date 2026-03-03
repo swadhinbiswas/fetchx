@@ -518,3 +518,37 @@ fn init_api_image_config() {
             } else {
                 // Add new entries
                 format!(
+                    "{}\n\n# API Image Fetching (Smart Caching)\nimage_backend = \"auto\"\nimage_source = \"auto\"\n",
+                    content
+                )
+            };
+
+            match fs::write(&config_path, updated) {
+                Ok(_) => {
+                    println!("✓ Config initialized with API image fetching!");
+                    println!("");
+                    println!("Settings applied:");
+                    println!("  • image_backend = \"auto\"    (terminal auto-detection)");
+                    println!("  • image_source = \"auto\"     (API + smart 6-hour caching)");
+                    println!("");
+                    println!("Next steps:");
+                    println!("  1. Run 'fetch' to see API wallpaper");
+                    println!("  2. Run 'fetch' again after a few seconds to see cached image");
+                    println!("  3. First run downloads image in background without blocking");
+                    println!("");
+                    println!("Cache location: ~/.cache/fetchx/current_image.png");
+                }
+                Err(e) => {
+                    eprintln!("Error writing config: {}", e);
+                    std::process::exit(1);
+                }
+            }
+        }
+        Err(_) => {
+            eprintln!("Config file not found. Create it first:");
+            eprintln!("  fetchx --create-config");
+            eprintln!("  fetchx --init-api-image");
+            std::process::exit(1);
+        }
+    }
+}
