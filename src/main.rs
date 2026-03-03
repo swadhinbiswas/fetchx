@@ -328,3 +328,53 @@ fn select_image_interactive() {
                     let path = entry.path();
                     if let Some(ext) = path.extension().and_then(|e| e.to_str()) {
                         if matches!(
+                            ext.to_lowercase().as_str(),
+                            "png" | "jpg" | "jpeg" | "gif" | "webp" | "bmp"
+                        ) {
+                            if let Some(path_str) = path.to_str() {
+                                image_paths.push(path_str.to_string());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    if image_paths.is_empty() {
+        println!("No images found in common directories (Downloads, Pictures, Desktop)");
+        return;
+    }
+
+    // Try to use fzf if available
+    let fzf_input = image_paths.join("\n");
+
+    match Command::new("fzf")
+        .arg("--preview")
+        .arg("file {}")
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .spawn()
+    {
+        Ok(mut child) => {
+            if let Some(mut stdin) = child.stdin.take() {
+                let _ = std::io::Write::write_all(&mut stdin, fzf_input.as_bytes());
+            }
+
+            if let Ok(output) = child.wait_with_output() {
+                let selected = String::from_utf8_lossy(&output.stdout).trim().to_string();
+                if !selected.is_empty() {
+                    update_config_image(&selected);
+                }
+            }
+        }
+        Err(_) => {
+            // Fallback: show a numbered menu if fzf not available
+            println!("Available images:");
+            for (i, path) in image_paths.iter().enumerate() {
+                println!("{}: {}", i + 1, path);
+            }
+            println!("fzf not found. Please install fzf for interactive selection: https://github.com/junegunn/fzf");
+        }
+    }
+}
