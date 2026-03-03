@@ -198,3 +198,63 @@ pub fn display_kitty(
     let rgba = resized.to_rgba8();
     let raw = rgba.as_raw();
 
+    // Kitty graphics protocol: transmit in chunks
+    // Format: \x1b_Ga=T,f=32,s=<width>,v=<height>,m=1;<base64>\x1b\\
+    let encoded = base64::engine::general_purpose::STANDARD.encode(raw);
+
+    let stdout = io::stdout();
+    let mut out = stdout.lock();
+
+    let chunk_size = 4096;
+    let chunks: Vec<&str> = encoded
+        .as_bytes()
+        .chunks(chunk_size)
+        .map(|c| std::str::from_utf8(c).unwrap_or(""))
+        .collect();
+
+    for (i, chunk) in chunks.iter().enumerate() {
+        let more = if i < chunks.len() - 1 { 1 } else { 0 };
+        if i == 0 {
+            write!(
+                out,
+                "\x1b_Ga=T,f=32,s={},v={},m={};{}\x1b\\",
+                resized.width(),
+                resized.height(),
+                more,
+                chunk
+            )
+            .ok();
+        } else {
+            write!(out, "\x1b_Gm={};{}\x1b\\", more, chunk).ok();
+        }
+    }
+    out.flush().ok();
+
+    // Return how many terminal cells the image occupies
+    let cols_used = (resized.width() as f64 / cell_w).ceil() as usize;
+    let rows_used = (resized.height() as f64 / cell_h).ceil() as usize;
+
+    Ok((cols_used, rows_used))
+}
+
+/// Display an image using chafa (converts to text-based art).
+/// Returns the rendered lines.
+pub fn display_chafa(
+    image_path: &str,
+    max_cols: usize,
+    max_rows: usize,
+) -> Result<Vec<String>, String> {
+    let path = Path::new(image_path);
+    if !path.exists() {
+        return Err(format!("Image not found: {}", image_path));
+    }
+
+    let output = Command::new("chafa")
+        .args([
+            "--size",
+            &format!("{}x{}", max_cols, max_rows),
+            "--animate",
+            "off",
+            image_path,
+        ])
+        .output()
