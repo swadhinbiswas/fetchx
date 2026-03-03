@@ -378,3 +378,53 @@ fn select_image_interactive() {
         }
     }
 }
+
+/// Update config file with selected image
+fn update_config_image(image_path: &str) {
+    use std::fs;
+    let config_path = Config::config_path();
+
+    match fs::read_to_string(&config_path) {
+        Ok(content) => {
+            let updated = if content.contains("custom_image") {
+                // Simple replacement: find and replace the custom_image line
+                let lines: Vec<&str> = content.lines().collect();
+                let new_lines: Vec<String> = lines.iter()
+                    .map(|line| {
+                        if line.starts_with("custom_image") {
+                            format!(r#"custom_image = "{}""#, image_path)
+                        } else {
+                            line.to_string()
+                        }
+                    })
+                    .collect();
+                new_lines.join("\n") + "\n"
+            } else {
+                format!("{}\ncustom_image = \"{}\"\n", content, image_path)
+            };
+
+            if let Err(e) = fs::write(&config_path, updated) {
+                eprintln!("Error updating config: {}", e);
+            } else {
+                println!("✓ Config updated with image: {}", image_path);
+                println!("  Run 'fetch' to see the selected image");
+            }
+        }
+        Err(e) => {
+            eprintln!("Error reading config: {}", e);
+        }
+    }
+}
+
+/// Run fetchx as a daemon, updating status file every 10 seconds
+fn run_daemon() {
+    use std::fs;
+    use std::thread;
+    use std::time::Duration;
+
+    let status_file = dirs::runtime_dir()
+        .unwrap_or_else(|| std::path::PathBuf::from("/tmp"))
+        .join("fetchx-status.json");
+
+    println!("Starting fetchx daemon...");
+    println!("Status file: {}", status_file.display());
