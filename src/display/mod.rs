@@ -378,3 +378,63 @@ impl Display {
                     let placeholder = format!("{{c{}}}", i + 1);
                     s = s.replace(&placeholder, color_seq);
                 }
+                s
+            })
+            .collect()
+    }
+
+    /// Build all info lines (title, underline, fields, color blocks).
+    fn build_info_lines(&self, sys: &SystemInfo, scheme: &ColorScheme) -> Vec<String> {
+        let mut lines: Vec<String> = Vec::new();
+        let sep = &self.config.separator;
+
+        // Title: user@host
+        if self.config.show_title {
+            if self.config.no_color {
+                lines.push(format!("{}@{}", sys.username, sys.hostname));
+            } else {
+                let title_line = format!(
+                    "{}{}{}{}{}@{}{}{}{}",
+                    scheme.title,
+                    BOLD,
+                    sys.username,
+                    RESET,
+                    scheme.at,
+                    scheme.title,
+                    BOLD,
+                    sys.hostname,
+                    RESET,
+                );
+                lines.push(title_line);
+            }
+        }
+
+        // Underline (uses configurable underline_char, defaults to '-' like neofetch)
+        if self.config.show_underline && self.config.show_title {
+            let title_visible_len = sys.username.len() + 1 + sys.hostname.len(); // user@host
+            let dashes = self.config.underline_char.repeat(title_visible_len);
+            if self.config.no_color {
+                lines.push(dashes);
+            } else {
+                lines.push(format!("{}{}{}", scheme.underline, dashes, RESET));
+            }
+        }
+
+        // Info fields — each one: colored label + separator + value
+        let nf = self.config.nerd_font;
+
+        let field = |label: &str, icon: &str, value: &str| -> String {
+            if self.config.no_color {
+                let prefix = if nf {
+                    format!("{} {}", icon, label)
+                } else {
+                    label.to_string()
+                };
+                format!("{}{}{}", prefix, sep, value)
+            } else {
+                let prefix = if nf {
+                    format!("{} {}{}{}", icon, scheme.subtitle, BOLD, label)
+                } else {
+                    format!("{}{}{}", scheme.subtitle, BOLD, label)
+                };
+                format!(
