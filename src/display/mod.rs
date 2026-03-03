@@ -258,3 +258,63 @@ impl Display {
 
     /// Build the color scheme based on config and distro.
     fn build_color_scheme(&self, distro_id: &str) -> ColorScheme {
+        // Determine ASCII art colors to use
+        let art_color_nums: Vec<u8> = match &self.config.ascii_colors {
+            ColorConfig::Numbers(nums) if !nums.is_empty() => nums.clone(),
+            _ => {
+                let art = ascii::get_ascii(distro_id);
+                art.colors.clone()
+            }
+        };
+
+        let art_bold = self.config.ascii_bold && self.config.bold;
+        if self.config.no_color {
+            ColorScheme::plain()
+        } else {
+            let mut cs = ColorScheme::from_colors(&art_color_nums, art_bold);
+
+            // Override text colors if user specified custom colors
+            match &self.config.colors {
+                ColorConfig::Numbers(nums) if !nums.is_empty() => {
+                    if let Some(&n) = nums.first() {
+                        cs.title = colors::color(n);
+                    }
+                    if let Some(&n) = nums.get(1) {
+                        cs.at = colors::color(n);
+                    }
+                    if let Some(&n) = nums.get(2) {
+                        cs.underline = colors::color(n);
+                    }
+                    if let Some(&n) = nums.get(3) {
+                        cs.subtitle = colors::color(n);
+                    }
+                    if let Some(&n) = nums.get(4) {
+                        cs.colon = colors::color(n);
+                    }
+                    if let Some(&n) = nums.get(5) {
+                        cs.info = colors::color(n);
+                    }
+                }
+                _ => {}
+            }
+
+            cs
+        }
+    }
+
+    /// Render left-side lines and right-side info lines side-by-side.
+    fn render_side_by_side(&self, left_lines: &[String], right_lines: &[String]) {
+        // Calculate max visible width of ASCII art (for padding calculations)
+        let max_left_width = left_lines
+            .iter()
+            .map(|l| visible_width(l))
+            .max()
+            .unwrap_or(0);
+
+        let gap = self.config.gap;
+        let term_w = terminal_width();
+        let right_avail = term_w.saturating_sub(max_left_width + gap);
+        let reset = if self.config.no_color { "" } else { RESET };
+
+        // Simple approach: just pad ASCII lines and print with info alongside
+        // No cursor repositioning - just proper column alignment
