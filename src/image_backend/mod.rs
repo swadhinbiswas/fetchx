@@ -258,3 +258,63 @@ pub fn display_chafa(
             image_path,
         ])
         .output()
+        .map_err(|e| format!("Failed to run chafa: {}", e))?;
+
+    if !output.status.success() {
+        return Err(format!(
+            "chafa failed: {}",
+            String::from_utf8_lossy(&output.stderr)
+        ));
+    }
+
+    let text = String::from_utf8_lossy(&output.stdout);
+    Ok(text.lines().map(|l| l.to_string()).collect())
+}
+
+/// Display an image using sixel (via img2sixel).
+pub fn display_sixel(
+    image_path: &str,
+    max_cols: usize,
+    _max_rows: usize,
+) -> Result<(), String> {
+    let path = Path::new(image_path);
+    if !path.exists() {
+        return Err(format!("Image not found: {}", image_path));
+    }
+
+    // Calculate pixel width (approx 8px per col)
+    let px_width = max_cols * 8;
+
+    let output = Command::new("img2sixel")
+        .args(["-w", &px_width.to_string(), image_path])
+        .output()
+        .map_err(|e| format!("Failed to run img2sixel: {}", e))?;
+
+    if !output.status.success() {
+        return Err(format!(
+            "img2sixel failed: {}",
+            String::from_utf8_lossy(&output.stderr)
+        ));
+    }
+
+    let stdout = io::stdout();
+    let mut out = stdout.lock();
+    out.write_all(&output.stdout).ok();
+    out.flush().ok();
+
+    Ok(())
+}
+
+/// Render an image with the specified backend. Returns lines for side-by-side layout.
+/// For kitty/sixel, the image is printed directly and empty placeholder lines are returned.
+#[allow(dead_code)]
+pub fn render_image(
+    backend: &Backend,
+    image_path: &str,
+    max_cols: usize,
+    max_rows: usize,
+) -> ImageResult {
+    match backend {
+        Backend::Kitty => match display_kitty(image_path, max_cols, max_rows) {
+            Ok((w, h)) => ImageResult::InlineRendered {
+                height_rows: h,
