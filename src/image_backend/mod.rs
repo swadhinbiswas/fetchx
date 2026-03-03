@@ -98,3 +98,53 @@ fn extract_gif_frames(image_path: &str) -> Result<Vec<image::DynamicImage>, Stri
 
     match image::open(path) {
         Ok(img) => {
+            // For now, return single frame (first frame of GIF)
+            // Full animation support would require the 'gif' crate
+            Ok(vec![img])
+        }
+        Err(e) => Err(format!("Failed to open GIF: {}", e)),
+    }
+}
+
+/// Display a single image frame using kitty graphics protocol
+fn display_kitty_frame(
+    img: &image::DynamicImage,
+    max_cols: usize,
+    max_rows: usize,
+) -> Result<(usize, usize), String> {
+    // Calculate dimensions — fit within max_cols x max_rows
+    let (orig_w, orig_h) = (img.width() as f64, img.height() as f64);
+    let cell_w = 8.0_f64;
+    let cell_h = 16.0_f64;
+
+    let max_px_w = max_cols as f64 * cell_w;
+    let max_px_h = max_rows as f64 * cell_h;
+
+    let scale = (max_px_w / orig_w).min(max_px_h / orig_h).min(1.0);
+    let target_w = (orig_w * scale) as u32;
+    let target_h = (orig_h * scale) as u32;
+
+    let resized = img.resize(target_w, target_h, image::imageops::FilterType::Lanczos3);
+    let rgba = resized.to_rgba8();
+    let raw = rgba.as_raw();
+
+    let encoded = base64::engine::general_purpose::STANDARD.encode(raw);
+    let stdout = io::stdout();
+    let mut out = stdout.lock();
+
+    let chunk_size = 4096;
+    let chunks: Vec<&str> = encoded
+        .as_bytes()
+        .chunks(chunk_size)
+        .map(|c| std::str::from_utf8(c).unwrap_or(""))
+        .collect();
+
+    for (i, chunk) in chunks.iter().enumerate() {
+        let more = if i < chunks.len() - 1 { 1 } else { 0 };
+        if i == 0 {
+            write!(
+                out,
+                "\x1b_Ga=T,f=32,s={},v={},m={};{}\x1b\\",
+                target_w, target_h, more, chunk
+            )
+            .ok();
