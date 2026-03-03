@@ -148,3 +148,53 @@ fn get_hyprland_wallpaper() -> Option<PathBuf> {
 
 /// Get GNOME wallpaper from dconf
 fn get_gnome_wallpaper() -> Option<PathBuf> {
+    let output = Command::new("dconf")
+        .args(&["read", "/org/gnome/desktop/background/picture-uri-dark"])
+        .output()
+        .ok()?;
+
+    let path_str = String::from_utf8(output.stdout).ok()?;
+    let path_str = path_str
+        .trim()
+        .trim_matches('\'')
+        .trim_start_matches("file://");
+
+    let path = PathBuf::from(path_str);
+    if path.exists() && is_image_file(&path) {
+        return Some(path);
+    }
+
+    None
+}
+
+/// Get KDE wallpaper from config
+fn get_kde_wallpaper() -> Option<PathBuf> {
+    let kde_config = dirs::config_dir()
+        .map(|d| d.join("plasmarc"))?;
+
+    if let Ok(content) = fs::read_to_string(&kde_config) {
+        for line in content.lines() {
+            if line.contains("Image=") || line.contains("File=") {
+                if let Some(value) = line.split('=').nth(1) {
+                    let path = expand_path(value.trim());
+                    if path.exists() && is_image_file(&path) {
+                        return Some(path);
+                    }
+                }
+            }
+        }
+    }
+
+    None
+}
+
+/// Copy wallpaper image to cache directory
+fn copy_image_to_cache(source: &PathBuf) -> Result<(), Box<dyn std::error::Error>> {
+    let cache = cache_dir();
+    fs::create_dir_all(&cache)?;
+
+    let cached = cached_image_path();
+    fs::copy(source, &cached)?;
+
+    Ok(())
+}
