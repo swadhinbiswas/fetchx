@@ -428,3 +428,53 @@ fn run_daemon() {
 
     println!("Starting fetchx daemon...");
     println!("Status file: {}", status_file.display());
+
+    loop {
+        // Gather system info
+        let sys_info = SystemInfo::collect();
+
+        // Create JSON status
+        let status = serde_json::json!({
+            "hostname": &sys_info.hostname,
+            "os": &sys_info.os,
+            "cpu": &sys_info.cpu,
+            "memory": &sys_info.memory,
+            "disk": &sys_info.disk,
+            "uptime": &sys_info.uptime,
+            "shell": &sys_info.shell,
+            "terminal": &sys_info.terminal,
+            "timestamp": std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap_or_default()
+                .as_secs(),
+        });
+
+        // Write to status file
+        if let Ok(json_str) = serde_json::to_string_pretty(&status) {
+            let _ = fs::write(&status_file, json_str);
+        }
+
+        // Update every 10 seconds
+        thread::sleep(Duration::from_secs(10));
+    }
+}
+
+/// Show compact tray status (read from daemon status file)
+fn show_tray_status() {
+    use std::fs;
+
+    let status_file = dirs::runtime_dir()
+        .unwrap_or_else(|| std::path::PathBuf::from("/tmp"))
+        .join("fetchx-status.json");
+
+    match fs::read_to_string(&status_file) {
+        Ok(content) => {
+            match serde_json::from_str::<serde_json::Value>(&content) {
+                Ok(status) => {
+                    // Compact format for tray/widgets
+                    let cpu = status.get("cpu").and_then(|v| v.as_str()).unwrap_or("N/A");
+                    let mem = status.get("memory").and_then(|v| v.as_str()).unwrap_or("N/A");
+                    let host = status.get("hostname").and_then(|v| v.as_str()).unwrap_or("Unknown");
+
+                    // Format: Host | CPU: 45% | RAM: 8.2GB/16GB
+                    println!("{} | CPU: {} | RAM: {}", host, cpu, mem);
