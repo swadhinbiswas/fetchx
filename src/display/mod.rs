@@ -318,3 +318,63 @@ impl Display {
 
         // Simple approach: just pad ASCII lines and print with info alongside
         // No cursor repositioning - just proper column alignment
+
+        let total_rows = left_lines.len().max(right_lines.len());
+
+        for i in 0..total_rows {
+            // Left column: ASCII art (padded to width)
+            let left_part = if i < left_lines.len() {
+                pad_right(&left_lines[i], max_left_width)
+            } else {
+                " ".repeat(max_left_width)
+            };
+
+            // Gap between columns
+            let gap_str = " ".repeat(gap);
+
+            // Right column: info lines (truncated to fit)
+            if i < right_lines.len() {
+                let truncated = if right_avail > 0 {
+                    truncate_to_width(&right_lines[i], right_avail)
+                } else {
+                    right_lines[i].clone()
+                };
+                println!("{}{}{}{}{}", left_part, reset, gap_str, truncated, reset);
+            } else {
+                println!("{}{}", left_part, reset);
+            }
+        }
+    }
+
+    /// Build ASCII art lines with {c1}-{c6} placeholders replaced by actual ANSI codes.
+    fn build_ascii_lines(&self, distro_id: &str, scheme: &ColorScheme) -> Vec<String> {
+        if self.config.emoji_mode {
+            return ascii::get_emoji_art(distro_id)
+                .into_iter()
+                .map(|s| s.to_string())
+                .collect();
+        }
+
+        // If user specified a custom ASCII file, load it from disk
+        let raw_lines: Vec<String> = if let Some(ref path) = self.config.ascii_file {
+            match std::fs::read_to_string(path) {
+                Ok(contents) => contents.lines().map(|l| l.to_string()).collect(),
+                Err(e) => {
+                    eprintln!("Warning: could not read ascii_file '{}': {}", path, e);
+                    let art = ascii::get_ascii(distro_id);
+                    art.lines.iter().map(|s| s.to_string()).collect()
+                }
+            }
+        } else {
+            let art = ascii::get_ascii(distro_id);
+            art.lines.iter().map(|s| s.to_string()).collect()
+        };
+
+        raw_lines
+            .iter()
+            .map(|line| {
+                let mut s = line.to_string();
+                for (i, color_seq) in scheme.c.iter().enumerate() {
+                    let placeholder = format!("{{c{}}}", i + 1);
+                    s = s.replace(&placeholder, color_seq);
+                }
