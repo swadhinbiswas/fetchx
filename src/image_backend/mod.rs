@@ -318,3 +318,63 @@ pub fn render_image(
         Backend::Kitty => match display_kitty(image_path, max_cols, max_rows) {
             Ok((w, h)) => ImageResult::InlineRendered {
                 height_rows: h,
+                width_cols: w,
+            },
+            Err(e) => ImageResult::Failed(e),
+        },
+        Backend::Chafa => match display_chafa(image_path, max_cols, max_rows) {
+            Ok(lines) => ImageResult::TextLines(lines),
+            Err(e) => ImageResult::Failed(e),
+        },
+        Backend::Sixel => match display_sixel(image_path, max_cols, max_rows) {
+            Ok(()) => ImageResult::InlineRendered {
+                height_rows: max_rows,
+                width_cols: max_cols,
+            },
+            Err(e) => ImageResult::Failed(e),
+        },
+        Backend::W3m => match display_w3m(image_path, max_cols, max_rows) {
+            Ok(()) => ImageResult::InlineRendered {
+                height_rows: max_rows,
+                width_cols: max_cols,
+            },
+            Err(e) => ImageResult::Failed(e),
+        },
+        Backend::Iterm2 => match display_iterm2(image_path, max_cols, max_rows) {
+            Ok(()) => ImageResult::InlineRendered {
+                height_rows: max_rows,
+                width_cols: max_cols,
+            },
+            Err(e) => ImageResult::Failed(e),
+        },
+        _ => ImageResult::Failed("Backend does not support images".to_string()),
+    }
+}
+
+/// Find the w3mimgdisplay binary path.
+fn w3m_img_path() -> Option<String> {
+    let paths = [
+        "/usr/lib/w3m/w3mimgdisplay",
+        "/usr/libexec/w3m/w3mimgdisplay",
+        "/usr/lib64/w3m/w3mimgdisplay",
+        "/usr/local/lib/w3m/w3mimgdisplay",
+    ];
+    for p in &paths {
+        if Path::new(p).exists() {
+            return Some(p.to_string());
+        }
+    }
+    // Try which
+    if let Ok(output) = Command::new("which").arg("w3mimgdisplay").output() {
+        if output.status.success() {
+            let s = String::from_utf8_lossy(&output.stdout).trim().to_string();
+            if !s.is_empty() {
+                return Some(s);
+            }
+        }
+    }
+    None
+}
+
+/// Display an image using w3mimgdisplay.
+/// w3m uses a helper binary that accepts commands on stdin:
