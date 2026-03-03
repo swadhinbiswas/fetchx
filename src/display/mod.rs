@@ -548,3 +548,52 @@ impl Display {
             "\u{f6ff}",
             &sys.local_ip
         ); //  󰛿
+        add_field!(
+            self.config.show_public_ip,
+            "Public IP",
+            "\u{f0ac}",
+            &sys.public_ip
+        ); //
+        add_field!(self.config.show_locale, "Locale", "\u{f0ac}", &sys.locale); //
+        add_field!(self.config.show_song, "Song", "\u{f001}", &sys.song); //
+        add_field!(self.config.show_users, "Users", "\u{f007}", &sys.users); //
+
+        // Blank line before color blocks
+        if self.config.show_colors && !self.config.no_color {
+            lines.push(String::new());
+            let blocks = colors::color_blocks(
+                self.config.block_range.0,
+                self.config.block_range.1,
+                self.config.block_width,
+            );
+            for block_line in blocks {
+                lines.push(block_line);
+            }
+        }
+
+        lines
+    }
+}
+
+/// Get terminal width in columns.
+fn terminal_width() -> usize {
+    // Try COLUMNS env first
+    if let Ok(cols) = std::env::var("COLUMNS") {
+        if let Ok(n) = cols.parse::<usize>() {
+            return n;
+        }
+    }
+
+    // Try `tput cols`
+    if let Ok(output) = std::process::Command::new("tput").arg("cols").output() {
+        if output.status.success() {
+            if let Ok(s) = String::from_utf8(output.stdout) {
+                if let Ok(n) = s.trim().parse::<usize>() {
+                    return n;
+                }
+            }
+        }
+    }
+
+    80
+}
