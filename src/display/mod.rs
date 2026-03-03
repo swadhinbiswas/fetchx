@@ -198,3 +198,63 @@ impl Display {
                         }
                     }
                     Err(e) => {
+                        eprintln!("Warning: iTerm2 image failed: {}", e);
+                        self.render_ascii(sys_info);
+                    }
+                }
+            }
+            _ => self.render_ascii(sys_info),
+        }
+    }
+
+    /// Parse image_size config into column count.
+    fn parse_image_size_cols(&self) -> Option<usize> {
+        let s = &self.config.image_size;
+        if s == "auto" || s == "none" {
+            return None;
+        }
+        if let Some(stripped) = s.strip_suffix("px") {
+            // Convert pixels to approximate columns (8px per col)
+            stripped.parse::<usize>().ok().map(|px| px / 8)
+        } else if let Some(stripped) = s.strip_suffix('%') {
+            // Percentage of terminal width
+            let term_cols = terminal_width();
+            stripped
+                .parse::<usize>()
+                .ok()
+                .map(|pct| term_cols * pct / 100)
+        } else {
+            s.parse::<usize>().ok()
+        }
+    }
+
+    /// Standard ASCII art rendering path.
+    fn render_ascii(&self, sys_info: &SystemInfo) {
+        // Resolve which distro art to use
+        let distro_id = if self.config.ascii_distro == "auto" {
+            &sys_info.distro_id
+        } else {
+            &self.config.ascii_distro
+        };
+
+        let scheme = self.build_color_scheme(distro_id);
+
+        // Get ASCII art lines with color placeholders resolved
+        let ascii_lines = self.build_ascii_lines(distro_id, &scheme);
+
+        if self.config.logo_only {
+            let reset = if self.config.no_color { "" } else { RESET };
+            for line in &ascii_lines {
+                println!("{}{}", line, reset);
+            }
+            return;
+        }
+
+        // Build info lines
+        let info_lines = self.build_info_lines(sys_info, &scheme);
+
+        self.render_side_by_side(&ascii_lines, &info_lines);
+    }
+
+    /// Build the color scheme based on config and distro.
+    fn build_color_scheme(&self, distro_id: &str) -> ColorScheme {
