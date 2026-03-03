@@ -48,3 +48,53 @@ impl Display {
     fn resolve_image_path(&self) -> Option<String> {
         // Priority: custom_image > image_source path > None
         if let Some(ref path) = self.config.custom_image {
+            if std::path::Path::new(path).exists() {
+                return Some(path.clone());
+            } else {
+                eprintln!("Warning: custom_image '{}' not found", path);
+            }
+        }
+        let src = &self.config.image_source;
+        if src != "auto" && src != "ascii" && src != "wallpaper" {
+            // Treat as a file path
+            if std::path::Path::new(src).exists() {
+                return Some(src.clone());
+            }
+        }
+        None
+    }
+
+    /// Render with an image on the left side.
+    fn render_with_image(&self, sys_info: &SystemInfo, backend: &Backend, image_path: &str) {
+        // Build color scheme for info text
+        let distro_id = if self.config.ascii_distro == "auto" {
+            &sys_info.distro_id
+        } else {
+            &self.config.ascii_distro
+        };
+        let scheme = self.build_color_scheme(distro_id);
+        let info_lines = self.build_info_lines(sys_info, &scheme);
+
+        // Determine size for the image
+        let max_cols = self.parse_image_size_cols().unwrap_or(35);
+        let max_rows = info_lines.len().max(20);
+
+        match backend {
+            Backend::Kitty => {
+                // Kitty: render image directly via escape codes, then print info beside it
+                match image_backend::display_kitty(image_path, max_cols, max_rows) {
+                    Ok((img_cols, img_rows)) => {
+                        let gap = self.config.gap;
+                        let reset = if self.config.no_color { "" } else { RESET };
+                        let total = img_rows.max(info_lines.len());
+                        let term_w = terminal_width();
+                        let right_avail = term_w.saturating_sub(img_cols + gap);
+
+                        // Move cursor up by img_rows to start printing info beside image
+                        print!("\x1b[{}A", img_rows);
+
+                        for i in 0..total {
+                            // Move to the right of the image
+                            print!("\x1b[{}C", img_cols + gap);
+                            if i < info_lines.len() {
+                                let truncated = if right_avail > 0 {
