@@ -198,3 +198,53 @@ fn copy_image_to_cache(source: &PathBuf) -> Result<(), Box<dyn std::error::Error
 
     Ok(())
 }
+
+/// Check if a file is likely an image
+fn is_image_file(path: &PathBuf) -> bool {
+    let extensions = ["png", "jpg", "jpeg", "webp", "gif", "bmp"];
+    if let Some(ext) = path
+        .extension()
+        .and_then(|e| e.to_str())
+        .map(|s| s.to_lowercase())
+    {
+        extensions.contains(&ext.as_str())
+    } else {
+        false
+    }
+}
+
+/// Expand ~ and environment variables in paths
+fn expand_path(path: &str) -> PathBuf {
+    if path.starts_with("~/") {
+        if let Ok(home) = std::env::var("HOME") {
+            PathBuf::from(path.replace("~", &home))
+        } else {
+            PathBuf::from(path)
+        }
+    } else {
+        PathBuf::from(path)
+    }
+}
+
+
+pub fn get_available_image() -> Option<PathBuf> {
+    let cache = cached_image_path();
+    if cache.exists() {
+        Some(cache)
+    } else {
+        None
+    }
+}
+
+/// Detect terminal capabilities
+pub fn detect_terminal_capabilities() -> TerminalCapabilities {
+    let term = std::env::var("TERM").unwrap_or_default();
+    let colorterm = std::env::var("COLORTERM").unwrap_or_default();
+
+    // Check for kitty
+    if std::env::var("KITTY_WINDOW_ID").is_ok() {
+        return TerminalCapabilities {
+            supports_graphics: true,
+            backend: "kitty".to_string(),
+        };
+    }
