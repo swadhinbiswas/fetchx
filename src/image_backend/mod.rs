@@ -148,3 +148,53 @@ fn display_kitty_frame(
                 target_w, target_h, more, chunk
             )
             .ok();
+        } else {
+            write!(out, "\x1b_Gm={};{}\x1b\\", more, chunk).ok();
+        }
+    }
+
+    let display_w = (target_w as f64 / cell_w).ceil() as usize;
+    let display_h = (target_h as f64 / cell_h).ceil() as usize;
+
+    Ok((display_w, display_h))
+}
+
+/// Display an image using the kitty graphics protocol.
+/// Returns the dimensions used.
+pub fn display_kitty(
+    image_path: &str,
+    max_cols: usize,
+    max_rows: usize,
+) -> Result<(usize, usize), String> {
+    let path = Path::new(image_path);
+    if !path.exists() {
+        return Err(format!("Image not found: {}", image_path));
+    }
+
+    // Check if it's an animated GIF
+    if let Ok(frames) = extract_gif_frames(image_path) {
+        if frames.len() > 1 {
+            // Display first frame for now (full animation support requires terminal refresh loop)
+            return display_kitty_frame(&frames[0], max_cols, max_rows);
+        }
+    }
+
+    let img = image::open(path).map_err(|e| format!("Failed to open image: {}", e))?;
+
+    // Calculate dimensions — fit within max_cols x max_rows
+    // Assume ~2:1 character aspect ratio (chars are taller than wide)
+    let (orig_w, orig_h) = (img.width() as f64, img.height() as f64);
+    let cell_w = 8.0_f64; // approximate pixel width of a terminal cell
+    let cell_h = 16.0_f64; // approximate pixel height of a terminal cell
+
+    let max_px_w = max_cols as f64 * cell_w;
+    let max_px_h = max_rows as f64 * cell_h;
+
+    let scale = (max_px_w / orig_w).min(max_px_h / orig_h).min(1.0);
+    let target_w = (orig_w * scale) as u32;
+    let target_h = (orig_h * scale) as u32;
+
+    let resized = img.resize(target_w, target_h, image::imageops::FilterType::Lanczos3);
+    let rgba = resized.to_rgba8();
+    let raw = rgba.as_raw();
+
