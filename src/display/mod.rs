@@ -98,3 +98,53 @@ impl Display {
                             print!("\x1b[{}C", img_cols + gap);
                             if i < info_lines.len() {
                                 let truncated = if right_avail > 0 {
+                                    truncate_to_width(&info_lines[i], right_avail)
+                                } else {
+                                    info_lines[i].clone()
+                                };
+                                println!("{}{}", truncated, reset);
+                            } else {
+                                println!();
+                            }
+                        }
+                    }
+                    Err(e) => {
+                        eprintln!("Warning: kitty image failed: {}", e);
+                        self.render_ascii(sys_info);
+                    }
+                }
+            }
+            Backend::Chafa => {
+                // Chafa: get text lines and use them like ASCII art
+                match image_backend::display_chafa(image_path, max_cols, max_rows) {
+                    Ok(img_lines) => {
+                        self.render_side_by_side(&img_lines, &info_lines);
+                    }
+                    Err(e) => {
+                        eprintln!("Warning: chafa failed: {}", e);
+                        self.render_ascii(sys_info);
+                    }
+                }
+            }
+            Backend::Sixel => {
+                match image_backend::display_sixel(image_path, max_cols, max_rows) {
+                    Ok(()) => {
+                        // Sixel prints inline; just print info lines below
+                        let reset = if self.config.no_color { "" } else { RESET };
+                        for line in &info_lines {
+                            println!("{}{}", line, reset);
+                        }
+                    }
+                    Err(e) => {
+                        eprintln!("Warning: sixel failed: {}", e);
+                        self.render_ascii(sys_info);
+                    }
+                }
+            }
+            Backend::W3m => {
+                match image_backend::display_w3m(image_path, max_cols, max_rows) {
+                    Ok(()) => {
+                        // w3m renders image at position; print info offset to the right
+                        let gap = self.config.gap;
+                        let offset = max_cols + gap;
+                        let reset = if self.config.no_color { "" } else { RESET };
