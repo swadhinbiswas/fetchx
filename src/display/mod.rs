@@ -438,3 +438,63 @@ impl Display {
                     format!("{}{}{}", scheme.subtitle, BOLD, label)
                 };
                 format!(
+                    "{}{}{}{}{}{}",
+                    prefix, RESET, scheme.colon, sep, scheme.info, value
+                )
+            }
+        };
+
+        // Helper to skip "Unknown" fields
+        macro_rules! add_field {
+            ($show:expr, $label:expr, $icon:expr, $val:expr) => {
+                if $show && $val != "Unknown" && !$val.is_empty() {
+                    lines.push(field($label, $icon, $val));
+                }
+            };
+        }
+
+        add_field!(self.config.show_os, "OS", "\u{f303}", &sys.os); //
+        add_field!(self.config.show_host, "Host", "\u{f7c9}", &sys.host); //  󰟩
+        add_field!(self.config.show_kernel, "Kernel", "\u{f303}", &sys.kernel); //
+        add_field!(self.config.show_uptime, "Uptime", "\u{f64f}", &sys.uptime); //
+        add_field!(
+            self.config.show_packages,
+            "Packages",
+            "\u{f487}",
+            &sys.packages
+        ); //
+        add_field!(self.config.show_shell, "Shell", "\u{f489}", &sys.shell); //
+        add_field!(
+            self.config.show_resolution,
+            "Resolution",
+            "\u{f878}",
+            &sys.resolution
+        ); //
+        add_field!(self.config.show_de, "DE", "\u{f108}", &sys.de); //
+        add_field!(self.config.show_wm, "WM", "\u{f2d0}", &sys.wm); //
+        add_field!(
+            self.config.show_wm_theme,
+            "WM Theme",
+            "\u{f53e}",
+            &sys.wm_theme
+        ); //
+        add_field!(self.config.show_theme, "Theme", "\u{f53e}", &sys.theme); //
+        add_field!(self.config.show_icons, "Icons", "\u{f53e}", &sys.icons); //
+        add_field!(
+            self.config.show_terminal,
+            "Terminal",
+            "\u{f120}",
+            &sys.terminal
+        ); //
+        add_field!(
+            self.config.show_term_font,
+            "Terminal Font",
+            "\u{f031}",
+            &sys.term_font
+        ); //
+        add_field!(self.config.show_cpu, "CPU", "\u{f4bc}", &sys.cpu); //
+
+        // GPU: each GPU on its own line (like neofetch)
+        if self.config.show_gpu {
+            for (i, gpu_entry) in sys.gpu.iter().enumerate() {
+                if gpu_entry != "Unknown" && !gpu_entry.is_empty() {
