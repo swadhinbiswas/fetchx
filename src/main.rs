@@ -478,3 +478,43 @@ fn show_tray_status() {
 
                     // Format: Host | CPU: 45% | RAM: 8.2GB/16GB
                     println!("{} | CPU: {} | RAM: {}", host, cpu, mem);
+                }
+                Err(_) => {
+                    eprintln!("Invalid status file format. Start daemon with: fetchx --daemon");
+                }
+            }
+        }
+        Err(_) => {
+            eprintln!("Status file not found. Start daemon with: fetchx --daemon");
+        }
+    }
+}
+
+/// Initialize config with API image fetching (one-command setup)
+fn init_api_image_config() {
+    use std::fs;
+
+    let config_path = Config::config_path();
+
+    match fs::read_to_string(&config_path) {
+        Ok(content) => {
+            let updated = if content.contains("image_backend") && content.contains("image_source") {
+                // Replace existing config
+                let mut lines: Vec<String> = content.lines().map(|s| s.to_string()).collect();
+
+                lines = lines.iter()
+                    .map(|line| {
+                        if line.starts_with("image_backend") {
+                            r#"image_backend = "auto""#.to_string()
+                        } else if line.starts_with("image_source") {
+                            r#"image_source = "auto""#.to_string()
+                        } else {
+                            line.clone()
+                        }
+                    })
+                    .collect();
+
+                lines.join("\n") + "\n"
+            } else {
+                // Add new entries
+                format!(
