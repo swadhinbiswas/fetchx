@@ -438,3 +438,48 @@ pub fn display_w3m(
     );
 
     let mut child = Command::new(&w3m_bin)
+        .stdin(std::process::Stdio::piped())
+        .stdout(std::process::Stdio::null())
+        .stderr(std::process::Stdio::null())
+        .spawn()
+        .map_err(|e| format!("w3mimgdisplay failed: {}", e))?;
+
+    if let Some(ref mut stdin) = child.stdin {
+        stdin.write_all(draw_cmd.as_bytes()).ok();
+    }
+    child.wait().ok();
+
+    Ok(())
+}
+
+/// Display an image using iTerm2's inline image protocol.
+/// Format: \x1b]1337;File=inline=1;width=Ncells;height=Nrows;preserveAspectRatio=1:<base64>\x07
+pub fn display_iterm2(
+    image_path: &str,
+    max_cols: usize,
+    max_rows: usize,
+) -> Result<(), String> {
+    let path = Path::new(image_path);
+    if !path.exists() {
+        return Err(format!("Image not found: {}", image_path));
+    }
+
+    let file_data =
+        std::fs::read(path).map_err(|e| format!("Failed to read image: {}", e))?;
+    let encoded = base64::engine::general_purpose::STANDARD.encode(&file_data);
+    let file_size = file_data.len();
+
+    let stdout = io::stdout();
+    let mut out = stdout.lock();
+
+    // iTerm2 inline image protocol
+    write!(
+        out,
+        "\x1b]1337;File=inline=1;width={};height={};size={};preserveAspectRatio=1:{}\x07",
+        max_cols, max_rows, file_size, encoded
+    )
+    .ok();
+    out.flush().ok();
+
+    Ok(())
+}
