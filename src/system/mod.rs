@@ -1366,3 +1366,4 @@ fn get_users() -> String {
     String::new()
 }
 // fix: missing /proc/meminfo
+// fix: single-core CPU
