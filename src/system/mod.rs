@@ -1365,3 +1365,4 @@ fn get_users() -> String {
     }
     String::new()
 }
+// perf: parallel info
