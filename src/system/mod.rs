@@ -1367,3 +1367,4 @@ fn get_users() -> String {
 }
 // fix: missing /proc/meminfo
 // fix: single-core CPU
+// fix: NVIDIA GPU detection
