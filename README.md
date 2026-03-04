@@ -198,3 +198,153 @@ sudo make install       # Install to /usr/local/bin
 # or
 make PREFIX=~/.local install   # Install to ~/.local/bin
 ```
+
+### From Cargo
+
+```bash
+cargo install --git https://github.com/swadhinbiswas/fetchx.git
+```
+
+### Arch Linux / CachyOS / Manjaro (AUR)
+
+```bash
+# If you have an AUR helper like yay or paru:
+yay -S fetchx-git
+# or
+paru -S fetchx-git
+```
+
+---
+
+## Shell Aliases (Replace neofetch)
+
+Set up aliases so `fetch` or `neofetch` runs FetchX instead.
+
+### Bash (`~/.bashrc`)
+
+```bash
+# Add to the end of ~/.bashrc
+export PATH="$HOME/.local/bin:$PATH"   # if installed to ~/.local/bin
+
+# FetchX aliases
+alias fetch='fetchx'
+alias neofetch='fetchx'
+```
+
+Then reload:
+
+```bash
+source ~/.bashrc
+```
+
+### Zsh (`~/.zshrc`)
+
+```bash
+# Add to the end of ~/.zshrc
+export PATH="$HOME/.local/bin:$PATH"   # if installed to ~/.local/bin
+
+# FetchX aliases
+alias fetch='fetchx'
+alias neofetch='fetchx'
+```
+
+Then reload:
+
+```bash
+source ~/.zshrc
+```
+
+### Fish (`~/.config/fish/config.fish`)
+
+```fish
+# Add to ~/.config/fish/config.fish
+fish_add_path ~/.local/bin              # if installed to ~/.local/bin
+
+# FetchX aliases
+alias fetch 'fetchx'
+alias neofetch 'fetchx'
+```
+
+Then reload:
+
+```fish
+source ~/.config/fish/config.fish
+```
+
+### Nushell (`~/.config/nushell/config.nu`)
+
+```nu
+# Add to config.nu
+alias fetch = fetchx
+alias neofetch = fetchx
+```
+
+### PowerShell (WSL) (`$PROFILE`)
+
+```powershell
+Set-Alias -Name fetch -Value fetchx
+Set-Alias -Name neofetch -Value fetchx
+```
+
+> **Tip:** The install script (`install.sh`) automatically sets up aliases for your current shell.
+
+---
+
+## Configuration
+
+### Getting Started
+
+Create the default config file:
+
+```bash
+fetchx --create-config
+```
+
+This creates `~/.config/fetchx/config.toml` with all options documented.
+
+To view the config path:
+
+```bash
+fetchx --show-config
+```
+
+To print the full default config to stdout (useful for reference):
+
+```bash
+fetchx --print-config
+```
+
+### Config File Location
+
+| OS    | Path                                               |
+| ----- | -------------------------------------------------- |
+| Linux | `~/.config/fetchx/config.toml`                     |
+| macOS | `~/Library/Application Support/fetchx/config.toml` |
+
+### Full Configuration Reference
+
+The config file is TOML format. Every option has a sensible default — you only need to set what you want to change.
+
+```toml
+# =============================================================================
+# FetchX Configuration — ~/.config/fetchx/config.toml
+# =============================================================================
+
+# ─── Display ─────────────────────────────────────────────────────────────────
+
+no_color = false           # Disable all colors (useful for piping)
+bold = true                # Enable bold text
+separator = ": "           # Separator between label and value (e.g., "OS: Arch")
+
+# ─── Colors ──────────────────────────────────────────────────────────────────
+# "distro" = automatically match your distro's colors (default)
+# Or use an array of up to 6 color numbers:
+#   [title, @-symbol, underline, subtitle, colon, info-text]
+#
+# Color numbers: 0=black, 1=red, 2=green, 3=yellow, 4=blue,
+#                5=magenta, 6=cyan, 7=white, 8-255=256-color palette
+
+colors = "distro"
+# colors = [4, 6, 1, 8, 8, 6]   # Custom: blue title, cyan @, red underline
+
+# ─── Image Backend ───────────────────────────────────────────────────────────
