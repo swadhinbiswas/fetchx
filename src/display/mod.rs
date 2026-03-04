@@ -597,4 +597,3 @@ fn terminal_width() -> usize {
 
     80
 }
-// perf: reduce allocs
