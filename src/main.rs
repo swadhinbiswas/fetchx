@@ -552,5 +552,3 @@ fn init_api_image_config() {
         }
     }
 }
-// fix: conditional fetch
-// fix: version flag
