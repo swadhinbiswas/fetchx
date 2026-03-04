@@ -948,3 +948,118 @@ Android · macOS · Windows
 ---
 
 ## Dependencies
+
+### Build Dependencies
+
+| Dependency | Purpose              |
+| ---------- | -------------------- |
+| `rustc`    | Rust compiler        |
+| `cargo`    | Rust package manager |
+| `git`      | Clone source         |
+
+### Runtime Dependencies
+
+**None required!** FetchX is a statically-linked binary.
+
+### Optional Runtime Dependencies
+
+| Package                | Purpose                  | Install (Arch/CachyOS)  |
+| ---------------------- | ------------------------ | ----------------------- |
+| `chafa`                | Chafa image backend      | `pacman -S chafa`       |
+| `img2sixel` (libsixel) | Sixel image backend      | `pacman -S libsixel`    |
+| `w3m`                  | w3m image backend        | `pacman -S w3m`         |
+| `fzf`                  | Interactive image picker | `pacman -S fzf`         |
+| `playerctl`            | Song/MPRIS detection     | `pacman -S playerctl`   |
+| `xrandr`               | Resolution (X11)         | `pacman -S xorg-xrandr` |
+| `wlr-randr`            | Resolution (Wayland)     | `pacman -S wlr-randr`   |
+| `hyprctl`              | Resolution (Hyprland)    | Included with Hyprland  |
+
+---
+
+## Uninstalling
+
+### Using the install script:
+
+```bash
+./install.sh --uninstall
+```
+
+### Manual removal:
+
+```bash
+# Remove binary
+rm ~/.local/bin/fetchx           # user install
+# or
+sudo rm /usr/local/bin/fetchx    # system install
+
+# Remove config (optional)
+rm -rf ~/.config/fetchx
+
+# Remove cache (optional)
+rm -rf ~/.cache/fetchx
+
+# Remove aliases from your shell config
+# Edit ~/.bashrc, ~/.zshrc, or ~/.config/fish/config.fish
+# and remove the fetchx alias lines
+```
+
+---
+
+## Contributing
+
+Contributions are welcome! Here's how to get started:
+
+```bash
+git clone https://github.com/swadhinbiswas/fetchx.git
+cd fetchx/fetchx
+cargo test          # Run 45 unit tests
+cargo build         # Debug build
+cargo build --release  # Release build
+```
+
+Areas where help is most needed:
+
+1. **ASCII art** — Port more distro logos from neofetch
+2. **macOS / BSD** — Testing and detection improvements
+3. **Windows (WSL)** — Compatibility testing
+4. **Package managers** — More package manager detection
+
+---
+
+## Star History
+
+If FetchX is useful to you, consider giving it a ⭐ — it helps others discover it!
+
+<p align="center">
+  <a href="https://github.com/swadhinbiswas/fetchx/stargazers">
+    <img src="https://img.shields.io/github/stars/swadhinbiswas/fetchx?style=for-the-badge&logo=github&color=yellow" alt="Star FetchX on GitHub">
+  </a>
+</p>
+
+---
+
+## License
+
+MIT — see [LICENSE](LICENSE) for details.
+
+## Acknowledgments
+
+- [Neofetch](https://github.com/dylanaraps/neofetch) — Original inspiration and ASCII art reference
+- [FastFetch](https://github.com/fastfetch-cli/fastfetch) — Performance inspiration
+- [Nerd Fonts](https://www.nerdfonts.com/) — Icon support
+
+---
+
+<p align="center">
+  <sub>Made with ❤️ and 🦀 Rust</sub>
+  <br>
+  <sub>FetchX is a <b>neofetch alternative</b> — a fast system info tool for Linux, macOS, and BSD.</sub>
+  <br>
+  <sub>Perfect for <a href="https://www.reddit.com/r/unixporn/">r/unixporn</a> screenshots, dotfiles, and terminal ricing.</sub>
+</p>
+
+<!-- SEO: neofetch alternative, neofetch replacement, neofetch rust, system fetch tool,
+     terminal system info, linux fetch, ascii art terminal, kitty image protocol,
+     rust cli tool, fast neofetch, screenfetch alternative, pfetch alternative,
+     macchina alternative, fastfetch alternative, unixporn, dotfiles, ricing,
+     system information display, terminal customization -->
