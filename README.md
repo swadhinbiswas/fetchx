@@ -648,3 +648,153 @@ fetchx --stdout | grep "OS:"
 # Server/SSH — no image, useful info only
 
 colors = "distro"
+image_backend = "ascii"
+ascii_distro = "auto"
+
+show_title = true
+show_underline = true
+show_os = true
+show_host = true
+show_kernel = true
+show_uptime = true
+show_packages = true
+show_shell = true
+show_cpu = true
+show_memory = true
+show_disk = true
+show_local_ip = true
+show_users = true
+show_colors = true
+
+# Hide desktop-only fields
+show_resolution = false
+show_de = false
+show_wm = false
+show_wm_theme = false
+show_theme = false
+show_icons = false
+show_terminal = false
+show_term_font = false
+show_gpu = false
+
+memory_bar = true
+disk_bar = true
+```
+
+</details>
+
+---
+
+## Usage
+
+```bash
+fetchx                              # Default output with config
+fetchx --json                       # JSON output (for scripting)
+fetchx --logo-only                  # Logo only, no system info
+fetchx --emoji                      # Emoji art mode
+fetchx --nerd-font                  # Nerd Font icons on labels
+fetchx --backend kitty              # Use kitty image protocol
+fetchx --backend chafa              # Use chafa text-art backend
+fetchx --custom-image ~/photo.png   # Display a specific image
+fetchx --ascii-distro arch          # Force Arch logo
+fetchx --ascii-distro cachyos       # Force CachyOS logo
+fetchx --no-color                   # Plain text (for piping)
+fetchx --stdout                     # Disable all formatting
+fetchx --gap 5                      # Wider gap between logo and info
+fetchx --separator " -> "           # Custom separator
+fetchx --select-image               # Interactive image picker (fzf)
+fetchx --init-api-image             # Quick setup: enable API image fetching
+fetchx --create-config              # Create default config file
+fetchx --print-config               # Print default config to stdout
+fetchx --show-config                # Show config file path
+fetchx --help                       # Full help
+fetchx --version                    # Version info
+```
+
+### All CLI Options
+
+```
+Options:
+      --no-color                 Disable colors in output
+      --bold <BOLD>              Enable/disable bold text
+  -b, --backend <BACKEND>       Image backend: ascii, kitty, sixel, chafa, w3m, iterm2, off
+  -s, --source <SOURCE>         Image source: auto, ascii, wallpaper, /path/to/image
+      --ascii-distro <DISTRO>   Which distro's ASCII art to display
+      --emoji                   Use emoji mode
+      --nerd-font               Use Nerd Font icons for labels
+  -c, --custom-image <PATH>     Path to custom image
+  -l, --logo-only               Only show the logo, no info
+      --gap <NUM>               Gap between logo and info text
+      --separator <SEP>         Separator between label and value
+      --stdout                  Disable formatting (for piping)
+      --show-config             Show the config file path
+      --print-config            Print the default config to stdout
+      --create-config           Create default config file
+      --json                    Print output as JSON
+      --select-image            Interactive image selector (fzf)
+      --init-api-image          Quick setup: enable kitty + API images
+      --daemon                  Run as background daemon
+      --tray-status             Compact status for tray widgets
+      --block-range-start <N>   Color block range start (0-15)
+      --block-range-end <N>     Color block range end (0-15)
+      --block-width <N>         Width of color blocks
+  -h, --help                    Print help
+  -V, --version                 Print version
+```
+
+---
+
+## Image Backends
+
+| Backend  | Protocol                | Terminal Support             | Requires               |
+| -------- | ----------------------- | ---------------------------- | ---------------------- |
+| `ascii`  | Text-based ASCII art    | **All terminals**            | Nothing                |
+| `kitty`  | Kitty graphics protocol | Kitty                        | Kitty terminal         |
+| `sixel`  | Sixel graphics          | xterm, mlterm, foot, WezTerm | `img2sixel` or `chafa` |
+| `chafa`  | Unicode block art       | **All terminals**            | `chafa` package        |
+| `w3m`    | w3m image display       | X11 terminals (urxvt, xterm) | `w3m` package          |
+| `iterm2` | OSC 1337 inline images  | iTerm2                       | iTerm2 (macOS)         |
+| `off`    | None                    | All                          | Nothing                |
+
+### How Smart Image Fetching Works
+
+When `image_source = "auto"` and you're using a graphics-capable backend (kitty, sixel, etc.):
+
+```
+Run 1:  No cached image → shows ASCII art
+        └─ Background process downloads random image from API
+
+Run 2:  Shows image from Run 1 (instant, zero delay)
+        └─ Background process downloads NEW random image
+
+Run 3:  Shows image from Run 2 (different image!)
+        └─ Background process downloads another new image
+
+...and so on — new image every single run!
+```
+
+**Key design:**
+
+- **Zero delay** — fetchx never waits for downloads; it shows what's cached and exits instantly
+- **Background child process** — downloads survive after fetchx exits (not a thread)
+- **Atomic writes** — image is written to a temp file first, then renamed, so you never see a half-downloaded image
+- **Any format** — API may return WebP, JPEG, or PNG; fetchx auto-converts to PNG for compatibility
+
+**One-command setup for kitty:**
+
+```bash
+fetchx --init-api-image
+```
+
+This sets `image_backend = "kitty"` and `image_source = "auto"` in your config.
+
+---
+
+## Advanced Features
+
+### Interactive Image Selector
+
+Browse and pick images interactively:
+
+```bash
+fetchx --select-image
