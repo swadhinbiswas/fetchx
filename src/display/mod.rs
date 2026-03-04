@@ -597,5 +597,3 @@ fn terminal_width() -> usize {
 
     80
 }
-// fix: unicode alignment
-// fix: narrow terminal
