@@ -118,3 +118,83 @@ echo "  ╔═══════════════════════
 echo "  ║        ⚡ FetchX Installer ⚡         ║"
 echo "  ║  Fast system info tool written in Rust ║"
 echo "  ╚═══════════════════════════════════════╝"
+echo -e "${RESET}"
+
+# ── Check prerequisites ─────────────────────────────────────────────────────
+info "Checking prerequisites..."
+
+if ! command_exists rustc || ! command_exists cargo; then
+    warn "Rust toolchain not found."
+    echo ""
+    echo -e "  Install Rust with: ${BOLD}curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh${RESET}"
+    echo ""
+    read -rp "Install Rust now? [Y/n] " answer
+    if [[ ! "$answer" =~ ^[Nn]$ ]]; then
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+        source "$HOME/.cargo/env"
+        success "Rust installed!"
+    else
+        error "Rust is required to build FetchX. Aborting."
+    fi
+fi
+
+RUST_VERSION=$(rustc --version | awk '{print $2}')
+success "Rust $RUST_VERSION found"
+
+if ! command_exists git; then
+    error "git is required. Install it with your package manager."
+fi
+success "git found"
+
+# ── Clone or update repository ───────────────────────────────────────────────
+TMPDIR=$(mktemp -d)
+CLONE_DIR="$TMPDIR/fetchx"
+
+info "Cloning FetchX repository..."
+if git clone --depth 1 "$REPO_URL" "$CLONE_DIR" 2>/dev/null; then
+    success "Repository cloned"
+    cd "$CLONE_DIR/fetchx"  # the Rust project is in the fetchx/ subdirectory
+else
+    # If clone fails, try building from current directory (local install)
+    if [[ -f "Cargo.toml" ]] && grep -q "fetchx" Cargo.toml 2>/dev/null; then
+        info "Building from local source..."
+        CLONE_DIR="."
+    else
+        error "Failed to clone repository and no local source found."
+    fi
+fi
+
+# ── Build ────────────────────────────────────────────────────────────────────
+info "Building FetchX (release mode with LTO)..."
+echo -e "  ${YELLOW}This may take 1-2 minutes on first build...${RESET}"
+
+cargo build --release 2>&1 | while IFS= read -r line; do
+    if [[ "$line" == *"Compiling"* ]]; then
+        echo -e "  ${CYAN}$line${RESET}"
+    fi
+done
+
+if [[ ! -f "target/release/$BINARY_NAME" ]]; then
+    error "Build failed — binary not found."
+fi
+
+BINARY_SIZE=$(du -h "target/release/$BINARY_NAME" | awk '{print $1}')
+success "Build complete! Binary size: $BINARY_SIZE"
+
+# ── Install binary ───────────────────────────────────────────────────────────
+info "Installing to $BINDIR..."
+maybe_sudo mkdir -p "$BINDIR"
+maybe_sudo install -m 755 "target/release/$BINARY_NAME" "$BINDIR/$BINARY_NAME"
+success "Installed $BINDIR/$BINARY_NAME"
+
+# ── Create default config ───────────────────────────────────────────────────
+CONFIG_DIR="$HOME/.config/fetchx"
+CONFIG_FILE="$CONFIG_DIR/config.toml"
+
+if [[ ! -f "$CONFIG_FILE" ]]; then
+    info "Creating default configuration..."
+    mkdir -p "$CONFIG_DIR"
+    "$BINDIR/$BINARY_NAME" --create-config 2>/dev/null || true
+    success "Config created at $CONFIG_FILE"
+else
+    success "Config already exists at $CONFIG_FILE"
