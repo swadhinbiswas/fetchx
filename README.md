@@ -798,3 +798,153 @@ Browse and pick images interactively:
 
 ```bash
 fetchx --select-image
+```
+
+- Scans `~/Downloads`, `~/Pictures`, `~/Desktop` for images
+- Interactive preview with [fzf](https://github.com/junegunn/fzf) (if installed)
+- Falls back to numbered menu if fzf not available
+- Selected image is saved to config
+
+### System Tray / Daemon Mode
+
+Run FetchX as a background service for status bar integration:
+
+```bash
+# Start daemon (updates status file every 10s)
+fetchx --daemon &
+
+# Get compact one-line status
+fetchx --tray-status
+# Output: swadhin | CPU: Intel i5-13600K | RAM: 8000MiB / 32000MiB
+```
+
+**Waybar integration** (`~/.config/waybar/config`):
+
+```json
+{
+  "custom/fetchx": {
+    "exec": "fetchx --tray-status",
+    "interval": 10,
+    "format": " {}",
+    "tooltip": false
+  }
+}
+```
+
+**Polybar integration** (`~/.config/polybar/config.ini`):
+
+```ini
+[module/fetchx]
+type = custom/script
+exec = fetchx --tray-status
+interval = 10
+format-prefix = " "
+```
+
+### Animated GIF Support
+
+Display GIFs in kitty terminal:
+
+```bash
+fetchx --custom-image ~/animations/cool.gif
+```
+
+### Custom ASCII Art
+
+Create your own ASCII art file with color placeholders:
+
+```
+{c1}    /\
+{c1}   /  \
+{c1}  /    \
+{c2} /______\
+{c2}/        \
+```
+
+Then use it:
+
+```toml
+# In config.toml:
+ascii_file = "/home/user/.config/fetchx/my_logo.txt"
+```
+
+---
+
+## Information Displayed
+
+| Field             | Source                                                 | Config Toggle     |
+| ----------------- | ------------------------------------------------------ | ----------------- |
+| **Title**         | `user@hostname`                                        | `show_title`      |
+| **OS**            | `/etc/os-release`                                      | `show_os`         |
+| **Host**          | `/sys/devices/.../product_name`                        | `show_host`       |
+| **Kernel**        | `uname -r`                                             | `show_kernel`     |
+| **Uptime**        | `/proc/uptime`                                         | `show_uptime`     |
+| **Packages**      | pacman, dpkg, rpm, flatpak, snap, nix, brew, apk, xbps | `show_packages`   |
+| **Shell**         | `$SHELL --version`                                     | `show_shell`      |
+| **Resolution**    | hyprctl, xrandr, wlr-randr                             | `show_resolution` |
+| **DE**            | `$XDG_CURRENT_DESKTOP` + version detection             | `show_de`         |
+| **WM**            | `$XDG_CURRENT_DESKTOP` / wmctrl                        | `show_wm`         |
+| **WM Theme**      | gsettings / xfconf                                     | `show_wm_theme`   |
+| **Theme**         | gsettings (GTK)                                        | `show_theme`      |
+| **Icons**         | gsettings (GTK)                                        | `show_icons`      |
+| **Terminal**      | Process tree walking (PPID)                            | `show_terminal`   |
+| **Terminal Font** | gsettings / kitty.conf / alacritty.toml                | `show_term_font`  |
+| **CPU**           | `/proc/cpuinfo`                                        | `show_cpu`        |
+| **GPU**           | `lspci` / `lshw`                                       | `show_gpu`        |
+| **Memory**        | `/proc/meminfo` + optional bar                         | `show_memory`     |
+| **Disk**          | `df` + optional bar                                    | `show_disk`       |
+| **Battery**       | `/sys/class/power_supply`                              | `show_battery`    |
+| **Local IP**      | `hostname -I`                                          | `show_local_ip`   |
+| **Public IP**     | `curl ipinfo.io/ip`                                    | `show_public_ip`  |
+| **Locale**        | `$LANG`                                                | `show_locale`     |
+| **Song**          | playerctl (MPRIS), mpc (MPD), cmus                     | `show_song`       |
+| **Users**         | `who`                                                  | `show_users`      |
+| **Colors**        | Terminal color blocks                                  | `show_colors`     |
+
+---
+
+## Supported Distributions
+
+<details>
+<summary><b>60+ distributions with ASCII art (click to expand)</b></summary>
+
+**Linux Distributions:**
+AlmaLinux · Alpine · Amazon Linux · Arch Linux · Artix Linux · Bedrock Linux · CachyOS · CentOS · ChromeOS · Clear Linux · CRUX · Debian · Deepin · Devuan · elementary OS · Endless OS · EndeavourOS · Exherbo · Fedora · Garuda Linux · Gentoo · Guix · Haiku · Hyperbola · instantOS · Kali Linux · Linux Generic · Linux Mint · Mageia · Manjaro · MX Linux · NixOS · openSUSE · Parabola · Parrot OS · Peppermint · Pop!\_OS · Porteus · postmarketOS · Puppy Linux · PureOS · Raspbian · Red Hat (RHEL) · Rocky Linux · Sabayon · Slackware · SliTaz · Solus · Tails · Trisquel · Ubuntu · Void Linux · Zorin OS
+
+**BSD:**
+FreeBSD · NetBSD · OpenBSD · DragonFly BSD
+
+**Other OS:**
+Android · macOS · Windows
+
+</details>
+
+---
+
+## Comparison with Neofetch
+
+> Neofetch was [archived in 2024](https://github.com/dylanaraps/neofetch). FetchX is the spiritual successor — faster, more features, actively maintained.
+
+| Feature                | FetchX                               | Neofetch           | FastFetch     |
+| ---------------------- | ------------------------------------ | ------------------ | ------------- |
+| **Language**           | Rust                                 | Bash               | C             |
+| **Maintained**         | ✅ Active                            | ❌ Archived        | ✅ Active     |
+| **Speed**              | ~10-50ms                             | ~200-500ms         | ~5-20ms       |
+| **Binary size**        | ~1.8 MB                              | ~11,500 LOC script | ~1 MB         |
+| **Image backends**     | 5 (kitty, sixel, chafa, w3m, iTerm2) | 6                  | 5             |
+| **Distro logos**       | 60+                                  | 350+               | 300+          |
+| **Config format**      | TOML                                 | Bash script        | JSON          |
+| **Smart image cache**  | ✅ (auto API, new every run)         | ❌                 | ❌            |
+| **Emoji mode**         | ✅                                   | ❌                 | ❌            |
+| **JSON output**        | ✅                                   | ❌                 | ✅            |
+| **Progress bars**      | ✅                                   | ✅                 | ✅            |
+| **Nerd Font icons**    | ✅                                   | ❌                 | ✅            |
+| **Parallel detection** | ✅ (8 threads)                       | ❌ (sequential)    | ✅            |
+| **Unit tests**         | 45 tests                             | ❌                 | ✅            |
+| **Daemon/tray mode**   | ✅                                   | ❌                 | ❌            |
+| **Interactive picker** | ✅ (fzf)                             | ❌                 | ❌            |
+| **Install**            | Single binary                        | Script + deps      | Single binary |
+
+---
+
+## Dependencies
