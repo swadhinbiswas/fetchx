@@ -312,3 +312,4 @@ mod tests {
     }
 }
 // fix: race condition
+// fix: detached child
