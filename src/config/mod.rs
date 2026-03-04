@@ -651,5 +651,3 @@ mod tests {
         assert_eq!(parsed.no_color, config.no_color);
     }
 }
-// fix: missing config
-// fix: validate colors
