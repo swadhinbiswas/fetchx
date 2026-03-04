@@ -498,3 +498,153 @@ show_icons = false
 show_terminal = false
 show_term_font = false
 show_gpu = false
+show_disk = false
+show_battery = false
+show_local_ip = false
+show_public_ip = false
+show_locale = false
+show_song = false
+show_users = false
+```
+
+</details>
+
+<details>
+<summary><b>Kitty Terminal — Image with auto-fetching</b></summary>
+
+```toml
+# ~/.config/fetchx/config.toml
+# Optimized for kitty terminal with random image fetching
+
+colors = "distro"
+bold = true
+separator = ": "
+
+image_backend = "kitty"
+image_source = "auto"
+ascii_distro = "auto"
+
+# Show everything
+show_title = true
+show_underline = true
+show_os = true
+show_host = true
+show_kernel = true
+show_uptime = true
+show_packages = true
+show_shell = true
+show_resolution = true
+show_de = true
+show_wm = true
+show_wm_theme = true
+show_theme = true
+show_icons = true
+show_terminal = true
+show_term_font = true
+show_cpu = true
+show_gpu = true
+show_memory = true
+show_disk = true
+show_colors = true
+
+# Extra features
+nerd_font = true
+memory_bar = true
+disk_bar = true
+bar_width = 20
+gap = 3
+```
+
+</details>
+
+<details>
+<summary><b>Ricing — Maximum eye candy</b></summary>
+
+```toml
+# ~/.config/fetchx/config.toml
+# Full ricing setup — all the bells and whistles
+
+colors = [6, 6, 4, 6, 7, 7]    # Cyan/blue theme
+bold = true
+separator = " → "
+
+image_backend = "kitty"
+custom_image = "/home/user/pictures/anime.png"
+
+show_title = true
+show_underline = true
+show_os = true
+show_host = true
+show_kernel = true
+show_uptime = true
+show_packages = true
+show_shell = true
+show_resolution = true
+show_de = true
+show_wm = true
+show_wm_theme = true
+show_theme = true
+show_icons = true
+show_terminal = true
+show_term_font = true
+show_cpu = true
+show_gpu = true
+show_memory = true
+show_disk = true
+show_battery = false
+show_local_ip = true
+show_public_ip = false
+show_locale = false
+show_song = true
+show_users = false
+show_colors = true
+
+nerd_font = true
+memory_bar = true
+disk_bar = true
+bar_width = 20
+gap = 3
+block_width = 3
+```
+
+</details>
+
+<details>
+<summary><b>Scripting — Machine-readable output</b></summary>
+
+```toml
+# ~/.config/fetchx/config.toml
+# Clean output for scripts and piping
+
+no_color = true
+bold = false
+stdout = true
+image_backend = "off"
+gap = 0
+
+show_title = false
+show_underline = false
+show_os = true
+show_kernel = true
+show_cpu = true
+show_memory = true
+show_disk = true
+show_colors = false
+```
+
+```bash
+# Usage:
+fetchx --json | jq '.memory'
+fetchx --stdout | grep "OS:"
+```
+
+</details>
+
+<details>
+<summary><b>Server — Headless, no graphics</b></summary>
+
+```toml
+# ~/.config/fetchx/config.toml
+# Server/SSH — no image, useful info only
+
+colors = "distro"
