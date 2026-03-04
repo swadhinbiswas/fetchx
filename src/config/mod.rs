@@ -32,7 +32,6 @@ impl ColorConfig {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Config {
     // ── Display options ──────────────────────────────────────────
-
     #[serde(default = "default_false")]
     pub no_color: bool,
     #[serde(default = "default_true")]
@@ -47,7 +46,6 @@ pub struct Config {
     pub colors: ColorConfig,
 
     // ── ASCII / Logo options ─────────────────────────────────────
-
     /// Image backend: "ascii", "kitty", "sixel", "chafa", "off"
     #[serde(default = "default_ascii")]
     pub image_backend: String,
@@ -74,7 +72,6 @@ pub struct Config {
     pub ascii_bold: bool,
 
     // ── Image options ────────────────────────────────────────────
-
     /// Path to custom image to display (for kitty/sixel/chafa backends)
     #[serde(default)]
     pub custom_image: Option<String>,
@@ -92,7 +89,6 @@ pub struct Config {
     pub crop_offset: String,
 
     // ── Extra features ───────────────────────────────────────────
-
     /// Use emoji art instead of ASCII art
     #[serde(default = "default_false")]
     pub emoji_mode: bool,
@@ -102,7 +98,6 @@ pub struct Config {
     pub nerd_font: bool,
 
     // ── Layout ───────────────────────────────────────────────────
-
     /// Gap between logo and info text (in chars)
     #[serde(default = "default_gap")]
     pub gap: usize,
@@ -112,7 +107,6 @@ pub struct Config {
     pub logo_only: bool,
 
     // ── Info field toggles ───────────────────────────────────────
-
     #[serde(default = "default_true")]
     pub show_title: bool,
     #[serde(default = "default_true")]
@@ -169,7 +163,6 @@ pub struct Config {
     pub show_colors: bool,
 
     // ── Progress bars ────────────────────────────────────────────
-
     /// Show progress bar next to memory percentage
     #[serde(default = "default_false")]
     pub memory_bar: bool,
@@ -183,7 +176,6 @@ pub struct Config {
     pub bar_width: usize,
 
     // ── Color blocks ─────────────────────────────────────────────
-
     #[serde(default = "default_block_range")]
     pub block_range: (u8, u8),
     #[serde(default = "default_block_width")]
@@ -192,13 +184,11 @@ pub struct Config {
     pub block_height: usize,
 
     // ── Underline ────────────────────────────────────────────────
-
     /// Underline character (neofetch defaults to "-")
     #[serde(default = "default_underline_char")]
     pub underline_char: String,
 
     // ── Misc ─────────────────────────────────────────────────────
-
     /// Stdout mode — disable colors & image backend (for piping)
     #[serde(default = "default_false")]
     pub stdout: bool,
@@ -321,10 +311,7 @@ impl Config {
                 match toml::from_str::<Config>(&content) {
                     Ok(config) => return config,
                     Err(e) => {
-                        eprintln!(
-                            "\x1b[33m[fetchx] Warning: config parse error: {}\x1b[0m",
-                            e
-                        );
+                        eprintln!("\x1b[33m[fetchx] Warning: config parse error: {}\x1b[0m", e);
                         eprintln!(
                             "\x1b[33m[fetchx] Using default config. Fix: {}\x1b[0m",
                             path.display()
@@ -638,7 +625,11 @@ mod tests {
     #[test]
     fn test_example_config_is_valid_toml() {
         let result = toml::from_str::<Config>(EXAMPLE_CONFIG);
-        assert!(result.is_ok(), "EXAMPLE_CONFIG is not valid: {:?}", result.err());
+        assert!(
+            result.is_ok(),
+            "EXAMPLE_CONFIG is not valid: {:?}",
+            result.err()
+        );
     }
 
     #[test]

@@ -511,12 +511,13 @@ impl Display {
         // Memory — optionally with progress bar
         if self.config.show_memory && sys.memory != "Unknown" && !sys.memory.is_empty() {
             if self.config.memory_bar {
-                let bar = colors::progress_bar(
-                    sys.memory_percent,
-                    self.config.bar_width,
-                    &scheme.c[0],
-                );
-                lines.push(field("Memory", "\u{f85a}", &format!("{} {}", sys.memory, bar)));
+                let bar =
+                    colors::progress_bar(sys.memory_percent, self.config.bar_width, &scheme.c[0]);
+                lines.push(field(
+                    "Memory",
+                    "\u{f85a}",
+                    &format!("{} {}", sys.memory, bar),
+                ));
             } else {
                 lines.push(field("Memory", "\u{f85a}", &sys.memory));
             }
@@ -525,11 +526,8 @@ impl Display {
         // Disk — optionally with progress bar
         if self.config.show_disk && sys.disk != "Unknown" && !sys.disk.is_empty() {
             if self.config.disk_bar {
-                let bar = colors::progress_bar(
-                    sys.disk_percent,
-                    self.config.bar_width,
-                    &scheme.c[0],
-                );
+                let bar =
+                    colors::progress_bar(sys.disk_percent, self.config.bar_width, &scheme.c[0]);
                 lines.push(field("Disk", "\u{f0a0}", &format!("{} {}", sys.disk, bar)));
             } else {
                 lines.push(field("Disk", "\u{f0a0}", &sys.disk));

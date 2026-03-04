@@ -55,8 +55,8 @@ pub fn download_image_from_api() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     // Decode whatever format API sends (webp/jpeg/png) and save as PNG
-    let img = image::load_from_memory(&bytes)
-        .map_err(|e| format!("Failed to decode image: {}", e))?;
+    let img =
+        image::load_from_memory(&bytes).map_err(|e| format!("Failed to decode image: {}", e))?;
 
     // Write to temp file first, then rename — so display never sees a half-written file
     let cache = cache_dir();
@@ -126,8 +126,7 @@ fn get_hyprland_wallpaper() -> Option<PathBuf> {
     }
 
     // Try hyprpaper config
-    let hyprpaper_config = dirs::config_dir()
-        .map(|d| d.join("hypr/hyprpaper.conf"))?;
+    let hyprpaper_config = dirs::config_dir().map(|d| d.join("hypr/hyprpaper.conf"))?;
 
     if let Ok(content) = fs::read_to_string(&hyprpaper_config) {
         for line in content.lines() {
@@ -169,8 +168,7 @@ fn get_gnome_wallpaper() -> Option<PathBuf> {
 
 /// Get KDE wallpaper from config
 fn get_kde_wallpaper() -> Option<PathBuf> {
-    let kde_config = dirs::config_dir()
-        .map(|d| d.join("plasmarc"))?;
+    let kde_config = dirs::config_dir().map(|d| d.join("plasmarc"))?;
 
     if let Ok(content) = fs::read_to_string(&kde_config) {
         for line in content.lines() {
@@ -225,7 +223,6 @@ fn expand_path(path: &str) -> PathBuf {
         PathBuf::from(path)
     }
 }
-
 
 pub fn get_available_image() -> Option<PathBuf> {
     let cache = cached_image_path();

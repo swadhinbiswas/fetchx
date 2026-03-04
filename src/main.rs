@@ -389,7 +389,8 @@ fn update_config_image(image_path: &str) {
             let updated = if content.contains("custom_image") {
                 // Simple replacement: find and replace the custom_image line
                 let lines: Vec<&str> = content.lines().collect();
-                let new_lines: Vec<String> = lines.iter()
+                let new_lines: Vec<String> = lines
+                    .iter()
                     .map(|line| {
                         if line.starts_with("custom_image") {
                             format!(r#"custom_image = "{}""#, image_path)
@@ -473,8 +474,14 @@ fn show_tray_status() {
                 Ok(status) => {
                     // Compact format for tray/widgets
                     let cpu = status.get("cpu").and_then(|v| v.as_str()).unwrap_or("N/A");
-                    let mem = status.get("memory").and_then(|v| v.as_str()).unwrap_or("N/A");
-                    let host = status.get("hostname").and_then(|v| v.as_str()).unwrap_or("Unknown");
+                    let mem = status
+                        .get("memory")
+                        .and_then(|v| v.as_str())
+                        .unwrap_or("N/A");
+                    let host = status
+                        .get("hostname")
+                        .and_then(|v| v.as_str())
+                        .unwrap_or("Unknown");
 
                     // Format: Host | CPU: 45% | RAM: 8.2GB/16GB
                     println!("{} | CPU: {} | RAM: {}", host, cpu, mem);
@@ -502,7 +509,8 @@ fn init_api_image_config() {
                 // Replace existing config
                 let mut lines: Vec<String> = content.lines().map(|s| s.to_string()).collect();
 
-                lines = lines.iter()
+                lines = lines
+                    .iter()
                     .map(|line| {
                         if line.starts_with("image_backend") {
                             r#"image_backend = "auto""#.to_string()

@@ -41,19 +41,14 @@ impl Backend {
             Backend::Kitty => {
                 // Kitty is supported if TERM contains "kitty" or KITTY_PID is set
                 std::env::var("KITTY_PID").is_ok()
-                    || std::env::var("TERM")
-                        .unwrap_or_default()
-                        .contains("kitty")
+                    || std::env::var("TERM").unwrap_or_default().contains("kitty")
                     || std::env::var("TERM_PROGRAM")
                         .unwrap_or_default()
                         .contains("kitty")
             }
             Backend::Sixel => {
                 // Check if img2sixel or ImageMagick convert is available
-                Command::new("img2sixel")
-                    .arg("--version")
-                    .output()
-                    .is_ok()
+                Command::new("img2sixel").arg("--version").output().is_ok()
             }
             Backend::Chafa => Command::new("chafa")
                 .arg("--version")
@@ -61,11 +56,9 @@ impl Backend {
                 .map(|o| o.status.success())
                 .unwrap_or(false),
             Backend::W3m => w3m_img_path().is_some(),
-            Backend::Iterm2 => {
-                std::env::var("TERM_PROGRAM")
-                    .unwrap_or_default()
-                    .contains("iTerm")
-            }
+            Backend::Iterm2 => std::env::var("TERM_PROGRAM")
+                .unwrap_or_default()
+                .contains("iTerm"),
         }
     }
 }
@@ -272,11 +265,7 @@ pub fn display_chafa(
 }
 
 /// Display an image using sixel (via img2sixel).
-pub fn display_sixel(
-    image_path: &str,
-    max_cols: usize,
-    _max_rows: usize,
-) -> Result<(), String> {
+pub fn display_sixel(image_path: &str, max_cols: usize, _max_rows: usize) -> Result<(), String> {
     let path = Path::new(image_path);
     if !path.exists() {
         return Err(format!("Image not found: {}", image_path));
@@ -380,11 +369,7 @@ fn w3m_img_path() -> Option<String> {
 /// w3m uses a helper binary that accepts commands on stdin:
 ///   0;1;x;y;w;h;sx;sy;sw;sh;path\n  (draw)
 ///   6;offset_x;offset_y;width;height\n  (sync)
-pub fn display_w3m(
-    image_path: &str,
-    max_cols: usize,
-    max_rows: usize,
-) -> Result<(), String> {
+pub fn display_w3m(image_path: &str, max_cols: usize, max_rows: usize) -> Result<(), String> {
     let path = Path::new(image_path);
     if !path.exists() {
         return Err(format!("Image not found: {}", image_path));
@@ -454,18 +439,13 @@ pub fn display_w3m(
 
 /// Display an image using iTerm2's inline image protocol.
 /// Format: \x1b]1337;File=inline=1;width=Ncells;height=Nrows;preserveAspectRatio=1:<base64>\x07
-pub fn display_iterm2(
-    image_path: &str,
-    max_cols: usize,
-    max_rows: usize,
-) -> Result<(), String> {
+pub fn display_iterm2(image_path: &str, max_cols: usize, max_rows: usize) -> Result<(), String> {
     let path = Path::new(image_path);
     if !path.exists() {
         return Err(format!("Image not found: {}", image_path));
     }
 
-    let file_data =
-        std::fs::read(path).map_err(|e| format!("Failed to read image: {}", e))?;
+    let file_data = std::fs::read(path).map_err(|e| format!("Failed to read image: {}", e))?;
     let encoded = base64::engine::general_purpose::STANDARD.encode(&file_data);
     let file_size = file_data.len();
 
