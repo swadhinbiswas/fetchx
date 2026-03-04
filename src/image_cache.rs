@@ -311,5 +311,3 @@ mod tests {
         assert!(result || !result); // Just verify it returns a bool
     }
 }
-// fix: race condition
-// fix: detached child
