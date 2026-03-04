@@ -198,3 +198,85 @@ if [[ ! -f "$CONFIG_FILE" ]]; then
     success "Config created at $CONFIG_FILE"
 else
     success "Config already exists at $CONFIG_FILE"
+fi
+
+# ── Setup shell alias ───────────────────────────────────────────────────────
+setup_alias() {
+    local shell_rc="$1"
+    local shell_name="$2"
+
+    if [[ -f "$shell_rc" ]]; then
+        if ! grep -q "alias fetch=" "$shell_rc" 2>/dev/null; then
+            echo "" >> "$shell_rc"
+            echo "# FetchX — fast neofetch alternative" >> "$shell_rc"
+            echo "alias fetch='fetchx'" >> "$shell_rc"
+            echo "alias neofetch='fetchx'" >> "$shell_rc"
+            success "Added aliases to $shell_rc (fetch & neofetch → fetchx)"
+        else
+            success "Aliases already exist in $shell_rc"
+        fi
+    fi
+}
+
+if [[ "$SETUP_ALIAS" == true ]]; then
+    info "Setting up shell aliases..."
+
+    CURRENT_SHELL=$(basename "${SHELL:-/bin/bash}")
+
+    case "$CURRENT_SHELL" in
+        zsh)  setup_alias "$HOME/.zshrc" "zsh" ;;
+        bash) setup_alias "$HOME/.bashrc" "bash" ;;
+        fish)
+            FISH_CONFIG="$HOME/.config/fish/config.fish"
+            if [[ -f "$FISH_CONFIG" ]] || [[ -d "$HOME/.config/fish" ]]; then
+                mkdir -p "$HOME/.config/fish"
+                if ! grep -q "alias fetch=" "$FISH_CONFIG" 2>/dev/null; then
+                    echo "" >> "$FISH_CONFIG"
+                    echo "# FetchX — fast neofetch alternative" >> "$FISH_CONFIG"
+                    echo "alias fetch 'fetchx'" >> "$FISH_CONFIG"
+                    echo "alias neofetch 'fetchx'" >> "$FISH_CONFIG"
+                    success "Added aliases to $FISH_CONFIG"
+                else
+                    success "Aliases already exist in $FISH_CONFIG"
+                fi
+            fi
+            ;;
+        *)
+            warn "Unknown shell ($CURRENT_SHELL). Add manually:"
+            echo "  alias fetch='fetchx'"
+            echo "  alias neofetch='fetchx'"
+            ;;
+    esac
+fi
+
+# ── Check PATH ───────────────────────────────────────────────────────────────
+if ! echo "$PATH" | tr ':' '\n' | grep -q "^$BINDIR$"; then
+    warn "$BINDIR is not in your PATH!"
+    echo ""
+    echo "  Add this to your shell config:"
+    echo ""
+    echo -e "  ${BOLD}# For bash (~/.bashrc) or zsh (~/.zshrc):${RESET}"
+    echo "  export PATH=\"$BINDIR:\$PATH\""
+    echo ""
+    echo -e "  ${BOLD}# For fish (~/.config/fish/config.fish):${RESET}"
+    echo "  fish_add_path $BINDIR"
+    echo ""
+fi
+
+# ── Cleanup ──────────────────────────────────────────────────────────────────
+if [[ "$CLONE_DIR" != "." ]] && [[ -d "$TMPDIR" ]]; then
+    rm -rf "$TMPDIR"
+fi
+
+# ── Done ─────────────────────────────────────────────────────────────────────
+echo ""
+echo -e "${GREEN}${BOLD}════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}  ⚡ FetchX installed successfully!${RESET}"
+echo -e "${GREEN}${BOLD}════════════════════════════════════════════${RESET}"
+echo ""
+echo -e "  Run:     ${BOLD}fetchx${RESET}"
+echo -e "  Config:  ${BOLD}$CONFIG_FILE${RESET}"
+echo -e "  Help:    ${BOLD}fetchx --help${RESET}"
+echo ""
+echo -e "  ${CYAN}Tip: Restart your shell or run 'source ~/.${CURRENT_SHELL}rc' to use aliases${RESET}"
+echo ""
