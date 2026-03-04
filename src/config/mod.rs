@@ -652,3 +652,4 @@ mod tests {
     }
 }
 // fix: missing config
+// fix: validate colors
