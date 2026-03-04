@@ -531,12 +531,18 @@ fn get_resolution() -> String {
             while i < chars.len() {
                 if out[i..].starts_with("\"width\":") {
                     let w_start = i + 8;
-                    let w_str: String = out[w_start..].chars().take_while(|c| c.is_ascii_digit() || *c == ' ').collect();
+                    let w_str: String = out[w_start..]
+                        .chars()
+                        .take_while(|c| c.is_ascii_digit() || *c == ' ')
+                        .collect();
                     let width = w_str.trim().parse::<u32>().unwrap_or(0);
                     // Find the next "height":
                     if let Some(h_pos) = out[w_start..].find("\"height\":") {
                         let h_start = w_start + h_pos + 9;
-                        let h_str: String = out[h_start..].chars().take_while(|c| c.is_ascii_digit() || *c == ' ').collect();
+                        let h_str: String = out[h_start..]
+                            .chars()
+                            .take_while(|c| c.is_ascii_digit() || *c == ' ')
+                            .collect();
                         let height = h_str.trim().parse::<u32>().unwrap_or(0);
                         if width > 0 && height > 0 {
                             resolutions.push(format!("{}x{}", width, height));
@@ -1028,11 +1034,7 @@ fn get_cpu() -> String {
         let mut speed_khz: u64 = 0;
 
         if Path::new(speed_dir).is_dir() {
-            for file in &[
-                "bios_limit",
-                "scaling_max_freq",
-                "cpuinfo_max_freq",
-            ] {
+            for file in &["bios_limit", "scaling_max_freq", "cpuinfo_max_freq"] {
                 let path = format!("{}/{}", speed_dir, file);
                 let val = read_first_line(&path);
                 if let Ok(khz) = val.parse::<u64>() {
