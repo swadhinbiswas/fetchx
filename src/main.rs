@@ -321,19 +321,17 @@ fn select_image_interactive() {
         dirs::home_dir().map(|h| h.join("Desktop")),
     ];
 
-    for dir_opt in search_dirs {
-        if let Some(dir) = dir_opt {
-            if let Ok(entries) = fs::read_dir(&dir) {
-                for entry in entries.flatten() {
-                    let path = entry.path();
-                    if let Some(ext) = path.extension().and_then(|e| e.to_str()) {
-                        if matches!(
-                            ext.to_lowercase().as_str(),
-                            "png" | "jpg" | "jpeg" | "gif" | "webp" | "bmp"
-                        ) {
-                            if let Some(path_str) = path.to_str() {
-                                image_paths.push(path_str.to_string());
-                            }
+    for dir in search_dirs.into_iter().flatten() {
+        if let Ok(entries) = fs::read_dir(&dir) {
+            for entry in entries.flatten() {
+                let path = entry.path();
+                if let Some(ext) = path.extension().and_then(|e| e.to_str()) {
+                    if matches!(
+                        ext.to_lowercase().as_str(),
+                        "png" | "jpg" | "jpeg" | "gif" | "webp" | "bmp"
+                    ) {
+                        if let Some(path_str) = path.to_str() {
+                            image_paths.push(path_str.to_string());
                         }
                     }
                 }
@@ -534,16 +532,16 @@ fn init_api_image_config() {
             match fs::write(&config_path, updated) {
                 Ok(_) => {
                     println!("✓ Config initialized with API image fetching!");
-                    println!("");
+                    println!();
                     println!("Settings applied:");
                     println!("  • image_backend = \"auto\"    (terminal auto-detection)");
                     println!("  • image_source = \"auto\"     (API + smart 6-hour caching)");
-                    println!("");
+                    println!();
                     println!("Next steps:");
                     println!("  1. Run 'fetch' to see API wallpaper");
                     println!("  2. Run 'fetch' again after a few seconds to see cached image");
                     println!("  3. First run downloads image in background without blocking");
-                    println!("");
+                    println!();
                     println!("Cache location: ~/.cache/fetchx/current_image.png");
                 }
                 Err(e) => {

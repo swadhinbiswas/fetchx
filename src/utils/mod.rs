@@ -85,11 +85,9 @@ pub fn strip_ansi(s: &str) -> String {
                         if c == '\x07' {
                             break; // BEL terminator
                         }
-                        if c == '\x1b' {
-                            if chars.peek() == Some(&'\\') {
-                                chars.next(); // consume '\\'
-                                break;
-                            }
+                        if c == '\x1b' && chars.peek() == Some(&'\\') {
+                            chars.next(); // consume '\\'
+                            break;
                         }
                     }
                 }
@@ -154,11 +152,9 @@ pub fn truncate_to_width(s: &str, max_width: usize) -> String {
                         if c == '\x07' {
                             break;
                         }
-                        if c == '\x1b' {
-                            if chars.peek() == Some(&'\\') {
-                                result.push(chars.next().unwrap());
-                                break;
-                            }
+                        if c == '\x1b' && chars.peek() == Some(&'\\') {
+                            result.push(chars.next().unwrap());
+                            break;
                         }
                     }
                 }

@@ -471,7 +471,7 @@ fn get_shell() -> String {
         return "Unknown".to_string();
     }
 
-    let shell_name = shell_path.split('/').last().unwrap_or("Unknown");
+    let shell_name = shell_path.split('/').next_back().unwrap_or("Unknown");
 
     // Get version
     let version = match shell_name {
@@ -573,7 +573,7 @@ fn get_resolution() -> String {
                 if found_monitor && trimmed.contains('@') && trimmed.contains('x') {
                     if let Some(res) = trimmed.split('@').next() {
                         let res = res.trim();
-                        if res.chars().next().map_or(false, |c| c.is_ascii_digit()) {
+                        if res.chars().next().is_some_and(|c| c.is_ascii_digit()) {
                             resolutions.push(res.to_string());
                             found_monitor = false; // Only first resolution per monitor
                         }
@@ -597,7 +597,7 @@ fn get_resolution() -> String {
                     // Find resolution pattern like "1920x1080+0+0"
                     for word in line.split_whitespace() {
                         if word.contains('x')
-                            && word.chars().next().map_or(false, |c| c.is_ascii_digit())
+                            && word.chars().next().is_some_and(|c| c.is_ascii_digit())
                         {
                             let res = word.split('+').next().unwrap_or(word);
                             resolutions.push(res.to_string());
@@ -686,7 +686,7 @@ fn get_de_version(de: &str) -> String {
         let out = run_cmd("gnome-shell", &["--version"]);
         // "GNOME Shell 45.2" → "45.2"
         if let Some(v) = out.split_whitespace().last() {
-            if v.chars().next().map_or(false, |c| c.is_ascii_digit()) {
+            if v.chars().next().is_some_and(|c| c.is_ascii_digit()) {
                 return v.to_string();
             }
         }
@@ -695,7 +695,7 @@ fn get_de_version(de: &str) -> String {
         let out = run_cmd("plasmashell", &["--version"]);
         // "plasmashell 5.27.10" or "plasmashell 6.0.2"
         if let Some(v) = out.split_whitespace().last() {
-            if v.chars().next().map_or(false, |c| c.is_ascii_digit()) {
+            if v.chars().next().is_some_and(|c| c.is_ascii_digit()) {
                 return v.to_string();
             }
         }
@@ -705,7 +705,7 @@ fn get_de_version(de: &str) -> String {
         for line in out.lines() {
             if line.contains("xfce4-session") || line.contains("xfce") {
                 if let Some(v) = line.split_whitespace().last() {
-                    if v.chars().next().map_or(false, |c| c.is_ascii_digit()) {
+                    if v.chars().next().is_some_and(|c| c.is_ascii_digit()) {
                         return v.to_string();
                     }
                 }
@@ -715,7 +715,7 @@ fn get_de_version(de: &str) -> String {
     if de_lower.contains("cinnamon") {
         let out = run_cmd("cinnamon", &["--version"]);
         if let Some(v) = out.split_whitespace().last() {
-            if v.chars().next().map_or(false, |c| c.is_ascii_digit()) {
+            if v.chars().next().is_some_and(|c| c.is_ascii_digit()) {
                 return v.to_string();
             }
         }
@@ -723,7 +723,7 @@ fn get_de_version(de: &str) -> String {
     if de_lower.contains("mate") {
         let out = run_cmd("mate-session", &["--version"]);
         if let Some(v) = out.split_whitespace().last() {
-            if v.chars().next().map_or(false, |c| c.is_ascii_digit()) {
+            if v.chars().next().is_some_and(|c| c.is_ascii_digit()) {
                 return v.to_string();
             }
         }
@@ -731,7 +731,7 @@ fn get_de_version(de: &str) -> String {
     if de_lower.contains("lxqt") {
         let out = run_cmd("lxqt-about", &["--version"]);
         if let Some(v) = out.split_whitespace().last() {
-            if v.chars().next().map_or(false, |c| c.is_ascii_digit()) {
+            if v.chars().next().is_some_and(|c| c.is_ascii_digit()) {
                 return v.to_string();
             }
         }
@@ -739,7 +739,7 @@ fn get_de_version(de: &str) -> String {
     if de_lower.contains("budgie") {
         let out = run_cmd("budgie-desktop", &["--version"]);
         if let Some(v) = out.split_whitespace().last() {
-            if v.chars().next().map_or(false, |c| c.is_ascii_digit()) {
+            if v.chars().next().is_some_and(|c| c.is_ascii_digit()) {
                 return v.to_string();
             }
         }
@@ -993,7 +993,7 @@ fn get_term_font() -> String {
         let profile_dir = format!("{}/.local/share/konsole", crate::utils::home_dir());
         if let Ok(entries) = std::fs::read_dir(&profile_dir) {
             for entry in entries.flatten() {
-                if entry.path().extension().map_or(false, |e| e == "profile") {
+                if entry.path().extension().is_some_and(|e| e == "profile") {
                     let content = read_file(entry.path().to_str().unwrap_or(""));
                     for line in content.lines() {
                         if let Some(val) = line.strip_prefix("Font=") {

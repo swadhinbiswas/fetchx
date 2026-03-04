@@ -75,21 +75,21 @@ pub fn download_image_from_api() -> Result<(), Box<dyn std::error::Error>> {
 pub fn detect_and_use_wallpaper() -> Option<PathBuf> {
     // Try Hyprland wallpaper detection
     if let Some(wallpaper) = get_hyprland_wallpaper() {
-        if let Ok(_) = copy_image_to_cache(&wallpaper) {
+        if copy_image_to_cache(&wallpaper).is_ok() {
             return Some(cached_image_path());
         }
     }
 
     // Try GNOME wallpaper
     if let Some(wallpaper) = get_gnome_wallpaper() {
-        if let Ok(_) = copy_image_to_cache(&wallpaper) {
+        if copy_image_to_cache(&wallpaper).is_ok() {
             return Some(cached_image_path());
         }
     }
 
     // Try KDE wallpaper
     if let Some(wallpaper) = get_kde_wallpaper() {
-        if let Ok(_) = copy_image_to_cache(&wallpaper) {
+        if copy_image_to_cache(&wallpaper).is_ok() {
             return Some(cached_image_path());
         }
     }
@@ -97,10 +97,8 @@ pub fn detect_and_use_wallpaper() -> Option<PathBuf> {
     // Try from environment variable
     if let Ok(wallpaper_path) = std::env::var("WALLPAPER") {
         let path = PathBuf::from(wallpaper_path);
-        if path.exists() {
-            if let Ok(_) = copy_image_to_cache(&path) {
-                return Some(cached_image_path());
-            }
+        if path.exists() && copy_image_to_cache(&path).is_ok() {
+            return Some(cached_image_path());
         }
     }
 
@@ -111,7 +109,7 @@ pub fn detect_and_use_wallpaper() -> Option<PathBuf> {
 fn get_hyprland_wallpaper() -> Option<PathBuf> {
     // Try hyprctl command first
     if let Ok(output) = Command::new("hyprctl")
-        .args(&["hyprpaper", "wallpapers"])
+        .args(["hyprpaper", "wallpapers"])
         .output()
     {
         if let Ok(stdout) = String::from_utf8(output.stdout) {
@@ -148,7 +146,7 @@ fn get_hyprland_wallpaper() -> Option<PathBuf> {
 /// Get GNOME wallpaper from dconf
 fn get_gnome_wallpaper() -> Option<PathBuf> {
     let output = Command::new("dconf")
-        .args(&["read", "/org/gnome/desktop/background/picture-uri-dark"])
+        .args(["read", "/org/gnome/desktop/background/picture-uri-dark"])
         .output()
         .ok()?;
 
@@ -198,7 +196,7 @@ fn copy_image_to_cache(source: &PathBuf) -> Result<(), Box<dyn std::error::Error
 }
 
 /// Check if a file is likely an image
-fn is_image_file(path: &PathBuf) -> bool {
+fn is_image_file(path: &std::path::Path) -> bool {
     let extensions = ["png", "jpg", "jpeg", "webp", "gif", "bmp"];
     if let Some(ext) = path
         .extension()
@@ -255,13 +253,11 @@ pub fn detect_terminal_capabilities() -> TerminalCapabilities {
     }
 
     // Check for sixel support
-    if term.contains("xterm-kitty") || colorterm.contains("truecolor") {
-        if check_sixel_support() {
-            return TerminalCapabilities {
-                supports_graphics: true,
-                backend: "sixel".to_string(),
-            };
-        }
+    if (term.contains("xterm-kitty") || colorterm.contains("truecolor")) && check_sixel_support() {
+        return TerminalCapabilities {
+            supports_graphics: true,
+            backend: "sixel".to_string(),
+        };
     }
 
     // Check for w3m (X11)
