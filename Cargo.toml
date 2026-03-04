@@ -2,13 +2,21 @@
 name = "fetchx"
 version = "0.2.0"
 edition = "2021"
-authors = ["FetchX Contributors"]
+authors = ["Swadhin Biswas <swadhinbiswas.cse@gmail.com>"]
 description = "A blazing-fast neofetch alternative — system information tool with image support, smart caching, 60+ distro logos, and Nerd Font icons"
 license = "MIT"
 repository = "https://github.com/swadhinbiswas/fetchx"
+homepage = "https://github.com/swadhinbiswas/fetchx"
+documentation = "https://github.com/swadhinbiswas/fetchx#readme"
 keywords = ["neofetch", "system-info", "terminal", "fetch", "ascii-art"]
 categories = ["command-line-utilities"]
 readme = "README.md"
+rust-version = "1.70"
+exclude = [
+    "assets/*.png",
+    ".github/",
+    "target/",
+]
 
 [dependencies]
 # CLI argument parsing

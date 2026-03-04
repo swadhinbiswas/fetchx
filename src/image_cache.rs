@@ -302,7 +302,12 @@ mod tests {
     #[test]
     fn test_cache_dir_exists() {
         let dir = cache_dir();
-        assert!(dir.to_string_lossy().contains("cache"));
+        // cache_dir() returns either <system_cache>/fetchx or ./fetchx
+        assert!(
+            dir.to_string_lossy().contains("fetchx"),
+            "Cache dir should contain 'fetchx': {:?}",
+            dir
+        );
     }
 
     #[test]

@@ -564,7 +564,7 @@ mod tests {
         assert!(!config.disk_bar);
         assert_eq!(config.bar_width, 15);
         assert_eq!(config.gap, 3);
-        assert_eq!(config.image_backend, "ascii");
+        assert_eq!(config.image_backend, "auto");
         assert_eq!(config.block_range, (0, 15));
     }
 
