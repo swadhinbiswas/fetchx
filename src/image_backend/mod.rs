@@ -483,5 +483,3 @@ pub fn display_iterm2(
 
     Ok(())
 }
-// fix: kitty chunk size
-// fix: WebP conversion
