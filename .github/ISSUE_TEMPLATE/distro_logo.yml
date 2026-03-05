@@ -1,0 +1,50 @@
+name: Distro Logo Request
+description: Request ASCII art for a new Linux distribution
+title: "[Logo]: "
+labels: ["ascii-art", "enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Want your distro's logo in FetchX? Let us know!
+
+  - type: input
+    id: distro
+    attributes:
+      label: Distribution Name
+      placeholder: "e.g., Bazzite, Nobara, Crystal Linux"
+    validations:
+      required: true
+
+  - type: input
+    id: distro_id
+    attributes:
+      label: Distro ID
+      description: "Value of `ID` in `/etc/os-release`"
+      placeholder: "e.g., bazzite"
+    validations:
+      required: true
+
+  - type: textarea
+    id: ascii_art
+    attributes:
+      label: ASCII Art (if available)
+      description: "Paste the ASCII art if you have one. Use {c1}-{c6} for color placeholders."
+      render: text
+      placeholder: |
+        {c1}    /\
+        {c1}   /  \
+        {c2}  /____\
+
+  - type: input
+    id: colors
+    attributes:
+      label: Brand Colors
+      description: "Primary colors for the logo (color numbers 0-255)"
+      placeholder: "e.g., [4, 6] for blue and cyan"
+
+  - type: textarea
+    id: reference
+    attributes:
+      label: Reference
+      description: "Link to the distro's website, logo, or neofetch art for reference."
