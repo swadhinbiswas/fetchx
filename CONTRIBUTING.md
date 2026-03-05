@@ -98,3 +98,63 @@ Found a bug? Please [open an issue](https://github.com/swadhinbiswas/fetchx/issu
 4. Steps to reproduce
 5. Expected vs actual behavior
 6. Terminal output or screenshots
+
+### Suggesting Features
+
+Have an idea? [Open a feature request](https://github.com/swadhinbiswas/fetchx/issues/new?template=feature_request.yml). Great features to work on:
+
+- New system info detections
+- Image backend improvements
+- Config options
+- Platform support (macOS, BSD, WSL)
+- Status bar integrations (Waybar, Polybar, EWW)
+
+### Adding Distro Logos
+
+This is the easiest way to contribute! ASCII logos are in `src/ascii/mod.rs`.
+
+**Steps:**
+
+1. Find the distro's logo (check [neofetch's source](https://github.com/dylanaraps/neofetch/blob/master/neofetch) for reference)
+
+2. Convert to ASCII art (roughly 18-25 lines tall, ~40 chars wide)
+
+3. Use `{c1}` through `{c6}` for color placeholders
+
+4. Add to `src/ascii/mod.rs`:
+
+```rust
+// In the get_ascii_art() match statement:
+"mydistro" | "my_distro_id" => (vec![4, 6], r#"
+{c1}         /\
+{c1}        /  \
+{c1}       /    \
+{c1}      /      \
+{c2}     /________\
+{c2}    /          \
+{c2}   /____________\
+"#.to_string()),
+```
+
+5. The first element `vec![4, 6]` is the color list (terminal color numbers)
+
+6. The distro ID must match the `ID` field in `/etc/os-release`
+
+7. Test with: `cargo run -- --ascii-distro mydistro`
+
+### Code Contributions
+
+1. Check [open issues](https://github.com/swadhinbiswas/fetchx/issues) for tasks labeled `good first issue` or `help wanted`
+2. Comment on the issue to claim it
+3. Fork, branch, code, test, PR
+
+---
+
+## Code Style & Guidelines
+
+### Rust Style
+
+- **Format** with `cargo fmt` before committing
+- **Lint** with `cargo clippy` — zero warnings required
+- **No `unwrap()`** in production code — use `?`, `.unwrap_or()`, or `.ok()`
+- **Error handling**: use descriptive error messages with context
