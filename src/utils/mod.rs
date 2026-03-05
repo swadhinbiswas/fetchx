@@ -295,4 +295,3 @@ mod tests {
         assert!(!command_exists("nonexistent_command_12345"));
     }
 }
-// doc: utils
