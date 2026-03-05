@@ -597,3 +597,4 @@ fn terminal_width() -> usize {
 
     80
 }
+// test: progress bar
