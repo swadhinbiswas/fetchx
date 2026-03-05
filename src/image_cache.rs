@@ -311,4 +311,3 @@ mod tests {
         assert!(result || !result); // Just verify it returns a bool
     }
 }
-// fix: API error log
