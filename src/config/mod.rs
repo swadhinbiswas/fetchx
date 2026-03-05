@@ -651,3 +651,4 @@ mod tests {
         assert_eq!(parsed.no_color, config.no_color);
     }
 }
+// custom ASCII config
