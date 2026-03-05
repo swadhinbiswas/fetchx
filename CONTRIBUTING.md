@@ -278,3 +278,60 @@ cargo tarpaulin --all-features
 ### Quick Iteration
 
 ```bash
+# Watch mode — rebuilds on file changes (install cargo-watch first)
+cargo install cargo-watch
+cargo watch -x run
+
+# Test a specific distro logo
+cargo run -- --ascii-distro arch
+
+# Test with kitty image backend
+cargo run -- --backend kitty
+
+# Test JSON output
+cargo run -- --json | jq .
+
+# Check binary size
+cargo build --release && ls -lh target/release/fetchx
+```
+
+### Debugging
+
+```bash
+# Run with backtrace
+RUST_BACKTRACE=1 cargo run
+
+# Check what info is detected
+cargo run -- --json 2>/dev/null | jq .
+
+# Test config loading
+cargo run -- --print-config
+```
+
+### Adding a New Info Field
+
+1. Add detection logic in `src/system/mod.rs`
+2. Add `show_my_field: bool` to `Config` struct in `src/config/mod.rs`
+3. Add display logic in `src/display/mod.rs`
+4. Add Nerd Font icon in the icon mapping
+5. Add toggle to example config in `assets/config.example.toml`
+6. Add tests for the detection
+7. Update README documentation
+
+---
+
+## Community
+
+- **Issues**: [GitHub Issues](https://github.com/swadhinbiswas/fetchx/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/swadhinbiswas/fetchx/discussions)
+- **Share your rice**: Post screenshots on [r/unixporn](https://www.reddit.com/r/unixporn/) with `fetchx` tag!
+
+---
+
+## License
+
+By contributing, you agree that your contributions will be licensed under the [MIT License](LICENSE).
+
+---
+
+**Thank you for making FetchX better!** Every contribution, no matter how small, helps the project grow. ⚡
