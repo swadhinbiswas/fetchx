@@ -651,4 +651,3 @@ mod tests {
         assert_eq!(parsed.no_color, config.no_color);
     }
 }
-// test: default config
