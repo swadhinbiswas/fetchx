@@ -293,4 +293,3 @@ mod tests {
         assert!(result.contains("A"));
     }
 }
-// doc: color funcs
