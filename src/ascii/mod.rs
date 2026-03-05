@@ -1617,4 +1617,3 @@ mod tests {
         assert!(!generic.is_empty());
     }
 }
-// ASCII tux default
