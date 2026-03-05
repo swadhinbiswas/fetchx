@@ -483,4 +483,3 @@ pub fn display_iterm2(
 
     Ok(())
 }
-// fix: sixel fallback
