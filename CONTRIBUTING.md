@@ -158,3 +158,63 @@ This is the easiest way to contribute! ASCII logos are in `src/ascii/mod.rs`.
 - **Lint** with `cargo clippy` — zero warnings required
 - **No `unwrap()`** in production code — use `?`, `.unwrap_or()`, or `.ok()`
 - **Error handling**: use descriptive error messages with context
+- Document public functions with `///` doc comments
+- Keep functions focused and small (< 50 lines ideally)
+
+### Commit Messages
+
+Use clear, descriptive commit messages:
+
+```
+feat: add CachyOS ASCII art logo
+fix: resolve kitty image not displaying on first run
+docs: update config reference with new options
+refactor: extract GPU detection into separate function
+test: add unit tests for uptime parsing
+ci: add codecov integration
+```
+
+Prefixes: `feat:`, `fix:`, `docs:`, `refactor:`, `test:`, `ci:`, `chore:`
+
+### Branch Naming
+
+```
+feat/add-bazzite-logo
+fix/kitty-image-crash
+docs/update-readme
+```
+
+---
+
+## Testing
+
+### Running Tests
+
+```bash
+# Run all tests
+cargo test
+
+# Run a specific test
+cargo test test_parse_uptime
+
+# Run tests with output
+cargo test -- --nocapture
+
+# Run tests in a specific module
+cargo test system::tests
+```
+
+### Writing Tests
+
+Add tests in the same file using `#[cfg(test)]` modules:
+
+```rust
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_my_function() {
+        let result = my_function("input");
+        assert_eq!(result, "expected output");
+    }
