@@ -1,5 +1,29 @@
-/target
+# Rust
+/target/
+**/*.rs.bk
+*.pdb
+Cargo.lock
+
+# Build
+*.o
+*.a
+*.so
+*.dylib
+
+# IDE
+.idea/
+.vscode/
 *.swp
 *.swo
 *~
+
+# OS
 .DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Config overrides
+config.toml
+create_history.sh
