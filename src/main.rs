@@ -552,4 +552,3 @@ fn init_api_image_config() {
         }
     }
 }
-// print-config flag
