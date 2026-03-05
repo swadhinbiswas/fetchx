@@ -118,3 +118,30 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cargo registry & build
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-build-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-cargo-build-
+
+      - name: Build release binary
+        run: cargo build --release --verbose
+
+      - name: Check binary size
+        run: |
+          ls -lh target/release/fetchx
+          echo "Binary size: $(du -h target/release/fetchx | cut -f1)"
+
+      - name: Upload binary artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: fetchx-${{ matrix.os }}
+          path: target/release/fetchx
+          retention-days: 7
