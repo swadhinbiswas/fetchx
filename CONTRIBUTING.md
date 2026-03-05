@@ -218,3 +218,63 @@ mod tests {
         let result = my_function("input");
         assert_eq!(result, "expected output");
     }
+}
+```
+
+### What to Test
+
+- Parsing functions (uptime, memory, CPU info)
+- Config loading and defaults
+- ASCII art color placeholder substitution
+- Utility functions (padding, truncation, width)
+
+### Coverage
+
+CI runs `cargo-tarpaulin` and uploads to [Codecov](https://codecov.io). Check coverage before submitting:
+
+```bash
+cargo install cargo-tarpaulin
+cargo tarpaulin --all-features
+```
+
+---
+
+## Pull Request Process
+
+1. **Fork** the repository and create a feature branch from `main`
+
+2. **Make your changes** — keep PRs focused on one thing
+
+3. **Run checks locally:**
+
+   ```bash
+   cargo fmt --all -- --check   # Format check
+   cargo clippy -- -D warnings  # Lint check
+   cargo test                   # All tests pass
+   cargo build --release        # Clean release build (0 warnings)
+   ```
+
+4. **Push** to your fork and open a PR against `main`
+
+5. **Fill out the PR template** — describe changes, link issues, add screenshots
+
+6. **Wait for CI** — all checks must pass (lint, test, build)
+
+7. **Address review feedback** — maintainers may request changes
+
+8. **Merge!** — once approved, a maintainer will merge your PR
+
+### PR Tips
+
+- Keep diffs small and focused — large PRs are harder to review
+- Add screenshots for visual changes (new logos, layout changes)
+- If adding a feature, update the README and config example
+- If fixing a bug, add a test that catches the regression
+
+---
+
+## Development Tips
+
+### Quick Iteration
+
+```bash
