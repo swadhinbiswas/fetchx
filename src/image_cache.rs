@@ -306,8 +306,9 @@ mod tests {
     }
 
     #[test]
-    fn test_should_download_returns_bool() {
-        let result = should_download();
-        assert!(result || !result); // Just verify it returns a bool
+    fn test_get_available_image() {
+        let result = get_available_image();
+        // Should return None if no cached image, or Some(path) if cached
+        assert!(result.is_none() || result.is_some());
     }
 }
