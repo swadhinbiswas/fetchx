@@ -1365,4 +1365,3 @@ fn get_users() -> String {
     }
     String::new()
 }
-// network info
