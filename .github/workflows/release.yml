@@ -30,6 +30,11 @@ jobs:
             binary: fetchx
             archive: fetchx-linux-aarch64.tar.gz
 
+          - os: ubuntu-latest
+            target: armv7-unknown-linux-gnueabihf
+            binary: fetchx
+            archive: fetchx-linux-armv7.tar.gz
+
           - os: macos-latest
             target: x86_64-apple-darwin
             binary: fetchx
@@ -48,16 +53,23 @@ jobs:
         with:
           targets: ${{ matrix.target }}
 
-      - name: Install cross-compilation tools
+      - name: Install cross-compilation tools (aarch64)
         if: matrix.target == 'aarch64-unknown-linux-gnu'
         run: |
           sudo apt-get update
           sudo apt-get install -y gcc-aarch64-linux-gnu
 
+      - name: Install cross-compilation tools (armv7)
+        if: matrix.target == 'armv7-unknown-linux-gnueabihf'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-arm-linux-gnueabihf
+
       - name: Build release binary
         run: cargo build --release --target ${{ matrix.target }}
         env:
           CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
+          CARGO_TARGET_ARMV7_UNKNOWN_LINUX_GNUEABIHF_LINKER: arm-linux-gnueabihf-gcc
 
       - name: Package binary
         run: |

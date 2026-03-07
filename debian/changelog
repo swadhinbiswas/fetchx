@@ -1,0 +1,12 @@
+fetchx (0.2.0) stable; urgency=low
+
+  * Initial release on crates.io
+  * Added 5 image backends (kitty, sixel, chafa, w3m, iterm2)
+  * Added smart image caching with random images
+  * Added 60+ distro logos
+  * Added Nerd Font icons support
+  * Added progress bars for memory and disk
+  * Added JSON output
+  * Added daemon mode for status bars
+
+ -- Swadhin Biswas <swadhinbiswas.cse@gmail.com>  Tue, 04 Mar 2026 00:00:00 +0000

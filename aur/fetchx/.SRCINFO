@@ -1,0 +1,19 @@
+pkgbase = fetchx
+	pkgdesc = A blazing-fast, feature-rich system information tool written in Rust - The modern neofetch replacement
+	pkgver = 0.2.0
+	pkgrel = 1
+	url = https://github.com/swadhinbiswas/fetchx
+	arch = x86_64
+	arch = aarch64
+	arch = armv7l
+	license = MIT
+	makedepends = cargo
+	depends = gcc
+	depends = pkgconf
+	source = fetchx-0.2.0.tar.gz::https://github.com/swadhinbiswas/fetchx/releases/download/v0.2.0/fetchx-0.2.0-x86_64-unknown-linux-gnu.tar.gz
+	source = fetchx-0.2.0-aarch64.tar.gz::https://github.com/swadhinbiswas/fetchx/releases/download/v0.2.0/fetchx-0.2.0-aarch64-unknown-linux-gnu.tar.gz
+	sha256sums = SKIP
+	sha256sums = SKIP
+	options = !strip
+
+	pkgname = fetchx

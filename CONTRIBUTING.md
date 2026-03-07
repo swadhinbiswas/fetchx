@@ -241,6 +241,21 @@ cargo tarpaulin --all-features
 
 ## Pull Request Process
 
+### Branch Protection Rules
+
+The `main` branch is protected with the following rules:
+
+| Rule | Description |
+| ---- |-------------|
+| **Require Reviews** | At least 1 approval required |
+| **Require Code Owner Review** | Code owner must approve |
+| **Require Status Checks** | CI must pass (lint, test, coverage) |
+| **Require Up-to-date** | Branch must be rebased on main |
+| **Require Linear History** | No merge commits allowed |
+| **Require Conversation Resolution** | All comments must be resolved |
+
+### Workflow
+
 1. **Fork** the repository and create a feature branch from `main`
 
 2. **Make your changes** — keep PRs focused on one thing
@@ -258,11 +273,24 @@ cargo tarpaulin --all-features
 
 5. **Fill out the PR template** — describe changes, link issues, add screenshots
 
-6. **Wait for CI** — all checks must pass (lint, test, build)
+6. **Wait for CI** — all checks must pass:
+   - `ci/lint` - Format and Clippy
+   - `ci/test` - Unit tests
+   - `ci/coverage` - Code coverage
 
 7. **Address review feedback** — maintainers may request changes
 
-8. **Merge!** — once approved, a maintainer will merge your PR
+8. **Resolve all conversations** before requesting merge
+
+9. **Merge!** — once approved and all checks pass, maintainer will merge
+
+### CI Failure Handling
+
+If CI fails:
+- An issue is automatically created tracking the failure
+- The PR gets a comment with failure details
+- Fix the issues and push new commits
+- When CI passes, the issue is automatically closed
 
 ### PR Tips
 

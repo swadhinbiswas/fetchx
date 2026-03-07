@@ -1,0 +1,54 @@
+# Maintainer: Swadhin Biswas <swadhinbiswas.cse@gmail.com>
+# Contributor: Your Name <your@email>
+
+pkgname=fetchx-git
+_pkgname=fetchx
+pkgver=0.2.0.r0.gabcdef0
+pkgrel=1
+pkgdesc="A blazing-fast, feature-rich system information tool written in Rust - The modern neofetch replacement (git version)"
+arch=('x86_64' 'aarch64' 'armv7l')
+url="https://github.com/swadhinbiswas/fetchx"
+license=('MIT')
+makedepends=('cargo' 'git')
+depends=('gcc' 'pkgconf')
+provides=('fetchx')
+conflicts=('fetchx')
+source=("git+https://github.com/swadhinbiswas/fetchx.git")
+sha256sums=('SKIP')
+
+pkgver() {
+    cd "$srcdir/$_pkgname"
+    git describe --long --tags | sed 's/^v//' | sed 's/\([^-]*-\)\(g\)/\1r\2/'
+}
+
+build() {
+    cd "$srcdir/$_pkgname"
+    cargo build --release --locked
+}
+
+package() {
+    cd "$srcdir/$_pkgname"
+    install -Dm755 target/release/fetchx -t "$pkgdir/usr/bin/"
+    
+    # Generate and install man page
+    cargo run --release --locked -- --help > /dev/null 2>&1 || true
+    if [ -f "target/release/fetchx" ]; then
+        # Basic man page content
+        mkdir -p "$pkgdir/usr/share/man/man1"
+        cat > "$pkgdir/usr/share/man/man1/fetchx.1" << 'EOF'
+.TH FETCHX 1 "March 2026" "FetchX 0.2.0"
+.SH NAME
+fetchx \- A blazing-fast system information tool
+.SH SYNOPSIS
+\fBfetchx\fR [OPTIONS]
+.SH DESCRIPTION
+FetchX is a modern neofetch replacement written in Rust.
+.SH OPTIONS
+See \fBfetchx \-\-help\fR for full options.
+.SH AUTHOR
+Swadhin Biswas <swadhinbiswas.cse@gmail.com>
+.SH LICENSE
+MIT
+EOF
+    fi
+}

@@ -1,0 +1,14 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@ --with=systemd
+
+override_dh_auto_build:
+	cargo build --release --locked
+
+override_dh_auto_install:
+	install -Dm755 target/release/fetchx debian/fetchx/usr/bin/fetchx
+	install -Dm644 debian/fetchx.desktop debian/fetchx/usr/share/applications/fetchx.desktop
+	install -Dm644 debian/fetchx.bash-completion debian/fetchx/usr/share/bash-completion/completions/fetchx
+	install -Dm644 debian/fetchx.zsh-completion debian/fetchx/usr/share/zsh/vendor-completions/_fetchx
+	install -Dm644 debian/fetchx.1 debian/fetchx/usr/share/man/man1/fetchx.1

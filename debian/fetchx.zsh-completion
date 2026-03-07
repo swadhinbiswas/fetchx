@@ -1,0 +1,41 @@
+#fetchx zsh completion
+
+autoload -U compinit
+compinit
+
+typeset -A opt_args
+local context state line
+
+_fetchx() {
+    _arguments -C \
+        '--help[Show help message]' \
+        '--version[Show version information]' \
+        '--json[Print output as JSON]' \
+        '--logo-only[Only show the logo]' \
+        '--emoji[Use emoji mode]' \
+        '--nerd-font[Use Nerd Font icons]' \
+        '--stdout[Disable formatting for piping]' \
+        '--no-color[Disable colors]' \
+        '--bold[Enable/disable bold text]' \
+        '-b+[Image backend]:backend:(ascii kitty sixel chafa w3m iterm2 off)' \
+        '--backend+[Image backend]:backend:(ascii kitty sixel chafa w3m iterm2 off)' \
+        '-s+[Image source]:source:(auto ascii wallpaper)' \
+        '--source+[Image source]:source:(auto ascii wallpaper)' \
+        '--ascii-distro[Which distro ASCII art]:distro:' \
+        '-c+[Custom image path]:path:_files' \
+        '--custom-image+[Custom image path]:path:_files' \
+        '--gap[Gap between logo and info]:number:' \
+        '--separator[Separator between label and value]:sep:' \
+        '--show-config[Show config file path]' \
+        '--print-config[Print default config]' \
+        '--create-config[Create default config]' \
+        '--select-image[Interactive image picker]' \
+        '--init-api-image[Setup API image fetching]' \
+        '--daemon[Run as daemon]' \
+        '--tray-status[Compact status for tray]' \
+        '--block-range-start[Color block range start]:number:' \
+        '--block-range-end[Color block range end]:number:' \
+        '--block-width[Width of color blocks]:number:'
+}
+
+_fetchx "$@"

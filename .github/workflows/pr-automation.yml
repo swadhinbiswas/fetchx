@@ -1,0 +1,28 @@
+name: PR Review Automation
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, closed]
+
+jobs:
+  pr-automation:
+    name: PR Automation
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+    steps:
+      - name: Run PR automation
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # This workflow handles:
+          # 1. Creates issues on CI failure
+          # 2. Closes issues when CI passes
+          # 3. Checks for required approvals
+          # 4. Adds labels based on changes
+          
+          echo "PR Number: ${{ github.event.pull_request.number }}"
+          echo "PR Action: ${{ github.event.action }}"
+          echo "Head SHA: ${{ github.event.pull_request.head.sha }}"

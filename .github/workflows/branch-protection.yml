@@ -1,0 +1,79 @@
+name: Branch Protection Setup
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to protect'
+        required: true
+        default: 'main'
+        type: string
+
+jobs:
+  setup-protection:
+    name: Setup Branch Protection
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure Branch Protection
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: ${{ github.event.inputs.branch }}
+        run: |
+          # Set branch protection rules
+          echo "Setting up branch protection for: $BRANCH"
+          
+          # Enable required reviews
+          curl -X PUT "https://api.github.com/repos/${{ github.repository }}/branches/$BRANCH/protection" \
+            -H "Authorization: token $GITHUB_TOKEN" \
+            -H "Accept: application/vnd.github.v3+json" \
+            -d '{
+              "required_status_checks": {
+                "strict": true,
+                "contexts": ["ci/lint", "ci/test", "ci/coverage"]
+              },
+              "enforce_admins": true,
+              "required_pull_request_reviews": {
+                "dismiss_stale_reviews": true,
+                "require_code_owner_reviews": true,
+                "required_reviewers": 1,
+                "dismiss_restrictions": []
+              },
+              "restrictions": null,
+              "allow_force_pushes": false,
+              "allow_deletions": false,
+              "require_linear_history": true,
+              "required_conversation_resolution": true
+            }'
+          
+          echo "Branch protection configured successfully!"
+
+      - name: Enable branch protection for PRs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Require branches to be up to date before merging
+          curl -X PUT "https://api.github.com/repos/${{ github.repository }}/branches/main/protection/required_status_checks" \
+            -H "Authorization: token $GITHUB_TOKEN" \
+            -H "Accept: application/vnd.github.v3+json" \
+            -d '{
+              "strict": true,
+              "contexts": ["ci/lint", "ci/test", "ci/coverage"]
+            }'
+          
+          echo "Required status checks configured!"
+
+      - name: Configure branch protection rules
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Get current protection status
+          curl -s "https://api.github.com/repos/${{ github.repository }}/branches/main/protection" \
+            -H "Authorization: token $GITHUB_TOKEN" \
+            -H "Accept: application/vnd.github.v3+json" | jq '.'

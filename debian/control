@@ -1,0 +1,25 @@
+Source: fetchx
+Section: utils
+Priority: optional
+Maintainer: Swadhin Biswas <swadhinbiswas.cse@gmail.com>
+Build-Depends: cargo, rustc
+Standards-Version: 4.6.2
+Homepage: https://github.com/swadhinbiswas/fetchx
+Vcs-Git: https://github.com/swadhinbiswas/fetchx.git
+
+Package: fetchx
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: A blazing-fast, feature-rich system information tool
+ FetchX is a modern neofetch replacement written in Rust. It displays
+ system information with ASCII art or images in the terminal.
+ .
+ Features:
+  - Blazing fast (10-50ms vs neofetch's 200-500ms)
+  - 5 image backends (kitty, sixel, chafa, w3m, iterm2)
+  - Smart image caching with random images
+  - 60+ distro logos
+  - Nerd Font icons support
+  - Progress bars for memory and disk
+  - JSON output for scripting
+  - Daemon mode for status bars

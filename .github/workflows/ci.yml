@@ -13,7 +13,7 @@ env:
 jobs:
   # ── Lint ─────────────────────────────────────────────────────────────────────
   lint:
-    name: Lint & Format
+    name: Lint (fmt + clippy)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -75,7 +75,7 @@ jobs:
 
   # ── Coverage ─────────────────────────────────────────────────────────────────
   coverage:
-    name: Code Coverage
+    name: Coverage
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

@@ -1,0 +1,38 @@
+# Maintainer: Swadhin Biswas <swadhinbiswas.cse@gmail.com>
+# Contributor: Your Name <your@email>
+
+pkgname=fetchx
+pkgver=0.2.0
+pkgrel=1
+pkgdesc="A blazing-fast, feature-rich system information tool written in Rust - The modern neofetch replacement"
+arch=('x86_64' 'aarch64' 'armv7l')
+url="https://github.com/swadhinbiswas/fetchx"
+license=('MIT')
+makedepends=('cargo')
+depends=('gcc' 'pkgconf')
+source=("$pkgname-$pkgver.tar.gz::https://github.com/swadhinbiswas/fetchx/releases/download/v$pkgver/fetchx-$pkgver-x86_64-unknown-linux-gnu.tar.gz"
+        "$pkgname-$pkgver-aarch64.tar.gz::https://github.com/swadhinbiswas/fetchx/releases/download/v$pkgver/fetchx-$pkgver-aarch64-unknown-linux-gnu.tar.gz")
+sha256sums=('SKIP'
+            'SKIP')
+options=('!strip')
+
+package() {
+    # x86_64
+    install -Dm755 fetchx-$pkgver-x86_64-unknown-linux-gnu/fetchx -t "$pkgdir/usr/bin/"
+    
+    # aarch64
+    if [ -d "fetchx-$pkgver-aarch64-unknown-linux-gnu" ]; then
+        install -Dm755 fetchx-$pkgver-aarch64-unknown-linux-gnu/fetchx -t "$pkgdir/usr/bin/"
+    fi
+    
+    # Install man page
+    install -Dm644 "$srcdir/$pkgname-$pkgver-x86_64-unknown-linux-gnu/$pkgname.1" "$pkgdir/usr/share/man/man1/$pkgname.1" || true
+    
+    # Install bash completion
+    install -Dm644 "$srcdir/$pkgname-$pkgver-x86_64-unknown-linux-gnu/completions/fetchx.bash" \
+        "$pkgdir/usr/share/bash-completion/completions/fetchx" || true
+    
+    # Install zsh completion
+    install -Dm644 "$srcdir/$pkgname-$pkgver-x86_64-unknown-linux-gnu/completions/fetchx.zsh" \
+        "$pkgdir/usr/share/zsh/site-functions/_fetchx" || true
+}

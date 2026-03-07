@@ -1,0 +1,29 @@
+# fetchx bash completion
+
+_fetchx() {
+    local cur prev opts
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+    
+    opts="--help --version --json --logo-only --emoji --nerd-font --stdout --no-color
+          --bold --backend --source --ascii-distro --custom-image --gap --separator
+          --show-config --print-config --create-config --select-image --init-api-image
+          --daemon --tray-status --block-range-start --block-range-end --block-width"
+    
+    case "${prev}" in
+        --backend|-b)
+            COMPREPLY=($(compgen -W "ascii kitty sixel chafa w3m iterm2 off" -- ${cur}))
+            return 0
+            ;;
+        --source|-s)
+            COMPREPLY=($(compgen -W "auto ascii wallpaper" -- ${cur}))
+            return 0
+            ;;
+    esac
+    
+    COMPREPLY=($(compgen -W "${opts}" -- ${cur}))
+    return 0
+}
+
+complete -F _fetchx fetchx

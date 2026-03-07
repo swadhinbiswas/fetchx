@@ -1,0 +1,83 @@
+.TH FETCHX 1 "March 2026" "FetchX 0.2.0" "User Commands"
+.SH NAME
+fetchx \- A blazing-fast system information tool written in Rust
+.SH SYNOPSIS
+\fBfetchx\fR [OPTIONS]
+.SH DESCRIPTION
+FetchX is a modern neofetch replacement written in Rust. It displays system information with ASCII art or images in the terminal.
+.SH OPTIONS
+.TP
+\fB\-b, --backend\fR <BACKEND>
+Image backend: ascii, kitty, sixel, chafa, w3m, iterm2, off
+.TP
+\fB\-s, --source\fR <SOURCE>
+Image source: auto, ascii, wallpaper
+.TP
+\fB--ascii-distro\fR <DISTRO>
+Which distro's ASCII art to display
+.TP
+\fB\-\-emoji\fR
+Use emoji mode
+.TP
+\fB\-\-nerd-font\fR
+Use Nerd Font icons for labels
+.TP
+\fB\-c, --custom-image\fR <PATH>
+Path to custom image
+.TP
+\fB\-l, --logo-only\fR
+Only show the logo, no info
+.TP
+\fB--json\fR
+Print output as JSON
+.TP
+\fB--no-color\fR
+Disable colors in output
+.TP
+\fB--stdout\fR
+Disable formatting (for piping)
+.TP
+\fB--create-config\fR
+Create default config file
+.TP
+\fB--show-config\fR
+Show config file path
+.TP
+\fB--print-config\fR
+Print default config to stdout
+.TP
+\fB--select-image\fR
+Interactive image selector
+.TP
+\fB--init-api-image\fR
+Quick setup: enable kitty + API images
+.TP
+\fB--daemon\fR
+Run as background daemon
+.TP
+\fB--tray-status\fR
+Compact status for tray widgets
+.TP
+\fB\-h, --help\fR
+Print help
+.TP
+\fB\-V, --version\fR
+Print version
+.SH CONFIGURATION
+Config file is located at: ~/.config/fetchx/config.toml
+.SH EXAMPLES
+.TP
+Basic usage:
+$ fetchx
+.TP
+With kitty image:
+$ fetchx --backend kitty
+.TP
+JSON output:
+$ fetchx --json
+.SH AUTHOR
+Written by Swadhin Biswas <swadhinbiswas.cse@gmail.com>
+.SH LICENSE
+MIT License
+.SH SEE ALSO
+neofetch(1), fastfetch(1)

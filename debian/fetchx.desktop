@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=FetchX
+Comment=A blazing-fast system information tool
+Exec=fetchx
+Icon=utilities-terminal
+Terminal=true
+Type=Application
+Categories=Utility;System;Information;
+Keywords=neofetch;fetch;system;info;terminal;

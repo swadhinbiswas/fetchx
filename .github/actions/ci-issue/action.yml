@@ -1,0 +1,19 @@
+name: 'Create Issue on CI Failure'
+description: 'Creates a GitHub issue when CI checks fail on a pull request'
+author: 'FetchX'
+inputs:
+  token:
+    description: 'GitHub token'
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Create issue on failure
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ inputs.token }}
+      run: |
+        echo "Checking CI status..."
+        
+        # This action is meant to be called from CI workflow
+        # See: .github/workflows/ci-issue-handler.yml

@@ -15,6 +15,8 @@
 
 <p align="center">
   <a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License"></a>
+  <a href="https://crates.io/crates/fetchx"><img src="https://img.shields.io/crates/v/fetchx.svg" alt="crates.io"></a>
+  <a href="https://aur.archlinux.org/packages/fetchx"><img src="https://img.shields.io/aur/version/fetchx" alt="AUR"></a>
   <a href="https://github.com/swadhinbiswas/fetchx/releases"><img src="https://img.shields.io/badge/version-0.2.0-green.svg" alt="Version 0.2.0"></a>
   <a href="https://www.rust-lang.org/"><img src="https://img.shields.io/badge/rust-2021-orange.svg" alt="Rust 2021"></a>
   <a href="https://github.com/swadhinbiswas/fetchx/actions"><img src="https://img.shields.io/badge/tests-45%20passing-brightgreen.svg" alt="45 Tests Passing"></a>
@@ -89,6 +91,7 @@
   - [With Make](#with-make)
   - [From Cargo](#from-cargo)
   - [Arch Linux / CachyOS / Manjaro (AUR)](#arch-linux--cachyos--manjaro-aur)
+  - [Debian / Ubuntu / APT](#debian--ubuntu--apt)
 - [Shell Aliases (Replace neofetch)](#shell-aliases-replace-neofetch)
 - [Configuration](#configuration)
   - [Getting Started](#getting-started)
@@ -202,19 +205,46 @@ make PREFIX=~/.local install   # Install to ~/.local/bin
 ### From Cargo
 
 ```bash
+# Install from crates.io (recommended)
+cargo install fetchx
+
+# Or install from git
 cargo install --git https://github.com/swadhinbiswas/fetchx.git
 ```
 
 ### Arch Linux / CachyOS / Manjaro (AUR)
 
+<a href="https://aur.archlinux.org/packages/fetchx"><img src="https://img.shields.io/aur/version/fetchx" alt="AUR Stable"></a>
+<a href="https://aur.archlinux.org/packages/fetchx-git"><img src="https://img.shields.io/aur/version/fetchx-git" alt="AUR Git"></a>
+
 ```bash
-# If you have an AUR helper like yay or paru:
+# Stable version (recommended)
+yay -S fetchx
+
+# Or git version (latest features)
 yay -S fetchx-git
+
+# With paru
+paru -S fetchx
 # or
 paru -S fetchx-git
 ```
 
----
+### Debian / Ubuntu / APT
+
+```bash
+# Download the .deb package from releases
+# https://github.com/swadhinbiswas/fetchx/releases
+
+# Install with:
+sudo dpkg -i fetchx_0.2.0_amd64.deb
+sudo apt-get install -f  # install dependencies
+
+# Or build from source:
+./build-deb.sh---
+```
+
+
 
 ## Shell Aliases (Replace neofetch)
 
