@@ -508,6 +508,11 @@ impl Display {
             }
         }
 
+        // Temperature
+        if self.config.show_temperature && !sys.temperature.is_empty() {
+            lines.push(field("Temperature", "\u{f76c}", &sys.temperature));
+        }
+
         // Memory — optionally with progress bar
         if self.config.show_memory && sys.memory != "Unknown" && !sys.memory.is_empty() {
             if self.config.memory_bar {

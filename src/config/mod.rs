@@ -143,6 +143,8 @@ pub struct Config {
     pub show_cpu: bool,
     #[serde(default = "default_true")]
     pub show_gpu: bool,
+    #[serde(default = "default_false")]
+    pub show_temperature: bool,
     #[serde(default = "default_true")]
     pub show_memory: bool,
     #[serde(default = "default_false")]
@@ -273,6 +275,7 @@ impl Default for Config {
             show_term_font: true,
             show_cpu: true,
             show_gpu: true,
+            show_temperature: false,
             show_memory: true,
             show_disk: false,
             show_battery: false,
@@ -480,6 +483,7 @@ show_terminal = true
 show_term_font = true
 show_cpu = true
 show_gpu = true
+show_temperature = false
 show_memory = true
 show_disk = false
 show_battery = false

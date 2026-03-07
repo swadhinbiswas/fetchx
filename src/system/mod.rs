@@ -27,6 +27,7 @@ pub struct SystemInfo {
     pub term_font: String,
     pub cpu: String,
     pub gpu: Vec<String>,
+    pub temperature: String,
     pub memory: String,
     pub memory_percent: f64,
     pub disk: String,
@@ -51,6 +52,7 @@ impl SystemInfo {
         let h_packages = thread::spawn(get_packages);
         let h_resolution = thread::spawn(get_resolution);
         let h_gpu = thread::spawn(get_gpu);
+        let h_temperature = thread::spawn(get_temperature);
         let h_public_ip = thread::spawn(get_public_ip);
         let h_song = thread::spawn(get_song);
         let h_cpu = thread::spawn(get_cpu);
@@ -81,6 +83,7 @@ impl SystemInfo {
         let packages = h_packages.join().unwrap_or_default();
         let resolution = h_resolution.join().unwrap_or_default();
         let gpu = h_gpu.join().unwrap_or_default();
+        let temperature = h_temperature.join().unwrap_or_default();
         let public_ip = h_public_ip.join().unwrap_or_else(|_| "Unknown".to_string());
         let song = h_song.join().unwrap_or_default();
         let cpu = h_cpu.join().unwrap_or_default();
@@ -107,6 +110,7 @@ impl SystemInfo {
             term_font,
             cpu,
             gpu,
+            temperature,
             memory,
             memory_percent,
             disk,
@@ -1148,6 +1152,94 @@ fn get_gpu() -> Vec<String> {
     }
 
     vec!["Unknown".to_string()]
+}
+
+/// Detect system temperature from various sources.
+fn get_temperature() -> String {
+    // Try sensors (lm-sensors)
+    if command_exists("sensors") {
+        let out = run_cmd("sensors", &[]);
+        if !out.is_empty() {
+            for line in out.lines() {
+                let lc = line.to_lowercase();
+                if (lc.contains("cpu") || lc.contains("package"))
+                    && (lc.contains("°c") || lc.contains("°f"))
+                {
+                    if let Some(temp) = extract_temp_from_line(line) {
+                        return temp;
+                    }
+                }
+            }
+        }
+    }
+
+    // Try reading from /sys/class/thermal (Linux)
+    if let Ok(thermal_dir) = std::fs::read_dir("/sys/class/thermal") {
+        let mut temps: Vec<i32> = Vec::new();
+        for entry in thermal_dir.flatten() {
+            let path = entry.path();
+            if path.join("type").exists() {
+                let temp_file = path.join("temp");
+                if temp_file.exists() {
+                    if let Ok(content) = std::fs::read_to_string(temp_file) {
+                        if let Ok(temp_millidegrees) = content.trim().parse::<i32>() {
+                            let temp = temp_millidegrees / 1000;
+                            if temp > 0 && temp < 150 {
+                                temps.push(temp);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if !temps.is_empty() {
+            let avg: i32 = temps.iter().sum::<i32>() / temps.len() as i32;
+            return format!("{}°C", avg);
+        }
+    }
+
+    // Try nvidia-smi for GPU temperature
+    if command_exists("nvidia-smi") {
+        let out = run_cmd(
+            "nvidia-smi",
+            &[
+                "--query-gpu=temperature.gpu",
+                "--format=csv,noheader,nounits",
+            ],
+        );
+        if !out.is_empty() {
+            if let Ok(temp) = out.trim().parse::<i32>() {
+                return format!("{}°C (GPU)", temp);
+            }
+        }
+    }
+
+    String::new()
+}
+
+fn extract_temp_from_line(line: &str) -> Option<String> {
+    let parts: Vec<&str> = line.split_whitespace().collect();
+    for (i, part) in parts.iter().enumerate() {
+        let part_lower = part.to_lowercase();
+        if part_lower.contains("°c")
+            || part_lower.contains("°f")
+            || part_lower.ends_with('c')
+            || part_lower.ends_with('f')
+        {
+            if i > 0 {
+                let prev = parts[i - 1].trim_start_matches(['+', '-']);
+                if let Ok(t) = prev.parse::<f64>() {
+                    let unit = if part_lower.contains("°f") || part_lower.ends_with('f') {
+                        "°F"
+                    } else {
+                        "°C"
+                    };
+                    return Some(format!("{}{}", t, unit));
+                }
+            }
+        }
+    }
+    None
 }
 
 fn get_memory_with_percent() -> (String, f64) {
