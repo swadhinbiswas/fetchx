@@ -508,6 +508,14 @@ impl Display {
             }
         }
 
+        // Temperature
+        add_field!(
+            self.config.show_temperature,
+            "Temperature",
+            "\u{f76c}",
+            &sys.temperature
+        );
+
         // Memory — optionally with progress bar
         if self.config.show_memory && sys.memory != "Unknown" && !sys.memory.is_empty() {
             if self.config.memory_bar {
